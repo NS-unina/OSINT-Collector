@@ -1,538 +1,217 @@
-<?xml version="1.0"?>
-<rdf:RDF xmlns="urn:absolute:None#"
-     xml:base="urn:absolute:None"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:owl="http://www.w3.org/2002/07/owl#"
-     xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-    <owl:Ontology rdf:about="urn:absolute:None">
-        <owl:versionIRI rdf:resource="urn:absolute:1.0"/>
-    </owl:Ontology>
-    
+@prefix : <http://osint.it/OSINT/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://osint.it/OSINT/> .
 
+<http://osint.it/OSINT> rdf:type owl:Ontology ;
+                         owl:versionIRI <http://osint.it/OSINT/1.0.0> .
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Object Properties
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://osint.it/OSINT#follow
+:follow rdf:type owl:ObjectProperty ;
+        owl:inverseOf :follow ;
+        rdf:type owl:SymmetricProperty ;
+        rdfs:domain :socialMediaAccount ;
+        rdfs:range :socialMediaAccount .
+
 
-    
+###  http://osint.it/OSINT#hasIgPart
+:hasIgPart rdf:type owl:ObjectProperty ;
+           rdfs:domain :instagramAccount ;
+           rdfs:range :instagramPost ;
+           rdfs:label "hasIgPart"@en .
 
+
+###  http://osint.it/OSINT#hasTwPart
+:hasTwPart rdf:type owl:ObjectProperty ;
+           rdfs:domain :twitterAccount ;
+           rdfs:range :Tweet ;
+           rdfs:label "hasTwPart"@en .
 
-    <!-- followedBy -->
 
-    <owl:ObjectProperty rdf:about="followedBy">
-        <rdfs:domain rdf:resource="instagramAccount"/>
-        <rdfs:domain rdf:resource="twitterAccount"/>
-        <rdfs:range rdf:resource="instagramAccount"/>
-        <rdfs:range rdf:resource="twitterAccount"/>
-    </owl:ObjectProperty>
-    
+###  http://osint.it/OSINT#identifies
+:identifies rdf:type owl:ObjectProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :Username ;
+            rdfs:range :socialMediaAccount ;
+            rdfs:label "identifies"@en .
 
 
-    <!-- follows -->
+###  http://osint.it/OSINT#identifiesWith
+:identifiesWith rdf:type owl:ObjectProperty ,
+                         owl:FunctionalProperty ;
+                rdfs:domain :Person ;
+                rdfs:range :Username .
 
-    <owl:ObjectProperty rdf:about="follows">
-        <rdfs:domain rdf:resource="instagramAccount"/>
-        <rdfs:domain rdf:resource="twitterAccount"/>
-        <rdfs:range rdf:resource="instagramAccount"/>
-        <rdfs:range rdf:resource="twitterAccount"/>
-    </owl:ObjectProperty>
-    
 
+#################################################################
+#    Data properties
+#################################################################
 
-    <!-- identifiesWith -->
+###  http://osint.it/OSINT#Biography
+:Biography rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :socialMediaAccount ;
+           rdfs:range xsd:string ;
+           rdfs:label "Biography"@en .
 
-    <owl:ObjectProperty rdf:about="identifiesWith">
-        <rdfs:domain rdf:resource="Person"/>
-        <rdfs:range rdf:resource="Username"/>
-    </owl:ObjectProperty>
-    
 
+###  http://osint.it/OSINT#Comments
+:Comments rdf:type owl:DatatypeProperty ;
+          rdfs:domain :socialPost ;
+          rdfs:label "Comments"@en .
 
-    <!-- isAssociatedWith -->
 
-    <owl:ObjectProperty rdf:about="isAssociatedWith">
-        <rdfs:domain rdf:resource="Username"/>
-        <rdfs:range rdf:resource="instagramAccount"/>
-        <rdfs:range rdf:resource="twitterAccount"/>
-    </owl:ObjectProperty>
-    
+###  http://osint.it/OSINT#Description
+:Description rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :socialPost ;
+             rdfs:range xsd:string ;
+             rdfs:label "Description"@en .
 
 
-    <!-- publish -->
+###  http://osint.it/OSINT#FirstName
+:FirstName rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Person ;
+           rdfs:range xsd:string ;
+           rdfs:label "FirstName"@en .
 
-    <owl:ObjectProperty rdf:about="publish">
-        <rdfs:domain rdf:resource="instagramAccount"/>
-        <rdfs:domain rdf:resource="twitterAccount"/>
-        <rdfs:range rdf:resource="Posts"/>
-        <rdfs:range rdf:resource="Tweets"/>
-    </owl:ObjectProperty>
-    
 
+###  http://osint.it/OSINT#Hastags
+:Hastags rdf:type owl:DatatypeProperty ;
+         rdfs:domain :socialPost ;
+         rdfs:label "Hashtags"@en .
 
-    <!-- tags -->
 
-    <owl:ObjectProperty rdf:about="tags">
-        <rdfs:domain rdf:resource="Posts"/>
-        <rdfs:range rdf:resource="instagramAccount"/>
-    </owl:ObjectProperty>
-    
+###  http://osint.it/OSINT#LastName
+:LastName rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :Person ;
+          rdfs:range xsd:string ;
+          rdfs:label "LastName"@en .
 
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Data properties
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
+###  http://osint.it/OSINT#Likes
+:Likes rdf:type owl:DatatypeProperty ,
+                owl:FunctionalProperty ;
+       rdfs:domain :socialPost ;
+       rdfs:range xsd:integer ;
+       rdfs:label "Likes"@en .
 
-    
 
+###  http://osint.it/OSINT#Location
+:Location rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :instagramPost ;
+          rdfs:range xsd:string ;
+          rdfs:label "Location"@en .
 
-    <!-- Biography -->
 
-    <owl:DatatypeProperty rdf:about="Biography"/>
-    
+###  http://osint.it/OSINT#Media
+:Media rdf:type owl:DatatypeProperty ,
+                owl:FunctionalProperty ;
+       rdfs:domain :socialPost ;
+       rdfs:label "Media"@en .
 
 
-    <!-- Birthdate -->
+###  http://osint.it/OSINT#Name
+:Name rdf:type owl:DatatypeProperty ,
+               owl:FunctionalProperty ;
+      rdfs:domain :socialMediaAccount ;
+      rdfs:range xsd:string ;
+      rdfs:label "Name"@en .
 
-    <owl:DatatypeProperty rdf:about="Birthdate"/>
-    
 
+###  http://osint.it/OSINT#Time
+:Time rdf:type owl:DatatypeProperty ,
+               owl:FunctionalProperty ;
+      rdfs:domain :socialPost ;
+      rdfs:range xsd:dateTime ;
+      rdfs:label "Time"@en .
 
-    <!-- Comments -->
 
-    <owl:DatatypeProperty rdf:about="Comments"/>
-    
+###  http://osint.it/OSINT#accountId
+:accountId rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :socialMediaAccount ;
+           rdfs:range xsd:int ;
+           rdfs:label "accountID"@en .
 
 
-    <!-- Description -->
+###  http://osint.it/OSINT#profilePhoto
+:profilePhoto rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :socialMediaAccount ;
+              rdfs:label "profilePhoto"@en .
 
-    <owl:DatatypeProperty rdf:about="Description"/>
-    
 
+#################################################################
+#    Classes
+#################################################################
 
-    <!-- Hashtags -->
+###  http://osint.it/OSINT#Person
+:Person rdf:type owl:Class ;
+        rdfs:comment "Person"@en .
 
-    <owl:DatatypeProperty rdf:about="Hashtags"/>
-    
 
+###  http://osint.it/OSINT#Tweet
+:Tweet rdf:type owl:Class ;
+       rdfs:subClassOf :socialPost ;
+       rdfs:label "Tweet"@en .
 
-    <!-- Likes -->
 
-    <owl:DatatypeProperty rdf:about="Likes"/>
-    
+###  http://osint.it/OSINT#Username
+:Username rdf:type owl:Class ;
+          rdfs:label "Username"@en .
 
 
-    <!-- Location -->
+###  http://osint.it/OSINT#instagramAccount
+:instagramAccount rdf:type owl:Class ;
+                  rdfs:subClassOf :socialMediaAccount ;
+                  owl:disjointWith :twitterAccount ;
+                  rdfs:label "instagramAccount"@en .
 
-    <owl:DatatypeProperty rdf:about="Location"/>
-    
 
+###  http://osint.it/OSINT#instagramPost
+:instagramPost rdf:type owl:Class ;
+               rdfs:subClassOf :socialPost ;
+               rdfs:label "instagramPost"@en .
 
-    <!-- Media -->
 
-    <owl:DatatypeProperty rdf:about="Media"/>
-    
+###  http://osint.it/OSINT#socialMediaAccount
+:socialMediaAccount rdf:type owl:Class ;
+                    rdfs:label "socialMediaAccount"@en .
 
 
-    <!-- Name -->
+###  http://osint.it/OSINT#socialPost
+:socialPost rdf:type owl:Class ;
+            rdfs:label "socialPost"@en .
 
-    <owl:DatatypeProperty rdf:about="Name"/>
-    
 
+###  http://osint.it/OSINT#twitterAccount
+:twitterAccount rdf:type owl:Class ;
+                rdfs:subClassOf :socialMediaAccount ;
+                rdfs:label "twitterAccount"@en .
 
-    <!-- Replies -->
 
-    <owl:DatatypeProperty rdf:about="Replies"/>
-    
+#################################################################
+#    General axioms
+#################################################################
 
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Tweet
+                :Username
+                :instagramPost
+                :socialMediaAccount
+              )
+] .
 
-    <!-- Text -->
 
-    <owl:DatatypeProperty rdf:about="Text"/>
-    
-
-
-    <!-- Time -->
-
-    <owl:DatatypeProperty rdf:about="Time"/>
-    
-
-
-    <!-- Website -->
-
-    <owl:DatatypeProperty rdf:about="Website"/>
-    
-
-
-    <!-- accountId -->
-
-    <owl:DatatypeProperty rdf:about="accountId"/>
-    
-
-
-    <!-- firstName -->
-
-    <owl:DatatypeProperty rdf:about="firstName"/>
-    
-
-
-    <!-- lastName -->
-
-    <owl:DatatypeProperty rdf:about="lastName"/>
-    
-
-
-    <!-- profilePhoto -->
-
-    <owl:DatatypeProperty rdf:about="profilePhoto"/>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Classes
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-    <!-- Person -->
-
-    <owl:Class rdf:about="Person">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="firstName"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="firstName"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="lastName"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="lastName"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-    </owl:Class>
-    
-
-
-    <!-- Posts -->
-
-    <owl:Class rdf:about="Posts">
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Description"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Description"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Location"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Location"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Likes"/>
-                <owl:someValuesFrom rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Time"/>
-                <owl:someValuesFrom rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Comments"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Hashtags"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Media"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- Retweets -->
-
-    <owl:Class rdf:about="Retweets">
-        <rdfs:subClassOf rdf:resource="Tweets"/>
-    </owl:Class>
-    
-
-
-    <!-- Tweets -->
-
-    <owl:Class rdf:about="Tweets">
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Text"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Text"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Likes"/>
-                <owl:someValuesFrom rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Time"/>
-                <owl:someValuesFrom rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Hashtags"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Media"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Replies"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- Username -->
-
-    <owl:Class rdf:about="Username"/>
-    
-
-
-    <!-- instagramAccount -->
-
-    <owl:Class rdf:about="instagramAccount">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Name"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Name"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="accountId"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="accountId"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-    </owl:Class>
-    
-
-
-    <!-- twitterAccount -->
-
-    <owl:Class rdf:about="twitterAccount">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Name"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Name"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="accountId"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="accountId"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Biography"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Biography"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Birthdate"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="Birthdate"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="profilePhoto"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="profilePhoto"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Website"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // General axioms
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    <owl:Class>
-        <owl:intersectionOf rdf:parseType="Collection">
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Biography"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="Biography"/>
-                <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-            </owl:Restriction>
-        </owl:intersectionOf>
-        <rdfs:subClassOf rdf:resource="instagramAccount"/>
-    </owl:Class>
-    <owl:Class>
-        <owl:intersectionOf rdf:parseType="Collection">
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="profilePhoto"/>
-                <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-            </owl:Restriction>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="profilePhoto"/>
-                <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
-            </owl:Restriction>
-        </owl:intersectionOf>
-        <rdfs:subClassOf rdf:resource="instagramAccount"/>
-    </owl:Class>
-    <owl:Restriction>
-        <owl:onProperty rdf:resource="Website"/>
-        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:minCardinality>
-        <rdfs:subClassOf rdf:resource="instagramAccount"/>
-    </owl:Restriction>
-</rdf:RDF>
-
-
-
-<!-- Generated by the OWL API (version 2.4) https://github.com/owlcs/owlapi -->
-
+###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi
