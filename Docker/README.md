@@ -32,5 +32,5 @@ Ontologies are serialised as RDF, so they can be imported using plain n10s.rdf.i
 - Import:
 
 ```bash
-  CALL n10s.onto.import.fetch("https://www.astrowood.it/Ontology/OSINT_v3","Turtle")
+  CALL n10s.onto.import.fetch(<Ontology>,<Format>)
 ```
