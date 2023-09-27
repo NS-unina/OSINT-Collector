@@ -1,0 +1,25 @@
+# This generate an Ontology with an element of wikidata as a starting point
+
+prefix osint: <osint://voc#> 
+#SELECT ?item ?label 
+CONSTRUCT {
+?item a osint:Category ; osint:subCatOf ?parentItem .  
+  ?item osint:name ?label .
+  ?parentItem a osint:Category; osint:name ?parentLabel .
+  ?article a osint:WikipediaPage; osint:about ?item ;
+}
+WHERE 
+{
+  ?item (wdt:P279)* wd:Q83267 .
+  ?item wdt:P279 ?parentItem .
+  ?item rdfs:label ?label .
+  filter(lang(?label) = "en")
+  ?parentItem rdfs:label ?parentLabel .
+  filter(lang(?parentLabel) = "en")
+  
+  OPTIONAL {
+      ?article schema:about ?item ;
+            schema:inLanguage "en" ;
+            schema:isPartOf <https://en.wikipedia.org/> .
+    }
+}
