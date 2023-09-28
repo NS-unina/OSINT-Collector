@@ -25,7 +25,7 @@ call apoc.create.addLabels(x,[from.name]) yield node as xs
 call apoc.create.addLabels(y,[to.name]) yield node as ys
 return count(xs) + count(ys) + " nodes updated"
 
-#NLP entity extraction process:
+#NLP entity extraction process by wikipedia page:
 
 CALL apoc.periodic.iterate(
   "MATCH (p:igPost)
@@ -43,6 +43,27 @@ CALL apoc.periodic.iterate(
    WHERE not(entity.metadata.wikipedia_url is null)
    MATCH (wp:WikipediaPage {uri: entity.metadata.wikipedia_url})
    MERGE (node)-[:parla_di]->(wp)",
+  {batchMode: "BATCH_SINGLE", batchSize: 10, params: {key: $key}})
+YIELD batches, total, timeTaken, committedOperations
+RETURN batches, total, timeTaken, committedOperations;
+
+#NLP entity extraction process by category name:
+
+CALL apoc.periodic.iterate(
+  "MATCH (p:igPost)
+   WHERE not(exists(p.processed))
+   RETURN p",
+  "CALL apoc.nlp.gcp.entities.stream([item in $_batch | item.p], {
+     nodeProperty: 'caption',
+     key: $key
+   })
+   YIELD node, value
+   SET node.processed = true
+   WITH node, value
+   UNWIND value.entities AS entity
+   WITH entity, node
+   MATCH (c:Category {name: entity.name})
+   MERGE (node)-[:parla_di]->(c)",
   {batchMode: "BATCH_SINGLE", batchSize: 10, params: {key: $key}})
 YIELD batches, total, timeTaken, committedOperations
 RETURN batches, total, timeTaken, committedOperations;
