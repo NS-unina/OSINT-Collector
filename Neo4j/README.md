@@ -124,6 +124,8 @@ where the .json file is generated from the OSINT-IG API. As an example the file 
 
 ## Entity extraction with APOC NLP
 
+- Pre-requisite: the NLP procedures have dependencies on Kotlin and client libraries that are not included in the APOC Library. These dependencies are included in apoc-nlp-dependencies-4.3.0.12.jar, which can be downloaded here: https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.3.0.12/apoc-nlp-dependencies-4.3.0.12.jar. Once that file is downloaded, it should be placed in the plugins directory and the Neo4j Server restarted.
+
 APOC is Neo4j’s standard utility library. It includes over 450 standard procedures, providing functionality for utilities, conversions, graph updates, and more. It has procedures that wrap the Natural Language Processing APIs for the major cloud providers, AWS, GCP, and Azure.
 
 In this project it has been used the Natural Language AI tool of Google Cloud Platform (https://cloud.google.com/natural-language?hl=it).
