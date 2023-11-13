@@ -13,18 +13,25 @@
 #    Object Properties
 #################################################################
 
-###  http://osint.it/OSINT#follows
+###  http://osint.it/OSINT#commentedBy
+:commentedBy rdf:type owl:ObjectProperty ;
+             rdfs:domain :Comment ;
+             rdfs:range :socialMediaAccount ;
+             rdfs:label "commentedBy"@en .
+
+
+###  http://osint.it/OSINT#likedBy
+:likedBy rdf:type owl:ObjectProperty ;
+         rdfs:domain :socialPost ;
+         rdfs:range :socialMediaAccount ;
+         rdfs:label "likedBy"@en .
+
+
+###  http://osint.it/OSINT/follows
 :follows rdf:type owl:ObjectProperty ;
          rdfs:domain :socialMediaAccount ;
          rdfs:range :socialMediaAccount ;
          rdfs:label "follows"@en .
-
-
-###  http://osint.it/OSINT#published
-:published rdf:type owl:ObjectProperty ;
-           rdfs:domain :socialMediaAccount ;
-           rdfs:range :socialPost ;
-           rdfs:label "published"@en .
 
 
 ###  http://osint.it/OSINT/identifies
@@ -42,9 +49,23 @@
                 rdfs:range :Username .
 
 
+###  http://osint.it/OSINT/published
+:published rdf:type owl:ObjectProperty ;
+           rdfs:domain :socialMediaAccount ;
+           rdfs:range :socialPost ;
+           rdfs:label "published"@en .
+
+
 #################################################################
 #    Data properties
 #################################################################
+
+###  http://osint.it/OSINT#Caption
+:Caption rdf:type owl:DatatypeProperty ;
+         rdfs:domain :instagramPost ;
+         rdfs:range xsd:string ;
+         rdfs:label "Caption"@en .
+
 
 ###  http://osint.it/OSINT/Biography
 :Biography rdf:type owl:DatatypeProperty ,
@@ -52,20 +73,6 @@
            rdfs:domain :socialMediaAccount ;
            rdfs:range xsd:string ;
            rdfs:label "Biography"@en .
-
-
-###  http://osint.it/OSINT/Comments
-:Comments rdf:type owl:DatatypeProperty ;
-          rdfs:domain :socialPost ;
-          rdfs:label "Comments"@en .
-
-
-###  http://osint.it/OSINT/Description
-:Description rdf:type owl:DatatypeProperty ,
-                      owl:FunctionalProperty ;
-             rdfs:domain :socialPost ;
-             rdfs:range xsd:string ;
-             rdfs:label "Description"@en .
 
 
 ###  http://osint.it/OSINT/FirstName
@@ -147,6 +154,11 @@
 #################################################################
 #    Classes
 #################################################################
+
+###  http://osint.it/OSINT#Comment
+:Comment rdf:type owl:Class ;
+         rdfs:label "Comment"@en .
+
 
 ###  http://osint.it/OSINT/Person
 :Person rdf:type owl:Class ;
