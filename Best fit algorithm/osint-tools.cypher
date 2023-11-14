@@ -1,5 +1,5 @@
 // Creazione dei nodi per gli strumenti
-call apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20best-fit%20alg/osint-tools-copy.json") YIELD value
+CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20best-fit%20alg/osint-tools-copy.json") YIELD value
 UNWIND value.osint_tools as tool
 MERGE (t:Tool {name: tool.name, platform: tool.platform})
 

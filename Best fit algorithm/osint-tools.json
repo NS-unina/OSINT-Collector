@@ -4,7 +4,7 @@
             "name": "Tool A",
             "platform": "Instagram",
             "input": ["username"],
-            "output": ["instagramPost"],
+            "output": ["igPost", "igBiography"],
             "capability": [
                 "profile data",
                 "media scraping",
@@ -15,7 +15,7 @@
             "name": "Tool B",
             "platform": "Instagram",
             "input": ["username"],
-            "output": ["Location"],
+            "output": ["igFollowers", "igLocation"],
             "capability": [
                 "geolocation data",
                 "comment analysis",
@@ -26,9 +26,9 @@
             "name": "Tool C",
             "platform": "Twitter",
             "input": ["username"],
-            "output": ["Likes"],
+            "output": ["likes", "comments"],
             "capability": [
-                "tweets and retweets",
+                "hashtags analysis",
                 "user mentions",
                 "follower analysis"
             ]
@@ -37,9 +37,9 @@
             "name": "Tool D",
             "platform": "Twitter",
             "input": ["username"],
-            "output": ["Tweet"],
+            "output": ["Tweet", "Retweets"],
             "capability": [
-                "hashtags analysis",
+                "tweets and retweets",
                 "geolocation data",
                 "sentiment analysis"
             ]
@@ -47,8 +47,8 @@
         {
             "name": "Tool E",
             "platform": "Telegram",
-            "input": [],
-            "output": [],
+            "input": ["username"],
+            "output": ["userInfo"],
             "capability": [
                 "chat extraction",
                 "group analysis",
@@ -58,8 +58,8 @@
         {
             "name": "Tool F",
             "platform": "Telegram",
-            "input": [],
-            "output": [],
+            "input": ["channelName"],
+            "output": ["chat"],
             "capability": [
                 "user activities",
                 "message tracking",
