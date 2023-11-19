@@ -7,7 +7,7 @@ MERGE (t:Tool {name: tool.name, platform: tool.platform})
 FOREACH (input IN tool.input | MERGE (i:Input {name: input}) MERGE (t)-[:USES]->(i))
 
 // Creazione dei nodi per gli output e collegamento con l'Ontologia
-FOREACH (output IN tool.output | MERGE (o:Resource {name: output}) MERGE (t)-[:PRODUCES]->(o))
+FOREACH (output IN tool.output | MERGE (o:Resource {label: output}) MERGE (t)-[:PRODUCES]->(o))
 
 // Creazione dei nodi per le capabilities
 FOREACH (capability IN tool.capability | MERGE (c:Capability {name: capability}) MERGE (t)-[:HAS_CAPABILITY]->(c))
