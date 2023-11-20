@@ -1,0 +1,35 @@
+<!--
+  TEST TO VISUALIZE NEO4J GRAPH
+-->
+
+<html>
+  <head>
+    <title>DataViz</title>
+    <style type="text/css">
+      #viz {
+        width: 900px;
+        height: 700px;
+      }
+    </style>
+    <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+  </head>
+  <script>
+    function draw() {
+      var config = {
+        container_id: "viz",
+        server_url: "bolt://localhost:7687",
+        server_user: "neo4j",
+        server_password: "password",
+        labels: {},
+        relationships: {},
+        initial_cypher: "MATCH g = (:Tool)-[]->() RETURN g",
+      };
+
+      var viz = new NeoVis.default(config);
+      viz.render();
+    }
+  </script>
+  <body onload="draw()">
+    <div id="viz"></div>
+  </body>
+</html>
