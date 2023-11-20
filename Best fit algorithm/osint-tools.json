@@ -26,7 +26,7 @@
             "name": "Tool C",
             "platform": "Twitter",
             "input": ["username"],
-            "output": ["likes", "comments"],
+            "output": ["twLikes", "twComments"],
             "capability": [
                 "hashtags analysis",
                 "user mentions",
