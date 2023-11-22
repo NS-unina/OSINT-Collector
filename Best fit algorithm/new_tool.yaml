@@ -1,0 +1,8 @@
+name: NewToolTest
+platform: Instagram
+input:
+  - username
+  - Param2
+output:
+  - igWebsite
+  - igAccountID
