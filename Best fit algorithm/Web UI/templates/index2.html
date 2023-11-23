@@ -1,35 +1,39 @@
-<!--
-  TEST TO VISUALIZE NEO4J GRAPH
--->
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>DataViz</title>
-    <style type="text/css">
-      #viz {
-        width: 900px;
-        height: 700px;
-      }
-    </style>
-    <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>OSINT Tool Manager</title>
   </head>
-  <script>
-    function draw() {
-      var config = {
-        container_id: "viz",
-        server_url: "bolt://localhost:7687",
-        server_user: "neo4j",
-        server_password: "password",
-        labels: {},
-        relationships: {},
-        initial_cypher: "MATCH g = (:Tool)-[]->() RETURN g",
-      };
-
-      var viz = new NeoVis.default(config);
-      viz.render();
-    }
-  </script>
-  <body onload="draw()">
-    <div id="viz"></div>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">OSINT Tool Manager</h1>
+      <div class="row">
+        <div class="col-md-4">
+          <a href="{{ url_for('add_tool') }}" class="btn btn-primary btn-block"
+            >Add Tool</a
+          >
+        </div>
+        <div class="col-md-4">
+          <a
+            href="{{ url_for('remove_tool') }}"
+            class="btn btn-danger btn-block"
+            >Remove Tool</a
+          >
+        </div>
+        <div class="col-md-4">
+          <a
+            href="{{ url_for('select_tool') }}"
+            class="btn btn-success btn-block"
+            >Select Tool</a
+          >
+        </div>
+      </div>
+    </div>
   </body>
 </html>

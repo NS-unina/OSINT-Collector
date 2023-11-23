@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>Remove Tool</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3"
+        >Back to Home</a
+      >
+      <h1 class="mt-5 mb-4">Remove Tool</h1>
+      <form method="post" action="/remove" class="mb-4">
+        <div class="form-group">
+          <label for="remove_tool">Tool to Remove:</label>
+          {% for tool in tools %}
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="remove_tool"
+              value="{{ tool }}"
+              id="{{ tool }}"
+            />
+            <label class="form-check-label" for="{{ tool }}">{{ tool }}</label>
+          </div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-danger mt-3">Remove</button>
+      </form>
+
+      {% if result %}
+      <h3>Tool has been deleted!</h3>
+      {% elif result is none %}
+      <br></br>
+      {% else %}
+      <h3>Tool not found!</h3>
+      {% endif %}
+    </div>
+  </body>
+</html>
