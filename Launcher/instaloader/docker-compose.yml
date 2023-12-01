@@ -1,0 +1,12 @@
+# Use export INPUT=instagram_profile_name to set the profile name
+
+version: '3'
+
+services:
+
+  instaloader:
+    image: instaloader
+    container_name: instaloader
+    volumes:
+      - ./output:/app/${INPUT}
+    command: profile ${INPUT}
