@@ -1,5 +1,4 @@
 neo4j
-yaml
-os
+PyYAML
 flask
 werkzeug
