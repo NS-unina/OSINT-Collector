@@ -15,7 +15,16 @@ class ToolSelector:
             input_parameters = [record["output"] for record in result.data()]
 
         return output_parameters, input_parameters
-        
+    
+    def get_required_inputs(self, tools):
+
+        with self.tool_manager.driver.session() as session:
+            query = f"MATCH (t:Tool)-[u:USES]->(i:Input) WHERE ANY(substring IN {tools} WHERE t.name CONTAINS substring) RETURN t as tool, COLLECT(i) as input"
+            result = session.run(query)
+            data = result.data()
+
+        return data
+    
     def select_tool(self, args):
         data = None
         

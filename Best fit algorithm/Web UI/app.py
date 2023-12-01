@@ -67,6 +67,11 @@ def select_tool():
 
         # Esegui la query Neo4j con i parametri forniti
         data = tool_selector.select_tool(args)
+        tools = [record["output"] for record in data]
+        required = tool_selector.get_required_inputs(tools);
+        print(required)
+        
+        return render_template('required_inputs.html', tools=required)
 
     return render_template('select.html', data=data, output_parameters=output_parameters, input_parameters=input_parameters)
 
