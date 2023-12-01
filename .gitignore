@@ -194,4 +194,6 @@ pyrightconfig.json
 
 .DS_STORE
 
+/OSINT-X
+
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode
