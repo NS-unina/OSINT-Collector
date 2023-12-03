@@ -5,8 +5,9 @@ version: '3'
 services:
 
   instaloader:
+    build: .
     image: instaloader
     container_name: instaloader
     volumes:
-      - ./output:/app/${INPUT}
-    command: profile ${INPUT}
+      - ./output:/app/${LAUNCHER_INPUT}
+    command: profile ${LAUNCHER_INPUT}
