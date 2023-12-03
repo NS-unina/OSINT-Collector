@@ -5,9 +5,10 @@ version: '3'
 services:
 
   instaloader:
-    build: .
+    build: ./tools/instaloader
     image: instaloader
     container_name: instaloader
     volumes:
-      - ./output:/app/${LAUNCHER_INPUT}
+      - ./output/instaloader:/app/${LAUNCHER_INPUT}
+    entrypoint: ./instaloader.py
     command: profile ${LAUNCHER_INPUT}
