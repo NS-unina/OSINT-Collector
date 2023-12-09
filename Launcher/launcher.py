@@ -7,8 +7,14 @@ from src.constants import *
 from src.show_services import *
 
 def launch_tool(tool: str, input: str):
+
+    tools = read_compose_services()
+    env = os.environ.copy()
+
+    if (tool not in tools):
+        show_error("Invalid tool")
+
     try:
-        env = os.environ.copy()
         env["LAUNCHER_INPUT"] = input
         result = subprocess.run(['docker-compose', '-f', DOCKER_COMPOSE_PATH, 'up', tool], check=True, env=env)
         
@@ -36,10 +42,7 @@ def main():
         show_error("Invalid input")
     
     # Launch tool
-    if (image in tools):
-        launch_tool(image, input_str)
-    else:
-        show_error("Invalid tool")
+    launch_tool(image, input_str)
 
 
 if __name__ == "__main__":

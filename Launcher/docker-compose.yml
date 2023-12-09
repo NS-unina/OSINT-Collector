@@ -1,5 +1,3 @@
-# Use export INPUT=instagram_profile_name to set the profile name
-
 version: '3'
 
 services:
@@ -10,5 +8,14 @@ services:
     container_name: instaloader
     volumes:
       - ./output/instaloader:/app/${LAUNCHER_INPUT}
-    entrypoint: ./instaloader.py
-    command: profile ${LAUNCHER_INPUT}
+    entrypoint: ./instaloader.py profile ${LAUNCHER_INPUT}
+
+  snscrape-telegram:
+    build: ./tools/snscrape
+    image: snscrape
+    container_name: snscrape-telegram
+    volumes:
+      - ./output/snscrape-telegram:/app/${LAUNCHER_INPUT}
+    entrypoint: sh -c "snscrape --jsonl telegram-channel ${LAUNCHER_INPUT} > /app/${LAUNCHER_INPUT}/output.jsonl"
+
+    
