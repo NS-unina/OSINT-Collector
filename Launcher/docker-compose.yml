@@ -16,6 +16,14 @@ services:
     container_name: snscrape-telegram
     volumes:
       - ./output/snscrape-telegram:/app/${LAUNCHER_INPUT}
-    entrypoint: sh -c "snscrape --jsonl telegram-channel ${LAUNCHER_INPUT} > /app/${LAUNCHER_INPUT}/output.jsonl"
+    entrypoint: sh -c "snscrape --jsonl telegram-channel ${LAUNCHER_INPUT} > /app/${LAUNCHER_INPUT}/${LAUNCHER_INPUT}.jsonl"
+  
+  the-harvester:
+    build: ./tools/the-harvester
+    image: the-harvester
+    container_name: the-harvester
+    volumes:
+      - ./output/the-harvester:/app/${LAUNCHER_INPUT}
+    entrypoint: ./theHarvester.py -d ${LAUNCHER_INPUT} -b duckduckgo -f /app/${LAUNCHER_INPUT}/${LAUNCHER_INPUT}.json
 
     
