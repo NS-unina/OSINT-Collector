@@ -5,7 +5,7 @@ services:
   # Description: Download all the data from the given instagram account; only works with public account.
   instaloader:
     extends: common   
-    entrypoint: ./instaloader.py --login --dirname-pattern=/output/${LAUNCHER_INPUT} profile ${LAUNCHER_INPUT}
+    entrypoint: ./instaloader.py --dirname-pattern=/output/${LAUNCHER_INPUT} profile ${LAUNCHER_INPUT}
 
   # Description: Download all the messages from the given telegram channel.
   snscrape-telegram:
@@ -19,7 +19,9 @@ services:
 
   # A common service to build and run the tools.
   common:
-    build: ./tools/${LAUNCHER_TOOL}
+    build: 
+      context: ./tools
+      dockerfile: ${LAUNCHER_TOOL}.Dockerfile
     image: ${LAUNCHER_TOOL}
     container_name: ${LAUNCHER_TOOL}
     volumes:
