@@ -2,28 +2,25 @@ version: '3'
 
 services:
 
+  # Description: Download all the data from the given instagram account; only works with public account.
   instaloader:
-    build: ./tools/instaloader
-    image: instaloader
-    container_name: instaloader
-    volumes:
-      - ./output/instaloader:/app/${LAUNCHER_INPUT}
-    entrypoint: ./instaloader.py profile ${LAUNCHER_INPUT}
+    extends: common   
+    entrypoint: ./instaloader.py --login --dirname-pattern=/output/${LAUNCHER_INPUT} profile ${LAUNCHER_INPUT}
 
+  # Description: Download all the messages from the given telegram channel.
   snscrape-telegram:
-    build: ./tools/snscrape
-    image: snscrape
-    container_name: snscrape-telegram
-    volumes:
-      - ./output/snscrape-telegram:/app/${LAUNCHER_INPUT}
-    entrypoint: sh -c "snscrape --jsonl telegram-channel ${LAUNCHER_INPUT} > /app/${LAUNCHER_INPUT}/${LAUNCHER_INPUT}.jsonl"
+    extends: common
+    entrypoint: sh -c "snscrape --jsonl telegram-channel ${LAUNCHER_INPUT} > /output/${LAUNCHER_INPUT}.jsonl"
   
+  # Description: Search on DuckDuckGo all the information about the given domain (emails, IPs and Hosts).
   the-harvester:
-    build: ./tools/the-harvester
-    image: the-harvester
-    container_name: the-harvester
-    volumes:
-      - ./output/the-harvester:/app/${LAUNCHER_INPUT}
-    entrypoint: ./theHarvester.py -d ${LAUNCHER_INPUT} -b duckduckgo -f /app/${LAUNCHER_INPUT}/${LAUNCHER_INPUT}.json
+    extends: common
+    entrypoint: ./theHarvester.py -d ${LAUNCHER_INPUT} -b duckduckgo -f /output/${LAUNCHER_INPUT}.json
 
-    
+  # A common service to build and run the tools.
+  common:
+    build: ./tools/${LAUNCHER_TOOL}
+    image: ${LAUNCHER_TOOL}
+    container_name: ${LAUNCHER_TOOL}
+    volumes:
+      - ./output/${LAUNCHER_TOOL}:/output

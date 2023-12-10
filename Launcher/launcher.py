@@ -16,6 +16,7 @@ def launch_tool(tool: str, input: str):
 
     try:
         env["LAUNCHER_INPUT"] = input
+        env["LAUNCHER_TOOL"] = tool
         result = subprocess.run(['docker-compose', '-f', DOCKER_COMPOSE_PATH, 'up', tool], check=True, env=env)
         
         if (result.returncode != 0):

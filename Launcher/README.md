@@ -18,4 +18,8 @@ tools
     └── Dockerfile
 ```
 
-After that, just add a service into the docker-compose.yml file to start the tool.
+After that, just add a service into the docker-compose.yml file to start the tool; a common structure is provided; it make the following assuntions:
+- The Dockerfile is in the ./tools/<tool-name> folder
+- The image will be named with the tool name
+- The container will be named with the tool name
+- The services output should be placed in the /output container folder (mapped in the output/<tool-name> host folder)
