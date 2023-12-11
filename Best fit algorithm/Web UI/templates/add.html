@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
       rel="stylesheet"
@@ -30,63 +30,49 @@
       #file-name {
         margin-top: 10px;
       }
-    </style>
-  </head>
-  <body>
-    <div class="container mt-5">
-      <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3"
-        >Back to Home</a
-      >
-      <h1 class="mt-5 mb-4">Add Tool</h1>
 
-      <form method="post" enctype="multipart/form-data" class="mb-4">
-        <div class="drag-drop-area" id="drag-drop-area">
-          <p>Drag & drop a YAML file here or click to select one.</p>
-          <input
-            type="file"
-            class="form-control-file"
-            id="yaml_file"
-            name="yaml_file"
-            accept=".yaml, .yml"
-            style="display: none"
-            onchange="updateFileName(this)"
-          />
-          <div id="file-name"></div>
-        </div>
-        <!--
-        <div class="form-group mt-3">
-          <label for="platform">Platform:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="platform"
-            name="platform"
-          />
-        </div>
-        <div class="form-group">
-          <label for="input">Input:</label>
-          <input type="text" class="form-control" id="input" name="input" />
-        </div>
-        <div class="form-group">
-          <label for="output">Output:</label>
-          <input type="text" class="form-control" id="output" name="output" />
-        </div>
-        -->
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-      </form>
-      
-      {% if result %}
-      <h3>Tool has been added!</h3>
-      {% elif result is none %}
-      <br></br>
-      {% else %}
-      <h3>Tool already exists!</h3>
-      {% endif %}
+      .btn-disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Home</a>
+        <h1 class="mt-5 mb-4">Add Tool</h1>
+
+        <form method="post" enctype="multipart/form-data" class="mb-4" id="add-tool-form">
+            <div class="drag-drop-area" id="drag-drop-area">
+                <p>Drag & drop a YAML file here or click to select one.</p>
+                <input
+                    type="file"
+                    class="form-control-file"
+                    id="yaml_file"
+                    name="yaml_file"
+                    accept=".yaml, .yml"
+                    style="display: none"
+                    onchange="updateFileName(this)"
+                />
+                <div id="file-name"></div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 btn-disabled" id="submit-button" disabled>Submit</button>
+        </form>
+
+        {% if result %}
+        <h3>Tool has been added!</h3>
+        {% elif result is none %}
+        <br></br>
+        {% else %}
+        <h3>Tool already exists!</h3>
+        {% endif %}
     </div>
 
     <script>
       const dragDropArea = document.getElementById("drag-drop-area");
       const fileNameDisplay = document.getElementById("file-name");
+      const submitButton = document.getElementById("submit-button");
+      const fileInput = document.getElementById("yaml_file");
 
       dragDropArea.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -99,25 +85,39 @@
 
       dragDropArea.addEventListener("drop", (e) => {
         e.preventDefault();
-        const fileInput = document.getElementById("yaml_file");
         const files = e.dataTransfer.files;
 
         if (files.length > 0) {
           fileInput.files = files;
           updateFileName(fileInput);
+          updateSubmitButton();
         }
 
         dragDropArea.classList.remove("border-primary");
       });
 
       dragDropArea.addEventListener("click", () => {
-        document.getElementById("yaml_file").click();
+        fileInput.click();
+      });
+
+      fileInput.addEventListener("change", () => {
+        updateFileName(fileInput);
+        updateSubmitButton();
       });
 
       function updateFileName(input) {
-        const fileName = input.files[0].name;
-        fileNameDisplay.textContent = `Selected File: ${fileName}`;
+        const fileName = input.files[0] ? input.files[0].name : "";
+        fileNameDisplay.textContent = fileName ? `Selected File: ${fileName}` : "";
+      }
+
+      function updateSubmitButton() {
+        submitButton.disabled = !fileInput.files[0];
+        if (fileInput.files[0]) {
+          submitButton.classList.remove("btn-disabled");
+        } else {
+          submitButton.classList.add("btn-disabled");
+        }
       }
     </script>
-  </body>
+</body>
 </html>
