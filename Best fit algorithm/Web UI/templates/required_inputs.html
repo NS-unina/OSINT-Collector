@@ -10,18 +10,46 @@
     />
     <title>Tool Inputs</title>
   </head>
+  <style>
+    .platform-icon-container {
+      display: inline-block;
+      margin-right: 10px; /* Aggiungi spazio tra l'icona e il titolo */
+    }
+
+    .platform-icon {
+      width: 30px; /* Imposta la larghezza dell'icona */
+      height: auto; /* Mantieni l'aspetto proporzionato */
+    }
+
+    h2 {
+      display: inline-block; /* Imposta il titolo in linea con l'icona */
+      vertical-align: middle; /* Allinea verticalmente con l'icona */
+    }
+  </style>
   <body>
     <div class="container mt-5">
       <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3"
         >Back to Home</a
       >
-      <h1 class="mt-5 mb-4">Tool Inputs</h1>
 
       <form method="post" action="/process" onsubmit="prepareData(this)">
         <div id="inputContainer">
+          <h1 class="mt-5 mb-4">This tools requires the following inputs:</h1>
           {% for item in tools %}
           <div class="mb-4">
-            <h2>{{ item.tool.name }} requires the following inputs:</h2>
+            <input
+              type="hidden"
+              name="platform"
+              value="{{ item.tool.platform }}"
+            />
+            <div class="platform-icon-container">
+              <img
+                src="{{ url_for('static', filename='platform_icons/' + item.tool.platform.lower() + '.png') }}"
+                alt="{{ item.tool.platform }}"
+                class="platform-icon"
+              />
+            </div>
+            <h2>{{ item.tool.name }}</h2>
 
             <input
               type="hidden"
@@ -31,7 +59,7 @@
 
             {% for input_name in item.input %}
             <div class="form-group">
-              <label for="{{ input_name.name }}">{{ input_name.name }}</label>
+              <!-- <label for="{{ input_name.name }}">{{ input_name.name }}</label> -->
               <input
                 type="text"
                 class="form-control"
