@@ -13,6 +13,7 @@ def read_compose_services():
             # Get services name
             if 'services' in data:
                 services_array = list(data['services'].keys())
+                services_array.remove('common')
 
     except FileNotFoundError:
         show_error("File {} not found".format(DOCKER_COMPOSE_PATH))
