@@ -50,6 +50,18 @@ def remove_tool():
 
     return render_template('remove.html', tools=tools, result=removeResult)
 
+@app.route('/process', methods=['GET', 'POST'])
+def run_tools():
+    data = None
+    
+    if request.method == 'POST':
+        # Estrai i parametri dalla richiesta WebUI
+        data = request.form.get('json_data')
+        print(data)
+
+    return render_template('index2.html')
+
+
 @app.route('/select', methods=['GET', 'POST'])
 def select_tool():
     data = None
@@ -69,7 +81,6 @@ def select_tool():
         data = tool_selector.select_tool(args)
         tools = [record["output"] for record in data]
         required = tool_selector.get_required_inputs(tools);
-        print(required)
         
         return render_template('required_inputs.html', tools=required)
 

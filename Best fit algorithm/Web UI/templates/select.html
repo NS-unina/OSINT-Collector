@@ -80,21 +80,6 @@
 
         <button type="submit" class="btn btn-success mt-3">Select</button>
       </form>
-
-      {% if data %}
-      <h2>Result:</h2>
-      <ul>
-        {% for record in data %}
-        <li>{{ record.output }}</li>
-        {% endfor %}
-      </ul>
-      {% elif data is none %}
-      <br></br>
-      {% else %}
-      <h2>No tool available!</h2>
-      {% endif %}
-    </div>
-
     </div>
   </body>
 </html>
