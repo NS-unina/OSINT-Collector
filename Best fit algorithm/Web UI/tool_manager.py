@@ -22,18 +22,39 @@ class ToolManager:
         return tools
 
     #Add a tool to the database
-    def add_tool(self, tool_name, platform, input_params, output_params):
+    def add_tool(self, tool_name, platform, capabilities):
         with self.driver.session() as session:
-            query = f"""MERGE (t:Tool {{name: '{tool_name}', platform: '{platform}'}})
-            FOREACH (input IN {input_params} | MERGE (i:Input {{name: input}}) MERGE (t)-[:USES]->(i))
-            FOREACH (output IN {output_params} | MERGE (o:Resource {{label: output}}) MERGE (t)-[:PRODUCES]->(o))
-            FOREACH (platform IN CASE WHEN NOT '{platform}' IS NULL THEN ['{platform}'] ELSE [] END | MERGE (p:Platform {{name: platform}}) MERGE (t)-[:RUNS_ON]->(p));
-            """
+            
+            input_params = []
+            output_params = []
+            query = f"MERGE (t:Tool {{name: '{tool_name}', platform: '{platform}'}})\n"
+            for c, params in capabilities.items():
+                #print(c, params['input'], params['output'])
+                input_params = params['input']
+                output_params = params['output']
+                if not isinstance(input_params, list):
+                    input_params = [input_params]
+                if not isinstance(output_params, list):
+                    output_params = [output_params]
+                query = query + f"""MERGE ({c}:Capability {{name: '{c}'}})
+                MERGE (t)-[:HAS_CAPABILITY]->({c})
+                
+                WITH {c}, t, {input_params} AS inputs
+                UNWIND inputs AS input
+                MATCH (i:Resource {{name: input}})-[*]->(:Resource {{name: '{platform}'}})
+                FOREACH (ignore IN CASE WHEN i IS NOT NULL THEN [1] ELSE [] END | MERGE ({c})-[:NEEDS]->(i))
+                
+                WITH t, {output_params} AS outputs
+                UNWIND outputs AS output
+                MATCH (o:Resource {{name: output}})-[*]->(:Resource {{name: '{platform}'}})
+                FOREACH (ignore IN CASE WHEN o IS NOT NULL THEN [1] ELSE [] END | MERGE (t)-[:PRODUCES]->(o))
+                """
+                
+            #print(query)
             result = session.run(query)
             
             # Checks if there are modified nodes
             records_modified = result.consume().counters.nodes_created
-            print(records_modified)
             
             if records_modified == 0:
                 print(f"{tool_name} already exists")
@@ -49,11 +70,12 @@ class ToolManager:
 
             tool_name = data.get('name')
             platform = data.get('platform')
-            input_params = data.get('input', [])
-            output_params = data.get('output', [])
+            capabilities = data.get('capabilities', [])
 
             if tool_name and platform:
-                return self.add_tool(tool_name, platform, input_params, output_params)
+                #for capability, params in capabilities.items():
+                #    print(capability, params['input'], params['output'])
+                return self.add_tool(tool_name, platform, capabilities)
             else:
                 print("Invalid YAML file format. Please make sure 'name' and 'platform' are specified.")
 

@@ -1,0 +1,20 @@
+name: InstaloaderTool
+platform: Instagram
+capabilities:
+  download_posts:
+    input: username
+    output: Post
+  download_post_with_hashtag:
+    input:
+      - username
+      - hashtags
+    output: Post
+  download_comments:
+    input: username
+    output: comments
+  download_geotags:
+    input: username
+    output: location
+  download_captions:
+    input: username
+    output: caption
