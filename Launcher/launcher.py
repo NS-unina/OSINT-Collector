@@ -5,6 +5,7 @@ import subprocess
 import os
 from src.constants import *
 from src.show_services import *
+from src.kafka_services import *
 
 def launch_tool(tool: str, input: str):
 
@@ -21,11 +22,30 @@ def launch_tool(tool: str, input: str):
         
         if (result.returncode != 0):
             show_error("Error processing {}".format(tool))
-        
-        # Manage Output
 
     except subprocess.CalledProcessError as e:
         show_error("Error launching {}: {}".format(tool, e))
+
+    # Manage output
+    manage_output(tool)
+    
+
+def manage_output(tool: str):
+
+    folder_path = './output/{}'.format(tool)
+    if not os.path.exists(folder_path):
+        show_error("Output folder does not exist")
+
+    kafka = KafkaServices()
+    
+    for root, _, files in os.walk(folder_path):
+        for filename in files:
+            file_path = os.path.join(root, filename)
+            
+            # Check if file is a json
+            if filename.lower().endswith('.json'):
+                kafka.write(file_path=file_path)
+
 
 def main():
 

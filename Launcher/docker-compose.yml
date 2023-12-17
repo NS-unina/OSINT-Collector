@@ -5,12 +5,12 @@ services:
   # Description: Download all the data from the given instagram account; only works with public account.
   instaloader:
     extends: common   
-    entrypoint: ./instaloader.py --dirname-pattern=/output/${LAUNCHER_INPUT} profile ${LAUNCHER_INPUT}
+    entrypoint: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/${LAUNCHER_INPUT} profile ${LAUNCHER_INPUT}
 
-  # Description: Download all the messages from the given telegram channel.
+  # Description: Download the last message from the given telegram channel.
   snscrape-telegram:
     extends: common
-    entrypoint: sh -c "snscrape --jsonl telegram-channel ${LAUNCHER_INPUT} > /output/${LAUNCHER_INPUT}.jsonl"
+    entrypoint: sh -c "snscrape --jsonl --max-results 1 telegram-channel ${LAUNCHER_INPUT} > /output/${LAUNCHER_INPUT}.json"
   
   # Description: Search on DuckDuckGo all the information about the given domain (emails, IPs and Hosts).
   the-harvester:
