@@ -66,6 +66,7 @@ def run_tools():
 def select_tool():
     data = None
     output_parameters, input_parameters = tool_selector.get_parameters();
+    capabilities = tool_selector.get_capabilities();
     
     if request.method == 'POST':
         # Estrai i parametri dalla richiesta WebUI
@@ -78,13 +79,14 @@ def select_tool():
         args = argparse.Namespace(platform=platform, input=input_params, capability=capability_params, output=output_params)
 
         # Esegui la query Neo4j con i parametri forniti
-        data = tool_selector.select_tool(args)
+        #data = tool_selector.select_tool(args)
+        data = tool_selector.select_too_by_capabilities(capability_params)
         tools = [record["output"] for record in data]
-        required = tool_selector.get_required_inputs(tools);
+        required = tool_selector.get_required_inputs(tools, capability_params);
         
         return render_template('required_inputs.html', tools=required)
 
-    return render_template('select.html', data=data, output_parameters=output_parameters, input_parameters=input_parameters)
+    return render_template('select.html', data=data, capability_parameters=capabilities, output_parameters=output_parameters, input_parameters=input_parameters)
 
 if __name__ == '__main__':
     uri = "bolt://localhost:7687"

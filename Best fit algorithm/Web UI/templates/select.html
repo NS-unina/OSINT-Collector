@@ -29,6 +29,7 @@
           </select>
         </div>
 
+        <!--
         <div class="mb-3">
           <label class="form-label">Input Parameters:</label>
           {% for parameter in input_parameters %}
@@ -49,7 +50,6 @@
 
         <div class="mb-3">
           <label class="form-label">Output Parameters:</label>
-          <!-- Checkbox options for Output Parameters -->
           {% for parameter in output_parameters %}
           <div class="form-check">
             <input
@@ -65,18 +65,26 @@
           </div>
           {% endfor %}
         </div>
-
-        <!--
-        <div class="mb-3">
-          <label for="capability" class="form-label">Capabilities:</label>
-          <input
-            type="text"
-            class="form-control"
-            name="capability"
-            id="capability"
-          />
-        </div>
         -->
+
+        <div class="mb-3">
+          <label class="form-label">Capabilities:</label>
+          <!-- Checkbox options for Output Parameters -->
+          {% for parameter in capability_parameters %}
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="capability"
+              value="{{ parameter }}"
+              id="{{ parameter }}"
+            />
+            <label class="form-check-label" for="{{ parameter }}"
+              >{{ parameter }}</label
+            >
+          </div>
+          {% endfor %}
+        </div>
 
         <button type="submit" class="btn btn-success mt-3">Select</button>
       </form>

@@ -27,7 +27,9 @@ class ToolManager:
             
             input_params = []
             output_params = []
-            query = f"MERGE (t:Tool {{name: '{tool_name}', platform: '{platform}'}})\n"
+            query = f"""MERGE (t:Tool {{name: '{tool_name}', platform: '{platform}'}})
+            MERGE (t)-[:RUNS_ON]->(p:Platform {{name: '{platform}'}})
+            \n"""
             for c, params in capabilities.items():
                 #print(c, params['input'], params['output'])
                 input_params = params['input']
@@ -44,10 +46,10 @@ class ToolManager:
                 MATCH (i:Resource {{name: input}})-[*]->(:Resource {{name: '{platform}'}})
                 FOREACH (ignore IN CASE WHEN i IS NOT NULL THEN [1] ELSE [] END | MERGE ({c})-[:NEEDS]->(i))
                 
-                WITH t, {output_params} AS outputs
+                WITH {c}, t, {output_params} AS outputs
                 UNWIND outputs AS output
                 MATCH (o:Resource {{name: output}})-[*]->(:Resource {{name: '{platform}'}})
-                FOREACH (ignore IN CASE WHEN o IS NOT NULL THEN [1] ELSE [] END | MERGE (t)-[:PRODUCES]->(o))
+                FOREACH (ignore IN CASE WHEN o IS NOT NULL THEN [1] ELSE [] END | MERGE ({c})-[:PRODUCES]->(o))
                 """
                 
             #print(query)
