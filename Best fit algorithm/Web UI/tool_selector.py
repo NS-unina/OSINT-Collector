@@ -16,11 +16,14 @@ class ToolSelector:
 
         return output_parameters, input_parameters
     
-    def get_capabilities(self):
+    def get_capabilities(self, platform):
         capabilities = []
 
         with self.tool_manager.driver.session() as session:
-            query = "MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability) RETURN DISTINCT c.name as output"
+            if platform is None or platform == "All":
+                query = "MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability) RETURN DISTINCT c.name as output"
+            else:
+                query = f"MATCH (t:Tool {{platform: '{platform}'}})-[:HAS_CAPABILITY]->(c:Capability) RETURN DISTINCT c.name as output"
             result = session.run(query)
             capabilities = [record["output"] for record in result.data()]
 
@@ -32,14 +35,11 @@ class ToolSelector:
         if not isinstance(capabilities, list):
             capabilities = [capabilities]
 
-        print(tools)
         with self.tool_manager.driver.session() as session:
             #query = f"MATCH (t:Tool)-[u:USES]->(i:Input) WHERE ANY(substring IN {tools} WHERE t.name CONTAINS substring) RETURN t as tool, COLLECT(i) as input"
             query = f"MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability)-[:NEEDS]->(i:Resource) WHERE ANY(substring IN {capabilities} WHERE c.name CONTAINS substring) RETURN t as tool, COLLECT(i) as input"
-            print(query + "\n")
             result = session.run(query)
             data = result.data()
-            print(data)
 
         return data
     

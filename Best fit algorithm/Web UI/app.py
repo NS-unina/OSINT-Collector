@@ -65,14 +65,15 @@ def run_tools():
 @app.route('/select', methods=['GET', 'POST'])
 def select_tool():
     data = None
+    platform = None
     output_parameters, input_parameters = tool_selector.get_parameters();
-    capabilities = tool_selector.get_capabilities();
+    capabilities = tool_selector.get_capabilities(platform);
     
     if request.method == 'POST':
         # Estrai i parametri dalla richiesta WebUI
         platform = request.form.get('platform')
         input_params = request.form.getlist('input')
-        capability_params = request.form.get('capability')
+        capability_params = request.form.getlist('capability')
         output_params = request.form.getlist('output')
 
         # Costruisci un oggetto argparse.Namespace
@@ -87,6 +88,17 @@ def select_tool():
         return render_template('required_inputs.html', tools=required)
 
     return render_template('select.html', data=data, capability_parameters=capabilities, output_parameters=output_parameters, input_parameters=input_parameters)
+
+@app.route('/get_capabilities', methods=['GET', 'POST'])
+def get_capabilities():
+    platform = None
+    if request.method == 'GET':
+        platform = request.args.get('platform', None)
+    capability_parameters = tool_selector.get_capabilities(platform)
+    # Costruisci l'oggetto JSON di risposta utilizzando jsonify
+    response = {'capability_parameters': capability_parameters}
+
+    return response
 
 if __name__ == '__main__':
     uri = "bolt://localhost:7687"
