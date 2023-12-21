@@ -65,26 +65,40 @@ def run_tools():
 @app.route('/select', methods=['GET', 'POST'])
 def select_tool():
     data = None
+    platform = None
     output_parameters, input_parameters = tool_selector.get_parameters();
+    capabilities = tool_selector.get_capabilities(platform);
     
     if request.method == 'POST':
         # Estrai i parametri dalla richiesta WebUI
         platform = request.form.get('platform')
         input_params = request.form.getlist('input')
-        capability_params = request.form.get('capability')
+        capability_params = request.form.getlist('capability')
         output_params = request.form.getlist('output')
 
         # Costruisci un oggetto argparse.Namespace
         args = argparse.Namespace(platform=platform, input=input_params, capability=capability_params, output=output_params)
 
         # Esegui la query Neo4j con i parametri forniti
-        data = tool_selector.select_tool(args)
+        #data = tool_selector.select_tool(args)
+        data = tool_selector.select_too_by_capabilities(capability_params)
         tools = [record["output"] for record in data]
-        required = tool_selector.get_required_inputs(tools);
+        required = tool_selector.get_required_inputs(tools, capability_params);
         
         return render_template('required_inputs.html', tools=required)
 
-    return render_template('select.html', data=data, output_parameters=output_parameters, input_parameters=input_parameters)
+    return render_template('select.html', data=data, capability_parameters=capabilities, output_parameters=output_parameters, input_parameters=input_parameters)
+
+@app.route('/get_capabilities', methods=['GET', 'POST'])
+def get_capabilities():
+    platform = None
+    if request.method == 'GET':
+        platform = request.args.get('platform', None)
+    capability_parameters = tool_selector.get_capabilities(platform)
+    # Costruisci l'oggetto JSON di risposta utilizzando jsonify
+    response = {'capability_parameters': capability_parameters}
+
+    return response
 
 if __name__ == '__main__':
     uri = "bolt://localhost:7687"
