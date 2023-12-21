@@ -38,6 +38,8 @@ def manage_output(tool: str):
 
     kafka = KafkaServices()
     
+    # Iterate through each folder and subfolder to find
+    # all the .json output file
     for root, _, files in os.walk(folder_path):
         for filename in files:
             file_path = os.path.join(root, filename)
@@ -47,7 +49,7 @@ def manage_output(tool: str):
                 kafka.write(file_path=file_path)
 
 
-def main():
+def cmd_main():
 
     image = sys.argv[1]
     input_flag = sys.argv[2]
@@ -66,17 +68,36 @@ def main():
     launch_tool(image, input_str)
 
 
+def interactive_main():
+    
+    tools = read_compose_services()
+
+    for index, elem in enumerate(tools):
+        print("[{}] {}".format(index, elem))
+    
+    tool_index = int(input("Select tool (integer): "))
+    input_string = input("Insert input (string): ")
+
+    # Launch tool
+    launch_tool(tools[tool_index], input_string)
+
+
 if __name__ == "__main__":
 
+    # Interactive launch
+    if len(sys.argv) == 1:
+        interactive_main()
+
     # Check hor help
-    if len(sys.argv) == 2:
+    elif len(sys.argv) == 2:
         help_flag = ["--help", "-h"]
         help_input = sys.argv[1]
         if help_input in help_flag:
             show_usage()
 
-    # Check if all args have been provided
-    if len(sys.argv) != 4:
-        show_error("Invalid format")
+    # Command line launch
+    else:
+        if len(sys.argv) != 4:
+            show_error("Invalid format")
 
-    main()
+        cmd_main()
