@@ -18,4 +18,3 @@ def show_usage():
 def show_error(error: str):
     print("[LauncherError] {}".format(error))
     sys.exit(1)
-
