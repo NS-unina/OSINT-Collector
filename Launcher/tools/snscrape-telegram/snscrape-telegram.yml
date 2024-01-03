@@ -1,0 +1,4 @@
+snscrape-telegram:
+  entrypoint: sh -c "snscrape --jsonl --max-results 1 telegram-channel $CHANNEL > /output/$CHANNEL.json"
+  inputs:
+    - CHANNEL: The telegram channel where to extract the last message

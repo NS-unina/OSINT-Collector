@@ -21,3 +21,13 @@ def read_compose_services():
         show_error("Error while parsing YAML file: {}".format(e))
 
     return services_array
+
+def read_tool_config(tool: str):
+    file_path = './tools/{}/{}.yml'.format(tool, tool)
+    with open(file_path, 'r') as file:
+        data = yaml.safe_load(file)
+
+        entrypoint = data.get(tool, {}).get('entrypoint', '')
+        inputs = data.get(tool, {}).get('inputs', [])
+
+        return entrypoint, inputs

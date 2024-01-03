@@ -4,25 +4,23 @@ services:
 
   # Description: Download all the data from the given instagram account; only works with public account.
   instaloader:
-    extends: common   
-    entrypoint: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/${LAUNCHER_INPUT} profile ${LAUNCHER_INPUT}
+    extends: common
 
   # Description: Download the last message from the given telegram channel.
   snscrape-telegram:
     extends: common
-    entrypoint: sh -c "snscrape --jsonl --max-results 1 telegram-channel ${LAUNCHER_INPUT} > /output/${LAUNCHER_INPUT}.json"
   
   # Description: Search on DuckDuckGo all the information about the given domain (emails, IPs and Hosts).
   the-harvester:
     extends: common
-    entrypoint: ./theHarvester.py -d ${LAUNCHER_INPUT} -b duckduckgo -f /output/${LAUNCHER_INPUT}.json
 
   # A common service to build and run the tools.
   common:
     build: 
-      context: ./tools
+      context: ./tools/${LAUNCHER_TOOL}
       dockerfile: ${LAUNCHER_TOOL}.Dockerfile
     image: ${LAUNCHER_TOOL}
     container_name: ${LAUNCHER_TOOL}
+    entrypoint: ${LAUNCHER_ENTRYPOINT}
     volumes:
       - ./output/${LAUNCHER_TOOL}:/output

@@ -1,0 +1,4 @@
+instaloader:
+  entrypoint: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/$PROFILE $PROFILE
+  inputs:
+    - PROFILE: The instagram profile to download

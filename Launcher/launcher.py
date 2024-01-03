@@ -7,18 +7,39 @@ from src.constants import *
 from src.show_services import *
 from src.kafka_services import *
 
-def launch_tool(tool: str, input: str):
+def launch_tool(tool: str, inputs: [str]):
 
     tools = read_compose_services()
-    env = os.environ.copy()
+    entrypoint, expected_inputs = read_tool_config(tool)
+
+    expected_inputs_keys = []
+    for input_dict in expected_inputs:
+            for key, _ in input_dict.items():
+                expected_inputs_keys.append(key)
 
     if (tool not in tools):
         show_error("Invalid tool")
 
+    if (len(expected_inputs) != len(inputs)):
+        expected_input_str = ", ".join(expected_inputs_keys)
+        show_error("Missing inputs, the following inputs should be provided: {}".format(expected_input_str))
+
     try:
-        env["LAUNCHER_INPUT"] = input
+
+        # Setting env var
+        env = os.environ.copy()
+        
+        i = 0
+        filled_entrypoint = entrypoint
+        for input_key in expected_inputs_keys:
+            env[input_key] = inputs[i]
+            filled_entrypoint = filled_entrypoint.replace("${}".format(input_key), inputs[i])
+            i += 1
+
+        env["LAUNCHER_ENTRYPOINT"] = filled_entrypoint
         env["LAUNCHER_TOOL"] = tool
-        result = subprocess.run(['docker-compose', '-f', DOCKER_COMPOSE_PATH, 'up', tool], check=True, env=env)
+
+        result = subprocess.run(['docker-compose', '-f', DOCKER_COMPOSE_PATH, 'up', 'common'], check=True, env=env)
         
         if (result.returncode != 0):
             show_error("Error processing {}".format(tool))
@@ -27,7 +48,7 @@ def launch_tool(tool: str, input: str):
         show_error("Error launching {}: {}".format(tool, e))
 
     # Manage output
-    manage_output(tool)
+    # manage_output(tool)
     
 
 def manage_output(tool: str):
@@ -53,7 +74,7 @@ def cmd_main():
 
     image = sys.argv[1]
     input_flag = sys.argv[2]
-    input_str = sys.argv[3]
+    inputs_str = sys.argv[3:]
     tools = read_compose_services()
     
     # Check if the tool is valid
@@ -65,7 +86,7 @@ def cmd_main():
         show_error("Invalid input")
     
     # Launch tool
-    launch_tool(image, input_str)
+    launch_tool(image, inputs_str)
 
 
 def interactive_main():
@@ -76,10 +97,17 @@ def interactive_main():
         print("[{}] {}".format(index, elem))
     
     tool_index = int(input("Select tool (integer): "))
-    input_string = input("Insert input (string): ")
+
+    tool = tools[tool_index]
+    _, expected_inputs = read_tool_config(tool)
+
+    input_strings = []
+    for input_dict in expected_inputs:
+            for key, hint in input_dict.items():
+                input_strings.append(input("Insert {} ({}): ".format(key, hint)))
 
     # Launch tool
-    launch_tool(tools[tool_index], input_string)
+    launch_tool(tools[tool_index], input_strings)
 
 
 if __name__ == "__main__":
@@ -97,7 +125,7 @@ if __name__ == "__main__":
 
     # Command line launch
     else:
-        if len(sys.argv) != 4:
+        if len(sys.argv) < 4:
             show_error("Invalid format")
 
         cmd_main()
