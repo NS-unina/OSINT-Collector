@@ -2,15 +2,12 @@ version: '3'
 
 services:
 
-  # Description: Download all the data from the given instagram account; only works with public account.
   instaloader:
     extends: common
 
-  # Description: Download the last message from the given telegram channel.
   snscrape-telegram:
     extends: common
   
-  # Description: Search on DuckDuckGo all the information about the given domain (emails, IPs and Hosts).
   the-harvester:
     extends: common
 

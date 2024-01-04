@@ -15,6 +15,22 @@ def show_usage():
     
     sys.exit(0)
 
+def show_tool_usage(tool: str):
+
+    tool_config = read_tool_config(tool)
+
+    input_key = map(lambda item: item.key, tool_config.inputs)
+    inputs = " ".join(input_key)
+
+    print("Usage:")
+    print("    launcher.py {} -i {}".format(tool, inputs))
+    print("\nInputs:")
+
+    for item in tool_config.inputs:
+        print("    {}: {}".format(item.key, item.description))
+
+    sys.exit(0)
+
 def show_error(error: str):
     print("[LauncherError] {}".format(error))
     sys.exit(1)

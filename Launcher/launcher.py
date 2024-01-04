@@ -4,23 +4,25 @@ import sys
 import subprocess
 import os
 from src.constants import *
-from src.show_services import *
-from src.kafka_services import *
+from src.services.kafka_services import *
+from src.services.show_services import *
+from src.services.yaml_services import *
+from src.models.tool_config import *
+
+tools = read_compose_services()
 
 def launch_tool(tool: str, inputs: [str]):
 
-    tools = read_compose_services()
-    entrypoint, expected_inputs = read_tool_config(tool)
+    tool_config = read_tool_config(tool)
 
     expected_inputs_keys = []
-    for input_dict in expected_inputs:
-            for key, _ in input_dict.items():
-                expected_inputs_keys.append(key)
+    for value in tool_config.inputs:
+        expected_inputs_keys.append(value.key)
 
     if (tool not in tools):
         show_error("Invalid tool")
 
-    if (len(expected_inputs) != len(inputs)):
+    if (len(tool_config.inputs) != len(inputs)):
         expected_input_str = ", ".join(expected_inputs_keys)
         show_error("Missing inputs, the following inputs should be provided: {}".format(expected_input_str))
 
@@ -30,10 +32,10 @@ def launch_tool(tool: str, inputs: [str]):
         env = os.environ.copy()
         
         i = 0
-        filled_entrypoint = entrypoint
-        for input_key in expected_inputs_keys:
-            env[input_key] = inputs[i]
-            filled_entrypoint = filled_entrypoint.replace("${}".format(input_key), inputs[i])
+        filled_entrypoint = tool_config.entrypoint
+        for item in tool_config.inputs:
+            env[item.key] = inputs[i]
+            filled_entrypoint = filled_entrypoint.replace("${}".format(item.key), inputs[i])
             i += 1
 
         env["LAUNCHER_ENTRYPOINT"] = filled_entrypoint
@@ -48,7 +50,7 @@ def launch_tool(tool: str, inputs: [str]):
         show_error("Error launching {}: {}".format(tool, e))
 
     # Manage output
-    # manage_output(tool)
+    manage_output(tool)
     
 
 def manage_output(tool: str):
@@ -75,7 +77,6 @@ def cmd_main():
     image = sys.argv[1]
     input_flag = sys.argv[2]
     inputs_str = sys.argv[3:]
-    tools = read_compose_services()
     
     # Check if the tool is valid
     if (image not in tools):
@@ -90,8 +91,6 @@ def cmd_main():
 
 
 def interactive_main():
-    
-    tools = read_compose_services()
 
     for index, elem in enumerate(tools):
         print("[{}] {}".format(index, elem))
@@ -99,12 +98,11 @@ def interactive_main():
     tool_index = int(input("Select tool (integer): "))
 
     tool = tools[tool_index]
-    _, expected_inputs = read_tool_config(tool)
+    tool_config = read_tool_config(tool)
 
     input_strings = []
-    for input_dict in expected_inputs:
-            for key, hint in input_dict.items():
-                input_strings.append(input("Insert {} ({}): ".format(key, hint)))
+    for item in tool_config.inputs:    
+        input_strings.append(input("Insert {} ({}): ".format(item.key, item.description)))
 
     # Launch tool
     launch_tool(tools[tool_index], input_strings)
@@ -112,16 +110,24 @@ def interactive_main():
 
 if __name__ == "__main__":
 
+    help_flag = ["--help", "-h"]
+
     # Interactive launch
     if len(sys.argv) == 1:
         interactive_main()
 
     # Check hor help
     elif len(sys.argv) == 2:
-        help_flag = ["--help", "-h"]
         help_input = sys.argv[1]
         if help_input in help_flag:
             show_usage()
+    
+    # Check hor tools help
+    elif len(sys.argv) == 3:
+        help_input = sys.argv[2]
+        tool = sys.argv[1]
+        if help_input in help_flag and tool in tools:
+            show_tool_usage(tool)
 
     # Command line launch
     else:

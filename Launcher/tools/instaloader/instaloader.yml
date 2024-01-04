@@ -1,4 +1,7 @@
 instaloader:
+  description: Download all the data from the given instagram account; only works with public account.
   entrypoint: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/$PROFILE $PROFILE
   inputs:
-    - PROFILE: The instagram profile to download
+    - key: PROFILE
+      description: The instagram profile to download
+      type: string
