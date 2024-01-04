@@ -1,5 +1,5 @@
 import yaml
-from ..constants import *
+from ..globals import *
 from ..models.tool_config import *
 from ..models.tool_input import *
 
@@ -7,7 +7,7 @@ def read_compose_services():
     services_array = []
 
     try:
-        with open(DOCKER_COMPOSE_PATH, 'r') as file:
+        with open('./docker-compose.yml', 'r') as file:
             # Load YAML content
             data = yaml.safe_load(file)
 
@@ -17,7 +17,7 @@ def read_compose_services():
                 services_array.remove('common')
 
     except FileNotFoundError:
-        print(f"File {DOCKER_COMPOSE_PATH} not found")
+        print(f"File {'./docker-compose.yml'} not found")
     except yaml.YAMLError as e:
         print(f"Error while parsing YAML file: {e}")
 
