@@ -1,0 +1,10 @@
+the-harvester:
+  description: Search on DuckDuckGo all the information about the given domain (emails, IPs and Hosts).
+  entrypoint: ./theHarvester.py -d $DOMAIN -b $SOURCE -f /output/$DOMAIN.json
+  inputs:
+    - key: DOMAIN
+      description: Company name or domain to search
+      type: string
+    - key: SOURCE
+      description: anubis, baidu, bevigil, binaryedge, bing, bingapi, bufferoverun, brave, censys, certspotter, criminalip, crtsh, dnsdumpster, duckduckgo, fullhunt, github-code, hackertarget, hunter, hunterhow, intelx, netlas, onyphe, otx, pentesttools, projectdiscovery, rapiddns, rocketreach, securityTrails, sitedossier, subdomaincenter, subdomainfinderc99, threatminer, tomba, urlscan, virustotal, yahoo, zoomeye
+      type: string

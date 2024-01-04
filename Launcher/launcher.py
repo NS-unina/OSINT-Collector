@@ -3,22 +3,45 @@
 import sys
 import subprocess
 import os
-from src.constants import *
-from src.show_services import *
-from src.kafka_services import *
+from src.globals import *
+from src.services.kafka_services import *
+from src.services.show_services import *
+from src.services.yaml_services import *
+from src.models.tool_config import *
+from src.launchers.cmd_launcher import *
+from src.launchers.interactive_launcher import *
 
-def launch_tool(tool: str, input: str):
+def launch_tool(tool: str, inputs: [str]):
 
-    tools = read_compose_services()
-    env = os.environ.copy()
+    tool_config = read_tool_config(tool)
 
-    if (tool not in tools):
+    expected_inputs_keys = []
+    for value in tool_config.inputs:
+        expected_inputs_keys.append(value.key)
+
+    if (tool not in TOOLS):
         show_error("Invalid tool")
 
+    if (len(tool_config.inputs) != len(inputs)):
+        expected_input_str = ", ".join(expected_inputs_keys)
+        show_error("Missing inputs, the following inputs should be provided: {}".format(expected_input_str))
+
     try:
-        env["LAUNCHER_INPUT"] = input
+
+        # Setting env var
+        env = os.environ.copy()
+        
+        i = 0
+        filled_entrypoint = tool_config.entrypoint
+        for item in tool_config.inputs:
+            env[item.key] = inputs[i]
+            filled_entrypoint = filled_entrypoint.replace("${}".format(item.key), inputs[i])
+            i += 1
+
+        env["LAUNCHER_ENTRYPOINT"] = filled_entrypoint
         env["LAUNCHER_TOOL"] = tool
-        result = subprocess.run(['docker-compose', '-f', DOCKER_COMPOSE_PATH, 'up', tool], check=True, env=env)
+
+        result = subprocess.run(['docker-compose', '-f', './docker-compose.yml', 'up', 'common'], check=True, env=env)
         
         if (result.returncode != 0):
             show_error("Error processing {}".format(tool))
@@ -38,6 +61,8 @@ def manage_output(tool: str):
 
     kafka = KafkaServices()
     
+    # Iterate through each folder and subfolder to find
+    # all the .json output file
     for root, _, files in os.walk(folder_path):
         for filename in files:
             file_path = os.path.join(root, filename)
@@ -47,36 +72,35 @@ def manage_output(tool: str):
                 kafka.write(file_path=file_path)
 
 
-def main():
-
-    image = sys.argv[1]
-    input_flag = sys.argv[2]
-    input_str = sys.argv[3]
-    tools = read_compose_services()
-    
-    # Check if the tool is valid
-    if (image not in tools):
-        show_error("Invalid tool")
-
-    # Check if the input flag is present
-    if input_flag != "-i":
-        show_error("Invalid input")
-    
-    # Launch tool
-    launch_tool(image, input_str)
-
-
 if __name__ == "__main__":
 
-    # Check hor help
-    if len(sys.argv) == 2:
-        help_flag = ["--help", "-h"]
+    args_len = len(sys.argv)
+
+    # Help Section
+
+    help_flag = ["--help", "-h"]
+
+    if args_len == 2:
         help_input = sys.argv[1]
         if help_input in help_flag:
             show_usage()
 
-    # Check if all args have been provided
-    if len(sys.argv) != 4:
-        show_error("Invalid format")
+    if args_len == 3:
+        help_input = sys.argv[2]
+        tool = sys.argv[1]
+        if help_input in help_flag and tool in TOOLS:
+            show_tool_usage(tool)
 
-    main()
+    # Launch Section
+    
+    image = ""
+    inputs_str = []
+
+    if args_len == 1:
+        # Interactive launch
+        image, inputs_str = interactive_launcher()
+    else:
+        # CMD launch
+        image, inputs_str = cmd_launcher()
+
+    launch_tool(image, inputs_str)

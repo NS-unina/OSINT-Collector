@@ -1,2 +1,3 @@
 PyYAML==6.0.1
 kafka-python==2.0.2
+typer==0.9.0
