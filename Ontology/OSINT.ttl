@@ -17,6 +17,7 @@
 <http://osint.it/OSINT/hasSocialAccount> rdf:type owl:ObjectProperty ;
                                          rdfs:domain <http://osint.it/OSINT/Person> ;
                                          rdfs:range <http://osint.it/OSINT/Instagram/instagramAccount> ,
+                                                    <http://osint.it/OSINT/Telegram/telegramAccount> ,
                                                     :twitterAccount ;
                                          rdfs:label "hasSocialAccount"@en .
 
@@ -24,6 +25,8 @@
 ###  http://osint.it/OSINT/refersTo
 <http://osint.it/OSINT/refersTo> rdf:type owl:ObjectProperty ;
                                  rdfs:domain <http://osint.it/OSINT/Instagram/Post> ,
+                                             <http://osint.it/OSINT/Telegram/Message> ,
+                                             <http://osint.it/OSINT/Telegram/Post> ,
                                              :Tweet ;
                                  rdfs:range <http://osint.it/OSINT/Category> ;
                                  rdfs:label "refersTo"@en .
@@ -70,6 +73,14 @@
                                           rdfs:domain <http://osint.it/OSINT/Instagram/Post> ;
                                           rdfs:range <http://osint.it/OSINT/Location> ;
                                           rdfs:label "igTakenAt"@en .
+
+
+###  http://osint.it/OSINT/Telegram/joined
+<http://osint.it/OSINT/Telegram/joined> rdf:type owl:ObjectProperty ;
+                                        rdfs:domain <http://osint.it/OSINT/Telegram/telegramAccount> ;
+                                        rdfs:range <http://osint.it/OSINT/Telegram/Channel> ,
+                                                   <http://osint.it/OSINT/Telegram/Group> ;
+                                        rdfs:label "tgJoined"@en .
 
 
 ###  http://osint.it/OSINT/Twitter/follows
@@ -148,7 +159,7 @@
 
 ###  http://osint.it/OSINT/Instagram/comments
 <http://osint.it/OSINT/Instagram/comments> rdf:type owl:DatatypeProperty ;
-                                           rdfs:domain :Tweet ;
+                                           rdfs:domain <http://osint.it/OSINT/Instagram/Post> ;
                                            rdfs:label "igComments"@en .
 
 
@@ -240,6 +251,129 @@
                                           rdfs:label "igWebsite"@en .
 
 
+###  http://osint.it/OSINT/Telegram/channelDescription
+<http://osint.it/OSINT/Telegram/channelDescription> rdf:type owl:DatatypeProperty ;
+                                                    rdfs:domain <http://osint.it/OSINT/Telegram/Channel> ;
+                                                    rdfs:range xsd:string ;
+                                                    rdfs:label "tgChannelDescription"@en .
+
+
+###  http://osint.it/OSINT/Telegram/channelInviteLinks
+<http://osint.it/OSINT/Telegram/channelInviteLinks> rdf:type owl:DatatypeProperty ;
+                                                    rdfs:domain <http://osint.it/OSINT/Telegram/Channel> ;
+                                                    rdfs:range xsd:anyURI ;
+                                                    rdfs:label "tgChannelInviteLinks"@en .
+
+
+###  http://osint.it/OSINT/Telegram/channelName
+<http://osint.it/OSINT/Telegram/channelName> rdf:type owl:DatatypeProperty ;
+                                             rdfs:domain <http://osint.it/OSINT/Telegram/Channel> ;
+                                             rdfs:range xsd:string ;
+                                             rdfs:label "tgChannelName"@en .
+
+
+###  http://osint.it/OSINT/Telegram/comments
+<http://osint.it/OSINT/Telegram/comments> rdf:type owl:DatatypeProperty ;
+                                          rdfs:domain <http://osint.it/OSINT/Telegram/Post> ;
+                                          rdfs:range xsd:string ;
+                                          rdfs:label "tgComments"@en .
+
+
+###  http://osint.it/OSINT/Telegram/groupDescription
+<http://osint.it/OSINT/Telegram/groupDescription> rdf:type owl:DatatypeProperty ;
+                                                  rdfs:domain <http://osint.it/OSINT/Telegram/Group> ;
+                                                  rdfs:range xsd:string ;
+                                                  rdfs:label "tgGroupDescription"@en .
+
+
+###  http://osint.it/OSINT/Telegram/groupInviteLinks
+<http://osint.it/OSINT/Telegram/groupInviteLinks> rdf:type owl:DatatypeProperty ;
+                                                  rdfs:domain <http://osint.it/OSINT/Telegram/Group> ;
+                                                  rdfs:range xsd:anyURI ;
+                                                  rdfs:label "tgGroupInviteLinks"@en .
+
+
+###  http://osint.it/OSINT/Telegram/members
+<http://osint.it/OSINT/Telegram/members> rdf:type owl:DatatypeProperty ;
+                                         rdfs:domain <http://osint.it/OSINT/Telegram/Group> ;
+                                         rdfs:label "tgMembers"@en .
+
+
+###  http://osint.it/OSINT/Telegram/messageMedia
+<http://osint.it/OSINT/Telegram/messageMedia> rdf:type owl:DatatypeProperty ;
+                                              rdfs:domain <http://osint.it/OSINT/Telegram/Message> ;
+                                              rdfs:range xsd:string ;
+                                              rdfs:label "tgMessageText"@en .
+
+
+###  http://osint.it/OSINT/Telegram/messageReacts
+<http://osint.it/OSINT/Telegram/messageReacts> rdf:type owl:DatatypeProperty ;
+                                               rdfs:domain <http://osint.it/OSINT/Telegram/Message> ;
+                                               rdfs:label "tgMessageReacts"@en .
+
+
+###  http://osint.it/OSINT/Telegram/messageText
+<http://osint.it/OSINT/Telegram/messageText> rdf:type owl:DatatypeProperty ;
+                                             rdfs:domain <http://osint.it/OSINT/Telegram/Message> ;
+                                             rdfs:range xsd:string ;
+                                             rdfs:label "tgMessageText"@en .
+
+
+###  http://osint.it/OSINT/Telegram/name
+<http://osint.it/OSINT/Telegram/name> rdf:type owl:DatatypeProperty ;
+                                      rdfs:domain <http://osint.it/OSINT/Telegram/telegramAccount> ;
+                                      rdfs:range xsd:string ;
+                                      rdfs:label "tgName"@en .
+
+
+###  http://osint.it/OSINT/Telegram/phoneNumber
+<http://osint.it/OSINT/Telegram/phoneNumber> rdf:type owl:DatatypeProperty ;
+                                             rdfs:domain <http://osint.it/OSINT/Telegram/telegramAccount> ;
+                                             rdfs:range xsd:string ;
+                                             rdfs:label "tgPhoneNumber"@en .
+
+
+###  http://osint.it/OSINT/Telegram/postMedia
+<http://osint.it/OSINT/Telegram/postMedia> rdf:type owl:DatatypeProperty ;
+                                           rdfs:domain <http://osint.it/OSINT/Telegram/Post> ;
+                                           rdfs:range xsd:anyURI ;
+                                           rdfs:label "tgPostMedia"@en .
+
+
+###  http://osint.it/OSINT/Telegram/postReacts
+<http://osint.it/OSINT/Telegram/postReacts> rdf:type owl:DatatypeProperty ;
+                                            rdfs:domain <http://osint.it/OSINT/Telegram/Post> ;
+                                            rdfs:label "tgPostReacts"@en .
+
+
+###  http://osint.it/OSINT/Telegram/postText
+<http://osint.it/OSINT/Telegram/postText> rdf:type owl:DatatypeProperty ;
+                                          rdfs:domain <http://osint.it/OSINT/Telegram/Post> ;
+                                          rdfs:range xsd:string ;
+                                          rdfs:label "tgPostText"@en .
+
+
+###  http://osint.it/OSINT/Telegram/profilePhoto
+<http://osint.it/OSINT/Telegram/profilePhoto> rdf:type owl:DatatypeProperty ;
+                                              rdfs:domain <http://osint.it/OSINT/Telegram/telegramAccount> ;
+                                              rdfs:range xsd:anyURI ;
+                                              rdfs:label "tgProfilePhoto"@en .
+
+
+###  http://osint.it/OSINT/Telegram/roles
+<http://osint.it/OSINT/Telegram/roles> rdf:type owl:DatatypeProperty ;
+                                       rdfs:domain <http://osint.it/OSINT/Telegram/telegramAccount> ;
+                                       rdfs:range xsd:string ;
+                                       rdfs:label "tgRoles"@en .
+
+
+###  http://osint.it/OSINT/Telegram/username
+<http://osint.it/OSINT/Telegram/username> rdf:type owl:DatatypeProperty ;
+                                          rdfs:domain <http://osint.it/OSINT/Telegram/telegramAccount> ;
+                                          rdfs:range xsd:string ;
+                                          rdfs:label "tgUsername"@en .
+
+
 ###  http://osint.it/OSINT/Twitter/accountID
 :accountID rdf:type owl:DatatypeProperty ;
            rdfs:domain :twitterAccount ;
@@ -328,6 +462,13 @@
             rdfs:label "twTimePosted"@en .
 
 
+###  http://osint.it/OSINT/Twitter/tweetText
+:tweetText rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Tweet ;
+           rdfs:range xsd:string ;
+           rdfs:label "twText"@en .
+
+
 ###  http://osint.it/OSINT/Twitter/username
 :username rdf:type owl:DatatypeProperty ;
           rdfs:domain :twitterAccount ;
@@ -365,6 +506,10 @@
                                  rdfs:label "Category"@en .
 
 
+###  http://osint.it/OSINT/Instagram
+<http://osint.it/OSINT/Instagram> rdf:type owl:Class .
+
+
 ###  http://osint.it/OSINT/Location
 <http://osint.it/OSINT/Location> rdf:type owl:Class ;
                                  rdfs:label "Location"@en .
@@ -375,18 +520,29 @@
                                rdfs:label "Person"@en .
 
 
+###  http://osint.it/OSINT/Telegram
+<http://osint.it/OSINT/Telegram> rdf:type owl:Class .
+
+
+###  http://osint.it/OSINT/Twitter
+<http://osint.it/OSINT/Twitter> rdf:type owl:Class .
+
+
 ###  http://osint.it/OSINT/Instagram/Post
 <http://osint.it/OSINT/Instagram/Post> rdf:type owl:Class ;
+                                       rdfs:subClassOf <http://osint.it/OSINT/Instagram> ;
                                        rdfs:label "igPost"@en .
 
 
 ###  http://osint.it/OSINT/Instagram/Story
 <http://osint.it/OSINT/Instagram/Story> rdf:type owl:Class ;
+                                        rdfs:subClassOf <http://osint.it/OSINT/Instagram> ;
                                         rdfs:label "igStory"@en .
 
 
 ###  http://osint.it/OSINT/Instagram/instagramAccount
 <http://osint.it/OSINT/Instagram/instagramAccount> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <http://osint.it/OSINT/Instagram> ;
                                                    rdfs:label "igAccount"@en .
 
 
@@ -396,6 +552,36 @@
                                              rdfs:label "igTaggedPost"@en .
 
 
+###  http://osint.it/OSINT/Telegram/Channel
+<http://osint.it/OSINT/Telegram/Channel> rdf:type owl:Class ;
+                                         rdfs:subClassOf <http://osint.it/OSINT/Telegram> ;
+                                         rdfs:label "tgChannel"@en .
+
+
+###  http://osint.it/OSINT/Telegram/Group
+<http://osint.it/OSINT/Telegram/Group> rdf:type owl:Class ;
+                                       rdfs:subClassOf <http://osint.it/OSINT/Telegram> ;
+                                       rdfs:label "tgGroup"@en .
+
+
+###  http://osint.it/OSINT/Telegram/Message
+<http://osint.it/OSINT/Telegram/Message> rdf:type owl:Class ;
+                                         rdfs:subClassOf <http://osint.it/OSINT/Telegram/Group> ;
+                                         rdfs:label "tgMessage"@en .
+
+
+###  http://osint.it/OSINT/Telegram/Post
+<http://osint.it/OSINT/Telegram/Post> rdf:type owl:Class ;
+                                      rdfs:subClassOf <http://osint.it/OSINT/Telegram/Channel> ;
+                                      rdfs:label "tgPost"@en .
+
+
+###  http://osint.it/OSINT/Telegram/telegramAccount
+<http://osint.it/OSINT/Telegram/telegramAccount> rdf:type owl:Class ;
+                                                 rdfs:subClassOf <http://osint.it/OSINT/Telegram> ;
+                                                 rdfs:label "tgAccount"@en .
+
+
 ###  http://osint.it/OSINT/Twitter/Retweets
 :Retweets rdf:type owl:Class ;
           rdfs:subClassOf :Tweet .
@@ -403,6 +589,7 @@
 
 ###  http://osint.it/OSINT/Twitter/Tweet
 :Tweet rdf:type owl:Class ;
+       rdfs:subClassOf <http://osint.it/OSINT/Twitter> ;
        rdfs:label "Tweet"@en .
 
 
@@ -413,6 +600,7 @@
 
 ###  http://osint.it/OSINT/Twitter/twitterAccount
 :twitterAccount rdf:type owl:Class ;
+                rdfs:subClassOf <http://osint.it/OSINT/Twitter> ;
                 rdfs:label "twAccount"@en .
 
 
