@@ -37,7 +37,7 @@ class ToolSelector:
 
         with self.tool_manager.driver.session() as session:
             #query = f"MATCH (t:Tool)-[u:USES]->(i:Input) WHERE ANY(substring IN {tools} WHERE t.name CONTAINS substring) RETURN t as tool, COLLECT(i) as input"
-            query = f"MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability)-[:NEEDS]->(i:Resource) WHERE ANY(substring IN {capabilities} WHERE c.name CONTAINS substring) RETURN t as tool, COLLECT(i) as input"
+            query = f"MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability)-[:NEEDS]->(i:Resource) WHERE ANY(substring IN {capabilities} WHERE c.name CONTAINS substring) RETURN t as tool, COLLECT(DISTINCT i) as input"
             result = session.run(query)
             data = result.data()
 
