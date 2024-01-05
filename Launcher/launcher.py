@@ -10,6 +10,7 @@ from src.services.yaml_services import *
 from src.models.tool_config import *
 from src.launchers.cmd_launcher import *
 from src.launchers.interactive_launcher import *
+from src.services.docker_services import *
 
 def launch_tool(tool: str, inputs: [str]):
 
@@ -19,35 +20,28 @@ def launch_tool(tool: str, inputs: [str]):
     for value in tool_config.inputs:
         expected_inputs_keys.append(value.key)
 
-    if (tool not in TOOLS):
+    if (tool not in tools()):
         show_error("Invalid tool")
 
     if (len(tool_config.inputs) != len(inputs)):
         expected_input_str = ", ".join(expected_inputs_keys)
-        show_error("Missing inputs, the following inputs should be provided: {}".format(expected_input_str))
+        show_error("Wrong inputs, the following inputs should be provided: {}".format(expected_input_str))
 
-    try:
+    i = 0
+    filled_entrypoint = tool_config.entrypoint
+    for item in tool_config.inputs:
+        filled_entrypoint = filled_entrypoint.replace("${}".format(item.key), inputs[i])
+        i += 1
 
-        # Setting env var
-        env = os.environ.copy()
-        
-        i = 0
-        filled_entrypoint = tool_config.entrypoint
-        for item in tool_config.inputs:
-            env[item.key] = inputs[i]
-            filled_entrypoint = filled_entrypoint.replace("${}".format(item.key), inputs[i])
-            i += 1
-
-        env["LAUNCHER_ENTRYPOINT"] = filled_entrypoint
-        env["LAUNCHER_TOOL"] = tool
-
-        result = subprocess.run(['docker-compose', '-f', './docker-compose.yml', 'up', 'common'], check=True, env=env)
-        
-        if (result.returncode != 0):
-            show_error("Error processing {}".format(tool))
-
-    except subprocess.CalledProcessError as e:
-        show_error("Error launching {}: {}".format(tool, e))
+    working_dir = os.getcwd()
+    image_tag = build_image(f'./tools/{tool}')
+    run_container(
+        image_tag=image_tag, 
+        name=tool, 
+        output_volume=f'{working_dir}/output/{tool}', 
+        entrypoint=filled_entrypoint,
+        timeout=False
+    )
 
     # Manage output
     manage_output(tool)
@@ -88,7 +82,7 @@ if __name__ == "__main__":
     if args_len == 3:
         help_input = sys.argv[2]
         tool = sys.argv[1]
-        if help_input in help_flag and tool in TOOLS:
+        if help_input in help_flag and tool in tools():
             show_tool_usage(tool)
 
     # Launch Section

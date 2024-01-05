@@ -13,7 +13,7 @@ def cmd_launcher():
     inputs_str = sys.argv[3:]
 
     # Check if the tool is valid
-    if (image not in TOOLS):
+    if (image not in tools()):
         show_error("Invalid tool")
 
     # Check if the input flag is present
