@@ -13,6 +13,18 @@ from src.services.yaml_services import read_tool_config
 class StarterException(Exception):
     """Manage starter errors"""
 
+    invalid_format_key = "Invalid format"
+    invalid_format_desc = ("Invalid format, please use 'launcher.py --help' "
+                           "to understand how to use the tool")
+
+    invalid_inputs_key = "Invalid inputs"
+    invalid_inputs_desc = ("Wrong inputs, the following inputs "
+                           "should be provided: %s")
+
+    invalid_tool_key = "Invalid tool"
+    invalid_tool_desc = ("Unknown tool, one the following tool "
+                         "should be provided: %s")
+
 
 class Starter:
     """
@@ -58,11 +70,12 @@ class Starter:
         """Check if tool is valid"""
         available_tools = tools()
         if tool not in available_tools:
+
             Starter._log.error(
-                "Unknown tool, one the following tool should be provided: %s",
+                StarterException.invalid_tool_desc,
                 ", ".join(available_tools)
             )
-            raise StarterException("Invalid Tool")
+            raise StarterException(StarterException.invalid_tool_key)
 
     @staticmethod
     def _check_inputs_validity(tool: str, inputs: [str]):
@@ -73,10 +86,10 @@ class Starter:
             expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
 
             Starter._log.error(
-                "Wrong inputs, the following inputs should be provided: %s",
+                StarterException.invalid_inputs_desc,
                 ", ".join(expected_inputs_keys)
             )
-            raise StarterException("Invalid Inputs")
+            raise StarterException(StarterException.invalid_inputs_key)
 
     @staticmethod
     def _command_line_interface():
@@ -84,10 +97,8 @@ class Starter:
 
         # Check invalid format
         if len(sys.argv) < 4:
-            Starter._log.error("""
-                Invalid format, please use 'launcher.py --help'
-                to understand how to use the tool""")
-            raise StarterException("Invalid format")
+            Starter._log.error(StarterException.invalid_format_desc)
+            raise StarterException(StarterException.invalid_format_key)
 
         tool_name = sys.argv[1]
         input_flag = sys.argv[2]
@@ -95,10 +106,8 @@ class Starter:
 
         # Check if the input flag is present
         if input_flag != "-i":
-            Starter._log.error("""
-                Invalid format, please use 'launcher.py --help'
-                to understand how to use the tool""")
-            raise StarterException("Invalid input")
+            Starter._log.error(StarterException.invalid_format_desc)
+            raise StarterException(StarterException.invalid_format_key)
 
         return tool_name, inputs_values
 

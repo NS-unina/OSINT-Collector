@@ -14,6 +14,14 @@ from src.services.docker_services import build_image, run_container
 class LauncherException(Exception):
     """Manage launcher errors"""
 
+    invalid_inputs_key = "Invalid inputs"
+    invalid_inputs_desc = ("Wrong inputs, the following inputs "
+                           "should be provided: %s")
+
+    invalid_tool_key = "Invalid tool"
+    invalid_tool_desc = ("Unknown tool, one the following tool "
+                         "should be provided: %s")
+
 
 class Launcher:
     """
@@ -38,10 +46,10 @@ class Launcher:
         available_tools = tools()
         if self.tool not in available_tools:
             self._log.error(
-                "Unknown tool, one the following tool should be provided: %s",
+                LauncherException.invalid_tool_desc,
                 ", ".join(available_tools)
             )
-            raise LauncherException("Invalid Tool")
+            raise LauncherException(LauncherException.invalid_tool_key)
 
         # Check if all inputs has been provided
         tool_cfg_in = self.tool_config.inputs
@@ -49,11 +57,11 @@ class Launcher:
             expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
 
             self._log.error(
-                "Wrong inputs, the following inputs should be provided: %s",
+                LauncherException.invalid_inputs_desc,
                 ", ".join(expected_inputs_keys)
             )
 
-            raise LauncherException("Invalid Inputs")
+            raise LauncherException(LauncherException.invalid_inputs_key)
 
     def launch_tool(self):
         """Function used to start the docker container with the choosed tool"""
