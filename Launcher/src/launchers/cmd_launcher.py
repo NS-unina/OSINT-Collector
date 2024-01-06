@@ -1,10 +1,18 @@
+"""
+Launcher used from command line interface
+"""
+
 import sys
-from ..services.show_services import *
-from ..globals import *
+from src.services.show_services import show_error
+from src.globals import tools
+
 
 def cmd_launcher():
+    """
+    Launcher used from command line interface
+    """
 
-    # Check invalid format
+    # Check invalid format
     if len(sys.argv) < 4:
         show_error("Invalid format")
 
@@ -12,13 +20,13 @@ def cmd_launcher():
     input_flag = sys.argv[2]
     inputs_str = sys.argv[3:]
 
-    # Check if the tool is valid
-    if (image not in tools()):
+    # Check if the tool is valid
+    if image not in tools():
         show_error("Invalid tool")
 
-    # Check if the input flag is present
+    # Check if the input flag is present
     if input_flag != "-i":
         show_error("Invalid input")
-    
-    # Launch tool
+
+    # Launch tool
     return image, inputs_str

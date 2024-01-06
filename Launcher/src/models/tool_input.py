@@ -1,8 +1,22 @@
+"""
+Tool Configuration Input Model
+"""
+
+
 class ToolInput:
-    def __init__(self, key: str, description: str, type: str):
+    """
+    Tool Configuration Model
+    """
+
+    def __init__(self, key: str, description: str, format_type: str):
         self.key = key
         self.description = description
-        self.type = type
+        self.format_type = format_type
 
     def __str__(self):
-        return "ToolInput: key={}, description={}, type={}".format(self.key, self.description, self.type)
+
+        key = f"key={self.key}"
+        desc = f"description={self.description}"
+        format_type = f"format_type={self.format_type}"
+
+        return f"ToolInput: {key}, {desc}, {format_type}"

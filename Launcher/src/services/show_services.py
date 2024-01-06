@@ -1,8 +1,16 @@
+"""
+Show Services to properly manage prints
+"""
+
 import sys
-from .yaml_services import *
-from ..globals import *
+from src.services.yaml_services import read_tool_config
+from src.globals import tools
+
 
 def show_usage():
+    """
+    Print the launcher usage message
+    """
 
     print("Usage:")
     print("    launcher.py <tool> -i <input1> <input2> ...")
@@ -11,10 +19,14 @@ def show_usage():
     print("    -i <input>: Specify the input list.")
     print("\nExample:")
     print("    python launcher.py the-harvester -i unina.it duckduckgo")
-    
+
     sys.exit(0)
 
+
 def show_tool_usage(tool: str):
+    """
+    Print the tool usage message
+    """
 
     tool_config = read_tool_config(tool)
 
@@ -22,14 +34,19 @@ def show_tool_usage(tool: str):
     inputs = " ".join(input_key)
 
     print("Usage:")
-    print("    launcher.py {} -i {}".format(tool, inputs))
+    print(f"    launcher.py {tool} -i {inputs}")
     print("\nInputs:")
 
     for item in tool_config.inputs:
-        print("    {}: {}".format(item.key, item.description))
+        print(f"    {item.key}: {item.description}")
 
     sys.exit(0)
 
+
 def show_error(error: str):
-    print("[LauncherError] {}".format(error))
+    """
+    Print error message
+    """
+
+    print(f"[LauncherError] {error}")
     sys.exit(1)
