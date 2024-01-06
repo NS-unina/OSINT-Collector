@@ -34,14 +34,12 @@ def launch_tool(tool: str, inputs: [str]):
         expected_input_str = ", ".join(expected_inputs_keys)
         show_error(f"{incipit}: {expected_input_str}")
 
-    i = 0
     filled_entrypoint = tool_config.entrypoint
-    for item in tool_config.inputs:
+    for index, item in enumerate(tool_config.inputs):
         cursor = f"${item.key}"
-        value = inputs[i]
+        value = inputs[index]
 
         filled_entrypoint = filled_entrypoint.replace(cursor, value)
-        i += 1
 
     working_dir = os.getcwd()
     image_tag = build_image(f'./tools/{tool}')
@@ -51,7 +49,7 @@ def launch_tool(tool: str, inputs: [str]):
                   entrypoint=filled_entrypoint)
 
     # Manage output
-    manage_output(tool)
+    # manage_output(tool)
 
 
 def manage_output(tool: str):
