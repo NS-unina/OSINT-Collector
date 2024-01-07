@@ -1,29 +1,52 @@
 """
-YAML Services to properly manage yaml file
+Module containing class to properly manage yaml file
 """
 
+import logging
 import yaml
 from src.models.tool_config import ToolConfig
 
 
-def read_tool_config(tool: str):
+class _Exceptions:
+    """Manage yaml services errors"""
+
+    unable_to_read_file = ("An exception occured while reading "
+                           "file %s")
+
+    unable_to_parse_file = ("An exception occured while parsing "
+                            "file %s: %s")
+
+
+class YAMLServices:
     """
-    Read the configuration yaml file relative to the provided
-    tool to retrive the tool informations
+    Facilitator class to properly manage yaml file
     """
 
-    file_path = f'./tools/{tool}/{tool}.yml'
+    _log = logging.getLogger(__name__)
 
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            # Load YAML content
-            data = yaml.safe_load(file)
+    @staticmethod
+    def read_tool_config(tool: str):
+        """
+        Read the configuration yaml file relative to the provided
+        tool to retrive the tool informations
+        """
 
-            # Object convertion
-            return ToolConfig(name=tool, data=data)
+        file_path = f'./tools/{tool}/{tool}.yml'
 
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-    except yaml.YAMLError as e:
-        print(f"Error reading YAML file: {e}")
-    return None
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                # Load YAML content
+                data = yaml.safe_load(file)
+
+                # Object convertion
+                return ToolConfig(name=tool, data=data)
+
+        except FileNotFoundError:
+            YAMLServices._log.error(_Exceptions.unable_to_read_file, file_path)
+            exit(1)
+
+        except yaml.YAMLError as e:
+            YAMLServices._log.error(_Exceptions.unable_to_parse_file,
+                                    file_path, e)
+            exit(1)
+        return None

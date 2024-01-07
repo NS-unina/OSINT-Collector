@@ -5,22 +5,22 @@ manage it's output and lifecycle
 
 import os
 import logging
-from src.globals import tools
+from src.globals import Globals
 from src.services.kafka_services import KafkaServices
-from src.services.yaml_services import read_tool_config
-from src.services.docker_services import build_image, run_container
+from src.services.yaml_services import YAMLServices
+from src.services.docker_services import DockerServices
 
 
-class LauncherException(Exception):
+class _Exceptions:
     """Manage launcher errors"""
 
-    invalid_inputs_key = "Invalid inputs"
-    invalid_inputs_desc = ("Wrong inputs, the following inputs "
-                           "should be provided: %s")
+    invalid_inputs = ("Wrong inputs, the following inputs "
+                      "should be provided: %s")
 
-    invalid_tool_key = "Invalid tool"
-    invalid_tool_desc = ("Unknown tool, one the following tool "
-                         "should be provided: %s")
+    invalid_tool = ("Unknown tool, one the following tool "
+                    "should be provided: %s")
+
+    invalid_output_folder = "Output folder %s does not exist"
 
 
 class Launcher:
@@ -40,16 +40,16 @@ class Launcher:
         """
         self.tool = tool
         self.inputs = inputs
-        self.tool_config = read_tool_config(self.tool)
+        self.tool_config = YAMLServices.read_tool_config(self.tool)
 
         # Check if tool is valid
-        available_tools = tools()
+        available_tools = Globals.tools()
         if self.tool not in available_tools:
             self._log.error(
-                LauncherException.invalid_tool_desc,
+                _Exceptions.invalid_tool,
                 ", ".join(available_tools)
             )
-            raise LauncherException(LauncherException.invalid_tool_key)
+            exit(1)
 
         # Check if all inputs has been provided
         tool_cfg_in = self.tool_config.inputs
@@ -57,11 +57,10 @@ class Launcher:
             expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
 
             self._log.error(
-                LauncherException.invalid_inputs_desc,
+                _Exceptions.invalid_inputs,
                 ", ".join(expected_inputs_keys)
             )
-
-            raise LauncherException(LauncherException.invalid_inputs_key)
+            exit(1)
 
     def launch_tool(self):
         """Function used to start the docker container with the choosed tool"""
@@ -75,11 +74,11 @@ class Launcher:
 
         # Starting container
         working_dir = os.getcwd()
-        image_tag = build_image(f'./tools/{self.tool}')
-        run_container(image_tag=image_tag,
-                      name=self.tool,
-                      output_volume=f'{working_dir}/output/{self.tool}',
-                      entrypoint=filled_entrypoint)
+        docker = DockerServices()
+        docker.build_image(f'./tools/{self.tool}')
+        docker.run_container(name=self.tool,
+                             output_volume=f'{working_dir}/output/{self.tool}',
+                             entrypoint=filled_entrypoint)
 
         # Managing output
         self._manage_output(self.tool)
@@ -89,7 +88,9 @@ class Launcher:
 
         folder_path = f'./output/{tool}'
         if not os.path.exists(folder_path):
-            raise LauncherException("Output folder does not exist")
+            self._log.error(_Exceptions.invalid_output_folder,
+                            folder_path)
+            exit(1)
 
         kafka = KafkaServices()
 
