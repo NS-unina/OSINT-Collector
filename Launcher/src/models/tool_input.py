@@ -13,6 +13,13 @@ class ToolInput:
         self.description = description
         self.format_type = format_type
 
+    def help_string(self):
+        """
+        Returns a string describing the input,
+        used in help message
+        """
+        return f"{self.key}: {self.description}"
+
     def __str__(self):
 
         key = f"key={self.key}"

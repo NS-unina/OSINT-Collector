@@ -22,6 +22,9 @@ class _Exceptions:
     invalid_tool = ("Unknown tool, one the following tool "
                     "should be provided: %s")
 
+    invalid_entrypoint = ("Unknown entrypoint, one the following entrypoint "
+                          "should be provided: %s")
+
 
 class Starter:
     """
@@ -65,15 +68,16 @@ class Starter:
 
         if len(sys.argv) == 1:
             # Interactive start
-            tool, inputs = Starter._interactive()
+            tool, entry, inputs = Starter._interactive()
         else:
             # CMD start
-            tool, inputs = Starter._command_line_interface()
+            tool, entry, inputs = Starter._command_line_interface()
 
         Starter._check_tool_validity(tool)
+        Starter._check_entry_validity(tool, entry)
         Starter._check_inputs_validity(tool, inputs)
 
-        return tool, inputs
+        return tool, entry, inputs
 
     @staticmethod
     def _check_tool_validity(tool: str):
@@ -84,6 +88,25 @@ class Starter:
             Starter._log.error(
                 _Exceptions.invalid_tool,
                 ", ".join(available_tools)
+            )
+            exit(1)
+
+    @staticmethod
+    def _check_entry_validity(tool: str, entry: str):
+        """Check if the entrypoint has been provided"""
+        tool_config = YAMLServices.read_tool_config(tool)
+        tool_cfg_entry = tool_config.entrypoints
+
+        filtered = filter(lambda item: item.key == entry, tool_cfg_entry)
+        filtered_list = list(filtered)
+        if len(filtered_list) == 0:
+
+            tool_cfg_entry_keys = map(lambda item: item.key,
+                                      tool_config.entrypoints)
+
+            Starter._log.error(
+                _Exceptions.invalid_entrypoint,
+                ", ".join(tool_cfg_entry_keys)
             )
             exit(1)
 
@@ -106,20 +129,26 @@ class Starter:
         """Starter that get the image and inputs from the executed command"""
 
         # Check invalid format
-        if len(sys.argv) < 4:
+        if len(sys.argv) < 6:
             Starter._log.error(_Exceptions.invalid_format)
             exit(1)
 
         tool_name = sys.argv[1]
-        input_flag = sys.argv[2]
-        inputs_values = sys.argv[3:]
+        entry_flag = sys.argv[2]
+        entry_value = sys.argv[3]
+        input_flag = sys.argv[4]
+        inputs_values = sys.argv[5:]
 
         # Check if the input flag is present
         if input_flag != "-i":
             Starter._log.error(_Exceptions.invalid_format)
             exit(1)
 
-        return tool_name, inputs_values
+        if entry_flag != "-e":
+            Starter._log.error(_Exceptions.invalid_format)
+            exit(1)
+
+        return tool_name, entry_value, inputs_values
 
     @staticmethod
     def _interactive():
@@ -137,10 +166,18 @@ class Starter:
         tool = tool_list[tool_index]
         tool_config = YAMLServices.read_tool_config(tool)
 
+        message = ""
+        for index, elem in enumerate(tool_config.entrypoints):
+            message += f"[{index}] {elem.key}\n"
+        message += "Select entrypoint (integer): "
+        entrypoint_index = int(input(message))
+        entrypoint = tool_config.entrypoints[entrypoint_index]
+
         input_strings = []
         for item in tool_config.inputs:
-            input_strings.append(
-                input(f"Insert {item.key} ({item.description}): ")
-            )
+            if item.key in entrypoint.inputs:
+                input_strings.append(
+                    input(f"Insert {item.key} ({item.description}): ")
+                )
 
-        return tool_list[tool_index], input_strings
+        return tool_list[tool_index], entrypoint, input_strings

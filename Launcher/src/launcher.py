@@ -20,6 +20,9 @@ class _Exceptions:
     invalid_tool = ("Unknown tool, one the following tool "
                     "should be provided: %s")
 
+    invalid_entrypoint = ("Unknown entrypoint, one the following entrypoint "
+                          "should be provided: %s")
+
     invalid_output_folder = "Output folder %s does not exist"
 
 
@@ -31,7 +34,7 @@ class Launcher:
 
     _log = logging.getLogger(__name__)
 
-    def __init__(self, tool: str, inputs: [str]):
+    def __init__(self, tool: str, entrypoint: str, inputs: [str]):
         """
         Initialize the launcher with the provided value
 
@@ -39,6 +42,7 @@ class Launcher:
         If there is an error during the initialization.
         """
         self.tool = tool
+        self.entrypoint = entrypoint
         self.inputs = inputs
         self.tool_config = YAMLServices.read_tool_config(self.tool)
 
@@ -48,6 +52,19 @@ class Launcher:
             self._log.error(
                 _Exceptions.invalid_tool,
                 ", ".join(available_tools)
+            )
+            exit(1)
+
+        # Check if entrypoint is valid
+        if not any(list(filter(lambda item: item.key == entrypoint,
+                               self.tool_config.entrypoints))):
+
+            tool_cfg_entry_keys = map(lambda item: item.key,
+                                      self.tool_config.entrypoints)
+
+            self._log.error(
+                _Exceptions.invalid_entrypoint,
+                ", ".join(tool_cfg_entry_keys)
             )
             exit(1)
 
@@ -66,11 +83,17 @@ class Launcher:
         """Function used to start the docker container with the choosed tool"""
 
         # Filling entrypoint with provided inputs by replacing input keys
-        filled_entrypoint = self.tool_config.entrypoint
+        filtered_entrypoints = filter(lambda item: item.key == self.entrypoint,
+                                      self.tool_config.entrypoints)
+        selected_entrypoint = list(filtered_entrypoints)[0]
+        filled_entrypoint_cmd = selected_entrypoint.command
         for index, item in enumerate(self.tool_config.inputs):
             cursor = f"${item.key}"
             value = self.inputs[index]
-            filled_entrypoint = filled_entrypoint.replace(cursor, value)
+            filled_entrypoint_cmd = filled_entrypoint_cmd.replace(
+                cursor,
+                value
+            )
 
         # Starting container
         working_dir = os.getcwd()
@@ -78,7 +101,7 @@ class Launcher:
         docker.build_image(f'./tools/{self.tool}')
         docker.run_container(name=self.tool,
                              output_volume=f'{working_dir}/output/{self.tool}',
-                             entrypoint=filled_entrypoint)
+                             entrypoint=filled_entrypoint_cmd)
 
         # Managing output
         self._manage_output(self.tool)

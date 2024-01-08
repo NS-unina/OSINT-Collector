@@ -33,14 +33,16 @@ class Globals:
 
         return (
             "Usage:"
-            "\n    launcher.py <tool> -i <input1> <input2> ..."
+            "\n    launcher.py <tool> -e <entrypoint> -i <input1> <input2> ..."
             "\n"
             "\nParameters:"
             f"\n    <tool>: Choose a tool from options: {tools}"
-            "\n    -i <input>: Specify the input list."
+            "\n    -e <entrypoint>: Specify the entrypoint for the chosen tool"
+            "\n    -i <input>: Specify the input list"
             "\n"
             "\nExample:"
-            "\n    python launcher.py the-harvester -i unina.it duckduckgo"
+            "\n    main.py the-harvester -e search-domain -i "
+            "unina.it duckduckgo"
         )
 
     @staticmethod
@@ -52,20 +54,32 @@ class Globals:
 
         tool = sys.argv[1]
         tool_config = YAMLServices.read_tool_config(tool)
-        input_key = map(lambda item: item.key, tool_config.inputs)
-        inputs_desc = map(lambda item: f"\n    {item.key}: {item.description}",
-                          tool_config.inputs)
 
-        inputs_keys_str = " ".join(input_key)
+        def space_separated_string(lst):
+            return " ".join(lst)
+
+        input_key = map(lambda item: item.key,
+                        tool_config.inputs)
+        inputs_desc = map(lambda item:
+                          f"\n    {item.help_string()}",
+                          tool_config.inputs)
+        entrypoints_desc = map(lambda item: f"\n    {item.help_string()}",
+                               tool_config.entrypoints)
+
+        inputs_keys_str = space_separated_string(input_key)
         inputs_desc = "".join(inputs_desc)
+        entrypoints = "".join(entrypoints_desc)
 
         return (
             "Usage:"
-            f"\n    launcher.py {tool} -i {inputs_keys_str}"
+            f"\n    main.py {tool} -e <entrypoint> -i {inputs_keys_str}"
             "\n"
             "\nDescription:"
             f"\n    {tool_config.description}"
             "\n"
             "\nInputs:"
             f"{inputs_desc}"
+            "\n"
+            "\nEntrypoints:"
+            f"{entrypoints}"
         )

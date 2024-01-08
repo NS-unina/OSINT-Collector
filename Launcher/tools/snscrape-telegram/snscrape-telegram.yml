@@ -1,6 +1,12 @@
 snscrape-telegram:
   description: Download the last message from the given telegram channel.
-  entrypoint: sh -c "snscrape --jsonl --max-results 1 telegram-channel $CHANNEL > /output/$CHANNEL.json"
+  entrypoints:
+    - key: download-last-message
+      description: Download the last message in the provided channel
+      inputs:
+        - CHANNEL
+      command: sh -c "snscrape --jsonl --max-results 1 telegram-channel $CHANNEL > /output/$CHANNEL.json"
+
   inputs:
     - key: CHANNEL
       description: The telegram channel where to extract the last message

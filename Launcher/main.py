@@ -23,6 +23,6 @@ if __name__ == "__main__":
 
     # Launch Section
 
-    image, inputs_str = Starter.fetch_launcher_params()
-    launcher = Launcher(image, inputs_str)
+    image, entrypoint, inputs_str = Starter.fetch_launcher_params()
+    launcher = Launcher(image, entrypoint, inputs_str)
     launcher.launch_tool()
