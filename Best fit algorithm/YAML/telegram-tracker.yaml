@@ -2,5 +2,7 @@ name: telegram-tracker
 platform: Telegram
 capabilities:
   download_channel_data:
-    input: channelName
-    output: Channel
+    input:
+      - channelName
+    output:
+      - Channel

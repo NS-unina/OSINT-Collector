@@ -2,11 +2,17 @@ name: testTool
 platform: Twitter
 capabilities:
   download_tweets:
-    input: username
-    output: Tweet
+    input:
+      - username
+    output:
+      - Tweet
   download_retweets:
-    input: username
-    output: Retweets
+    input:
+      - username
+    output:
+      - Retweets
   download_replies:
-    input: username
-    output: replies
+    input:
+      - username
+    output:
+      - replies
