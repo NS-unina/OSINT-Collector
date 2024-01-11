@@ -1,43 +1,52 @@
+"""
+Module containing class to properly manage yaml file
+"""
+
+import logging
 import yaml
-from ..globals import *
-from ..models.tool_config import *
-from ..models.tool_input import *
+from src.models.tool_config import ToolConfig
 
-def read_compose_services():
-    services_array = []
 
-    try:
-        with open('./docker-compose.yml', 'r') as file:
-            # Load YAML content
-            data = yaml.safe_load(file)
+class _Exceptions:
+    """Manage yaml services errors"""
 
-            # Get services name
-            if 'services' in data:
-                services_array = list(data['services'].keys())
-                services_array.remove('common')
+    unable_to_read_file = ("An exception occured while reading "
+                           "file %s")
 
-    except FileNotFoundError:
-        print(f"File {'./docker-compose.yml'} not found")
-    except yaml.YAMLError as e:
-        print(f"Error while parsing YAML file: {e}")
+    unable_to_parse_file = ("An exception occured while parsing "
+                            "file %s: %s")
 
-    return services_array
 
-def read_tool_config(tool: str):
-    
-    file_path = './tools/{}/{}.yml'.format(tool, tool)
+class YAMLServices:
+    """
+    Facilitator class to properly manage yaml file
+    """
 
-    try:
-        with open(file_path, 'r') as file:
-            # Load YAML content
-            data = yaml.safe_load(file)
+    _log = logging.getLogger(__name__)
 
-            # Object convertion
-            return ToolConfig(name=tool, data=data)
+    @staticmethod
+    def read_tool_config(tool: str):
+        """
+        Read the configuration yaml file relative to the provided
+        tool to retrive the tool informations
+        """
 
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-    except yaml.YAMLError as e:
-        print(f"Error reading YAML file: {e}")
-    return None
+        file_path = f'./tools/{tool}/{tool}.yml'
 
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                # Load YAML content
+                data = yaml.safe_load(file)
+
+                # Object convertion
+                return ToolConfig(name=tool, data=data)
+
+        except FileNotFoundError:
+            YAMLServices._log.error(_Exceptions.unable_to_read_file, file_path)
+            exit(1)
+
+        except yaml.YAMLError as e:
+            YAMLServices._log.error(_Exceptions.unable_to_parse_file,
+                                    file_path, e)
+            exit(1)
+        return None
