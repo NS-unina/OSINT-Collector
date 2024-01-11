@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-import { AiFillInstagram, AiFillTwitterCircle } from "react-icons/ai";
-import { FaTelegram } from "react-icons/fa";
-import { CgDarkMode } from "react-icons/cg";
 import SelectCapability from "./SelectCapability";
 import { Capability, RequiredInput, ServerResponse } from "../types";
+import RequiredInputs from "./RequiredInputs";
 
-const SelectTool: React.FC = () => {
+const SelectTool = () => {
   const [capabilities, setCapabilities] = useState<Capability[]>([]);
   const [selectedCapabilities, setSelectedCapabilities] = useState<
     Capability[]
@@ -87,21 +84,6 @@ const SelectTool: React.FC = () => {
     fetchRequiredInputs();
   }, [selectedCapabilities, selectedPlatform]);
 
-  const getPlatformIcon = (platform: string) => {
-    switch (platform.toLowerCase()) {
-      case "instagram":
-        return <AiFillInstagram />;
-      case "twitter":
-        return <AiFillTwitterCircle />;
-      case "telegram":
-        return <FaTelegram />;
-      case "darkweb":
-        return <CgDarkMode />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="container mt-5">
       <div className="row">
@@ -133,32 +115,7 @@ const SelectTool: React.FC = () => {
         </div>
 
         {requiredInputs.length > 0 && (
-          <div className="col-md-6">
-            <form>
-              {requiredInputs.map((input, index) => (
-                <div key={index}>
-                  <h3>
-                    {getPlatformIcon(input.tool.platform)} {input.tool.name}
-                  </h3>
-                  {input.input.map((inputField) => (
-                    <div key={inputField.name} className="mb-3">
-                      <label htmlFor={inputField.name} className="form-label">
-                        {inputField.label}
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id={inputField.name}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ))}
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </form>
-          </div>
+          <RequiredInputs requiredInputs={requiredInputs} />
         )}
       </div>
     </div>

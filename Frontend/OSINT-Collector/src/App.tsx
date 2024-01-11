@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BsCursor, BsTrash, BsPlus } from "react-icons/bs"; // Import delle icone
 import SelectTool from "./components/SelectTool";
-import DeleteTool from "./components/DeleteTool";
+import RemoveTool from "./components/RemoveTool";
 import AddTool from "./components/AddTool";
 
 const App: React.FC = () => {
@@ -19,7 +19,7 @@ const App: React.FC = () => {
       case "Select Tool":
         return <SelectTool />;
       case "Delete Tool":
-        return <DeleteTool />;
+        return <RemoveTool />;
       case "Add Tool":
         return <AddTool />;
       default:

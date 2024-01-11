@@ -43,13 +43,15 @@ def add_tool():
 def remove_tool():
     tools = tool_manager.get_tools();
     removeResult = None;
+    data = request.json
     
     if request.method == 'POST':
-        remove_tool = request.form.get('remove_tool')
+        remove_tool = data.get('remove_tool')
         print(remove_tool)
         removeResult = tool_manager.remove_tool(remove_tool)
         tools = tool_manager.get_tools();
 
+    return tools;
     return render_template('remove.html', tools=tools, result=removeResult)
 
 @app.route('/process', methods=['GET', 'POST'])
@@ -106,6 +108,15 @@ def get_capabilities():
     capability_parameters = tool_selector.get_capabilities(platform)
     # Costruisci l'oggetto JSON di risposta utilizzando jsonify
     response = {'capability_parameters': capability_parameters}
+
+    return response
+
+@app.route('/get_tools', methods=['GET', 'POST'])
+def get_tools():
+    if request.method == 'GET':
+        tools = tool_manager.get_tools();
+    # Costruisci l'oggetto JSON di risposta utilizzando jsonify
+    response = {'tools': tools}
 
     return response
 

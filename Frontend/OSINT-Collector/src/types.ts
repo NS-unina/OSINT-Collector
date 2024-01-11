@@ -18,3 +18,12 @@ export interface RequiredInput {
         platform: string;
     };
 }
+
+export interface GetToolsResponse {
+    tools: Tool[];
+}
+
+export interface Tool {
+    id: number;
+    name: string;
+}
