@@ -1,5 +1,4 @@
-// src/App.tsx
-import React, { useState, ReactElement } from "react";
+import { useState, ReactElement } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BsCursor, BsTrash, BsPlus } from "react-icons/bs"; // Import delle icone
@@ -7,11 +6,13 @@ import SelectTool from "./components/SelectTool";
 import RemoveTool from "./components/RemoveTool";
 import AddTool from "./components/AddTool";
 
-const App: React.FC = () => {
+const App = () => {
   const [selectedTool, setSelectedTool] = useState<string>("");
 
   const handleSelectTool = (tool: string) => {
-    setSelectedTool(tool);
+    setSelectedTool((prevSelectedTool) =>
+      prevSelectedTool === tool ? "" : tool
+    );
   };
 
   const renderPage = (): ReactElement => {
@@ -55,7 +56,7 @@ const App: React.FC = () => {
           >
             <div className="card-body text-center">
               <BsTrash size={40} className="mb-3 text-danger" />
-              <h5 className="card-title">Delete Tool</h5>
+              <h5 className="card-title">Remove Tool</h5>
             </div>
           </div>
         </div>
@@ -73,9 +74,7 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className={`mt-4 ${selectedTool ? "fade-in" : ""}`}>
-        {renderPage()}
-      </div>
+      {selectedTool && <div className="mt-4 fade-in">{renderPage()}</div>}
     </div>
   );
 };

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GetToolsResponse, Tool } from "../types";
 import axios from "axios";
+import AlertMessage from "./AlertMessage";
 
 const RemoveTool = () => {
   const [tools, fetchTools] = useState<Tool[]>([]);
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
+  const [removeSuccess, setRemoveSuccess] = useState<boolean | null>(null);
 
   useEffect(() => {
     axios
@@ -24,10 +26,6 @@ const RemoveTool = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Esegui l'azione di rimozione qui utilizzando l'elenco selectedTool
-    console.log("Tool to remove:", selectedTool);
-
-    // Aggiungi qui la logica per rimuovere lo strumento selezionato
     if (selectedTool) {
       const formData = {
         remove_tool: selectedTool.name,
@@ -37,42 +35,61 @@ const RemoveTool = () => {
         .post<Tool[]>("http://127.0.0.1:5000/remove", formData)
         .then((response) => {
           fetchTools(response.data);
-          setSelectedTool(null); // Deseleziona lo strumento dopo la rimozione
+          setSelectedTool(null);
+          setRemoveSuccess(true);
         })
         .catch((error) => {
           console.error("Error removing tool:", error);
+          setRemoveSuccess(false);
         });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="mb-3" id="toolsContainer">
-        <label className="form-label">Tools:</label>
-        {tools.map((tool) => (
-          <div key={tool.id} className="mb-2">
-            <input
-              type="radio"
-              className="btn-check"
-              id={`tool-${tool.id}`}
-              value={tool.name}
-              autoComplete="off"
-              checked={selectedTool?.id === tool.id}
-              onChange={() => handleToolToggle(tool.id)}
-            />
-            <label
-              className="btn btn-outline-primary"
-              htmlFor={`tool-${tool.id}`}
-            >
-              {tool.name}
-            </label>
-          </div>
-        ))}
-      </div>
-      <button type="submit" className="btn btn-danger" disabled={!selectedTool}>
-        Remove
-      </button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3" id="toolsContainer">
+          <label className="form-label">Tools:</label>
+          {tools.map((tool) => (
+            <div key={tool.id} className="mb-2">
+              <input
+                type="radio"
+                className="btn-check"
+                id={`tool-${tool.id}`}
+                value={tool.name}
+                autoComplete="off"
+                checked={selectedTool?.id === tool.id}
+                onChange={() => handleToolToggle(tool.id)}
+              />
+              <label
+                className="btn btn-outline-primary"
+                htmlFor={`tool-${tool.id}`}
+              >
+                {tool.name}
+              </label>
+            </div>
+          ))}
+        </div>
+        <button
+          type="submit"
+          className="btn btn-danger"
+          disabled={!selectedTool}
+        >
+          Remove
+        </button>
+      </form>
+      {removeSuccess !== null && (
+        <AlertMessage
+          message={
+            removeSuccess
+              ? "Tool removed successfully!"
+              : "Error removing tool."
+          }
+          type={removeSuccess ? "success" : "danger"}
+          onClose={() => setRemoveSuccess(null)}
+        />
+      )}
+    </div>
   );
 };
 
