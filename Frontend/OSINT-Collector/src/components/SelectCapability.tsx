@@ -26,7 +26,7 @@ const SelectCapability = ({
             onChange={() => handleCapabilityToggle(capability.id)}
           />
           <label
-            className="btn btn-outline-primary"
+            className="btn btn-outline-primary capability-label"
             htmlFor={`capability-${capability.id}`}
           >
             {capability.name}

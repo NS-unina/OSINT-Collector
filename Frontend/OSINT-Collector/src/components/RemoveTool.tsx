@@ -62,7 +62,7 @@ const RemoveTool = () => {
                 onChange={() => handleToolToggle(tool.id)}
               />
               <label
-                className="btn btn-outline-primary"
+                className="btn btn-outline-primary tool-label"
                 htmlFor={`tool-${tool.id}`}
               >
                 {tool.name}

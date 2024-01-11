@@ -73,3 +73,13 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+.capability-label {
+  display: inline-block;
+  width: 100%; /* Imposta la larghezza desiderata */
+}
+
+.tool-label {
+  display: inline-block;
+  width: 45%; /* Imposta la larghezza desiderata */
+}
