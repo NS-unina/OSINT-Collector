@@ -2,6 +2,7 @@ snscrape-telegram:
   description: Download the last message from the given telegram channel.
   entrypoints:
     - key: download-last-message
+      name: Download last channel message
       description: Download the last message in the provided channel
       inputs:
         - CHANNEL

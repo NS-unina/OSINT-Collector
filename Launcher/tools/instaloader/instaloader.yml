@@ -2,12 +2,14 @@ instaloader:
   description: Download all the data from the given instagram account; only works with public account.
   entrypoints:
     - key: download-public-profile
+      name: Download public profile
       description: Download public profile informations
       inputs:
         - PROFILE
       command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/$PROFILE $PROFILE
 
     - key: download-hashtag-post
+      name: Download hashtag post
       description: Download posts with certain hashtag
       inputs:
         - HASHTAG
