@@ -15,9 +15,9 @@ class ToolManager:
         tools = []
 
         with self.driver.session() as session:
-            query = "MATCH (t:Tool) RETURN DISTINCT t.name as output"
+            query = "MATCH (t:Tool) RETURN DISTINCT ID(t) as id, t.name as name"
             result = session.run(query)
-            tools = [record["output"] for record in result.data()]
+            tools = [record for record in result.data()]
 
         return tools
 

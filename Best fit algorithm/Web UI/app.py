@@ -1,11 +1,13 @@
 import argparse
 import os
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
+from flask_cors import CORS
 from tool_manager import ToolManager
 from tool_selector import ToolSelector
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})
 
 @app.route('/', methods=['GET'])
 def index():
@@ -41,13 +43,15 @@ def add_tool():
 def remove_tool():
     tools = tool_manager.get_tools();
     removeResult = None;
+    data = request.json
     
     if request.method == 'POST':
-        remove_tool = request.form.get('remove_tool')
+        remove_tool = data.get('remove_tool')
         print(remove_tool)
         removeResult = tool_manager.remove_tool(remove_tool)
         tools = tool_manager.get_tools();
 
+    return tools;
     return render_template('remove.html', tools=tools, result=removeResult)
 
 @app.route('/process', methods=['GET', 'POST'])
@@ -71,9 +75,14 @@ def select_tool():
     
     if request.method == 'POST':
         # Estrai i parametri dalla richiesta WebUI
+        data = request.json
+        platform = data.get('platform')
+        capabilities = data.get('capabilities')
+        print(platform)
+        print(capabilities)
         platform = request.form.get('platform')
         input_params = request.form.getlist('input')
-        capability_params = request.form.getlist('capability')
+        capability_params = request.form.get('capabilities')
         output_params = request.form.getlist('output')
 
         # Costruisci un oggetto argparse.Namespace
@@ -81,11 +90,13 @@ def select_tool():
 
         # Esegui la query Neo4j con i parametri forniti
         #data = tool_selector.select_tool(args)
-        data = tool_selector.select_too_by_capabilities(capability_params)
+        data = tool_selector.select_too_by_capabilities(capabilities)
         tools = [record["output"] for record in data]
-        required = tool_selector.get_required_inputs(tools, capability_params);
+        required = tool_selector.get_required_inputs(tools, capabilities);
+        print(required);
         
-        return render_template('required_inputs.html', tools=required)
+        return required
+        #return render_template('required_inputs.html', tools=required)
 
     return render_template('select.html', data=data, capability_parameters=capabilities, output_parameters=output_parameters, input_parameters=input_parameters)
 
@@ -97,6 +108,15 @@ def get_capabilities():
     capability_parameters = tool_selector.get_capabilities(platform)
     # Costruisci l'oggetto JSON di risposta utilizzando jsonify
     response = {'capability_parameters': capability_parameters}
+
+    return response
+
+@app.route('/get_tools', methods=['GET', 'POST'])
+def get_tools():
+    if request.method == 'GET':
+        tools = tool_manager.get_tools();
+    # Costruisci l'oggetto JSON di risposta utilizzando jsonify
+    response = {'tools': tools}
 
     return response
 
