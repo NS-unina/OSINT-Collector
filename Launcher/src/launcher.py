@@ -88,7 +88,7 @@ class Launcher:
         selected_entrypoint = list(filtered_entrypoints)[0]
         filled_entrypoint_cmd = selected_entrypoint.command
         for index, item in enumerate(self.tool_config.inputs):
-            cursor = f"${item.key}"
+            cursor = f"${{{item.key}}}"
             value = self.inputs[index]
             filled_entrypoint_cmd = filled_entrypoint_cmd.replace(
                 cursor,
@@ -97,10 +97,11 @@ class Launcher:
 
         # Starting container
         working_dir = os.getcwd()
+        output_volume = f'{working_dir}/output/{self.tool}'
         docker = DockerServices()
         docker.build_image(f'./tools/{self.tool}')
         docker.run_container(name=self.tool,
-                             output_volume=f'{working_dir}/output/{self.tool}',
+                             output_volume=output_volume,
                              entrypoint=filled_entrypoint_cmd)
 
         # Managing output
