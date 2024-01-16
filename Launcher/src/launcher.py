@@ -56,8 +56,9 @@ class Launcher:
             exit(1)
 
         # Check if entrypoint is valid
-        if not any(list(filter(lambda item: item.key == entrypoint,
-                               self.tool_config.entrypoints))):
+        matching_entrypoints = list(filter(lambda item: item.key == entrypoint,
+                                           self.tool_config.entrypoints))
+        if not any(matching_entrypoints):
 
             tool_cfg_entry_keys = map(lambda item: item.key,
                                       self.tool_config.entrypoints)
@@ -69,7 +70,8 @@ class Launcher:
             exit(1)
 
         # Check if all inputs has been provided
-        tool_cfg_in = self.tool_config.inputs
+        entrypoint_config = matching_entrypoints[0]
+        tool_cfg_in = entrypoint_config.inputs
         if len(tool_cfg_in) != len(inputs):
             expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
 
@@ -87,8 +89,8 @@ class Launcher:
                                       self.tool_config.entrypoints)
         selected_entrypoint = list(filtered_entrypoints)[0]
         filled_entrypoint_cmd = selected_entrypoint.command
-        for index, item in enumerate(self.tool_config.inputs):
-            cursor = f"${{{item.key}}}"
+        for index, item in enumerate(selected_entrypoint.inputs):
+            cursor = f"${{{item}}}"
             value = self.inputs[index]
             filled_entrypoint_cmd = filled_entrypoint_cmd.replace(
                 cursor,
@@ -105,7 +107,7 @@ class Launcher:
                              entrypoint=filled_entrypoint_cmd)
 
         # Managing output
-        self._manage_output(self.tool)
+        # self._manage_output(self.tool)
 
     def _manage_output(self, tool: str):
         """Function used to manage the tool output and send data to Kafka"""

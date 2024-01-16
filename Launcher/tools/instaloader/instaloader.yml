@@ -13,7 +13,7 @@ instaloader:
       description: Download posts with certain hashtag
       inputs:
         - HASHTAG
-      command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/${PROFILE} "#${HASHTAG}"
+      command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/${HASHTAG} "#${HASHTAG}"
 
   inputs:
     - key: PROFILE
