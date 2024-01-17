@@ -1,6 +1,6 @@
 services:
   neo4j:
-    image: neo4j:4.0.7-enterprise
+    image: neo4j:4.3.6
     container_name: "neo4j"
     volumes:
       - ./neo4j/data:/data
