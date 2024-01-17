@@ -2,11 +2,12 @@ the-harvester:
   description: Search on DuckDuckGo all the information about the given domain (emails, IPs and Hosts).
   entrypoints:
     - key: search-domain
+      name: Search web domain
       description: Look for the public information on provided source for the specified domain
       inputs:
         - SOURCE
         - DOMAIN
-      command: ./theHarvester.py -d $DOMAIN -b $SOURCE -f /output/$DOMAIN.json
+      command: ./theHarvester.py -d ${DOMAIN} -b ${SOURCE} -f /output/${DOMAIN}.json
 
   inputs:
     - key: DOMAIN

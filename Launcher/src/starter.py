@@ -75,7 +75,7 @@ class Starter:
 
         Starter._check_tool_validity(tool)
         Starter._check_entry_validity(tool, entry)
-        Starter._check_inputs_validity(tool, inputs)
+        Starter._check_inputs_validity(tool, entry, inputs)
 
         return tool, entry, inputs
 
@@ -111,10 +111,14 @@ class Starter:
             exit(1)
 
     @staticmethod
-    def _check_inputs_validity(tool: str, inputs: [str]):
+    def _check_inputs_validity(tool: str, entry: str, inputs: [str]):
         """Check if all inputs has been provided"""
         tool_config = YAMLServices.read_tool_config(tool)
-        tool_cfg_in = tool_config.inputs
+        tool_cfg_entry = tool_config.entrypoints
+        filtered = filter(lambda item: item.key == entry, tool_cfg_entry)
+        filtered_list = list(filtered)
+        entrypoint = filtered_list[0]
+        tool_cfg_in = entrypoint.inputs
         if len(tool_cfg_in) != len(inputs):
             expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
 
