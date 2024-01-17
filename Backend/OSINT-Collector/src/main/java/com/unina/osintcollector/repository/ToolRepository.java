@@ -21,6 +21,5 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
             """)
     Flux<ToolInput> getRequiredInputs(List<String> capabilities);
 
-
 }
 

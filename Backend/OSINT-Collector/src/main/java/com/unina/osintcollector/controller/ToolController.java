@@ -38,4 +38,10 @@ public class ToolController {
         return toolRepository.getRequiredInputs(capabilities);
     }
 
+    @PostMapping("/add")
+    public void addTool(@RequestBody String fileYAML) {
+        //TO_DO
+        System.out.println(fileYAML);
+    }
+
 }
