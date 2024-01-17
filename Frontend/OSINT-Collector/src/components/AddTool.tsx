@@ -60,7 +60,7 @@ const AddTool = () => {
     formData.append("yaml_file", fileInput[0]);
 
     axios
-      .post("http://127.0.0.1:5000/add", formData)
+      .post("http://localhost:8080/tools/add", formData)
       .then(() => {
         console.log("Upload completato con successo!");
         setUploadSuccess(true);

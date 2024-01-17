@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SelectCapability from "./SelectCapability";
-import { Capability, RequiredInput, ServerResponse } from "../types";
+import { Capability, RequiredInput } from "../types";
 import RequiredInputs from "./RequiredInputs";
 
 const SelectTool = () => {
@@ -18,12 +18,10 @@ const SelectTool = () => {
 
   const fetchData = (platform: string) => {
     axios
-      .get<ServerResponse>(
-        `http://127.0.0.1:5000/get_capabilities?platform=${platform}`
+      .get<Capability[]>(
+        `http://localhost:8080/capabilities?platform=${platform}`
       )
-      .then((response) =>
-        updateCapabilities(response.data.capability_parameters)
-      )
+      .then((res) => setCapabilities(res.data))
       .catch((error) => console.error("Error fetching data:", error));
   };
 
@@ -49,27 +47,20 @@ const SelectTool = () => {
     setSelectedPlatform(selectedPlatform);
   };
 
-  const updateCapabilities = (capabilities: string[]) => {
-    setCapabilities(
-      capabilities.map((capability, index) => ({
-        id: index + 1,
-        name: capability,
-      }))
-    );
-  };
-
   useEffect(() => {
     const fetchRequiredInputs = () => {
       if (selectedCapabilities.length > 0) {
         const formData = {
-          platform: selectedPlatform,
           capabilities: selectedCapabilities.map(
             (capability) => capability.name
           ),
         };
 
         axios
-          .post<RequiredInput[]>("http://127.0.0.1:5000/select", formData)
+          .post<RequiredInput[]>(
+            "http://localhost:8080/tools/requiredInputs",
+            formData
+          )
           .then((response) => {
             setRequiredInputs(response.data);
           })

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GetToolsResponse, Tool } from "../types";
+import { Tool } from "../types";
 import axios from "axios";
 import AlertMessage from "./AlertMessage";
 
@@ -10,8 +10,8 @@ const RemoveTool = () => {
 
   useEffect(() => {
     axios
-      .get<GetToolsResponse>(`http://127.0.0.1:5000/get_tools`)
-      .then((res) => fetchTools(res.data.tools))
+      .get<Tool[]>(`http://localhost:8080/tools`)
+      .then((res) => fetchTools(res.data))
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
@@ -32,7 +32,7 @@ const RemoveTool = () => {
       };
 
       axios
-        .post<Tool[]>("http://127.0.0.1:5000/remove", formData)
+        .post<Tool[]>("http://localhost:8080/tools/remove", formData)
         .then((response) => {
           fetchTools(response.data);
           setSelectedTool(null);

@@ -32,7 +32,7 @@ const RequiredInputs = ({ requiredInputs }: Props) => {
             <h3>
               {getPlatformIcon(input.tool.platform)} {input.tool.name}
             </h3>
-            {input.input.map((inputField) => (
+            {input.inputs.map((inputField) => (
               <div key={inputField.name} className="mb-3">
                 <label htmlFor={inputField.name} className="form-label">
                   {inputField.label}
