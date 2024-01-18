@@ -1,4 +1,9 @@
 // types.ts
+export interface Platform {
+    id: number;
+    name: string;
+}
+
 export interface Capability {
     id: number;
     name: string;

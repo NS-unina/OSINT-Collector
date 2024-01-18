@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SelectCapability from "./SelectCapability";
-import { Capability, RequiredInput } from "../types";
+import { Platform, Capability, RequiredInput } from "../types";
 import RequiredInputs from "./RequiredInputs";
 
 const SelectTool = () => {
+  const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [capabilities, setCapabilities] = useState<Capability[]>([]);
   const [selectedCapabilities, setSelectedCapabilities] = useState<
     Capability[]
@@ -13,8 +14,16 @@ const SelectTool = () => {
   const [selectedPlatform, setSelectedPlatform] = useState<string>("All");
 
   useEffect(() => {
+    fetchPlatform();
     fetchData("All");
   }, []);
+
+  const fetchPlatform = () => {
+    axios
+      .get<Platform[]>(`http://localhost:8080/platforms`)
+      .then((res) => setPlatforms(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
 
   const fetchData = (platform: string) => {
     axios
@@ -91,10 +100,9 @@ const SelectTool = () => {
               onChange={handlePlatformChange}
             >
               <option value="All">All</option>
-              <option value="Instagram">Instagram</option>
-              <option value="Twitter">Twitter</option>
-              <option value="Telegram">Telegram</option>
-              <option value="DarkWeb">DarkWeb</option>
+              {platforms.map((platform) => (
+                <option value={platform.name}>{platform.name}</option>
+              ))}
             </select>
           </div>
 
