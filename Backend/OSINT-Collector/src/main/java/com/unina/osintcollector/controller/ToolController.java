@@ -7,6 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
+import org.yaml.snakeyaml.Yaml;
+import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +44,29 @@ public class ToolController {
     }
 
     @PostMapping("/add")
-    public void addTool(@RequestBody String fileYAML) {
-        //TO_DO
-        System.out.println(fileYAML);
+    public Mono<Void> addTool(@RequestBody String fileContent) {
+        Yaml yaml = new Yaml();
+        Map<String, Object> yamlMap = yaml.load(fileContent);
+
+        String name = (String) yamlMap.get("name");
+        String platform = (String) yamlMap.get("platform");
+
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, Map<String, List<String>>>> capabilitiesMap = (Map<String, Map<String, Map<String, List<String>>>>) yamlMap.get("capabilities");
+
+        List<Map<String, Object>> capabilities = new ArrayList<>();
+        capabilitiesMap.forEach((capabilityName, ioMap) -> {
+            Map<String, Object> capability = new HashMap<>();
+            capability.put("name", capabilityName);
+            capability.put("inputs", ioMap.get("input"));
+            capability.put("outputs", ioMap.get("output"));
+
+            capabilities.add(capability);
+        });
+
+        //System.out.println("Name: " + name + "; Platform: " + platform + "; Capabilities: " + capabilities);
+
+        return toolRepository.addTool(name, platform, capabilities);
     }
 
 }

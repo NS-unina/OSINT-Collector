@@ -5,7 +5,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
@@ -19,12 +18,13 @@ public class Tool {
     @Property
     private String platform;
     @Relationship(type = "HAS_CAPABILITY", direction = OUTGOING)
-    private Set<Capability> capabilities = new HashSet<>();
+    private Set<Capability> capabilities;
 
-    public Tool(Integer id, String name, String platform) {
+    public Tool(Integer id, String name, String platform, Set<Capability> capabilities) {
         this.id = id;
         this.name = name;
         this.platform = platform;
+        this.capabilities = capabilities;
     }
 
     public Integer getId() {
