@@ -35,3 +35,10 @@ export interface Tool {
     id: number;
     name: string;
 }
+
+export interface RequiredToolInputs {
+    [toolName: string]: {
+        [inputLabel: string]: string;
+    };
+}
+  

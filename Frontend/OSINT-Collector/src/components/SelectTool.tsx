@@ -15,7 +15,7 @@ const SelectTool = () => {
 
   useEffect(() => {
     fetchPlatform();
-    fetchData("All");
+    fetchCapabilities("All");
   }, []);
 
   const fetchPlatform = () => {
@@ -25,7 +25,7 @@ const SelectTool = () => {
       .catch((error) => console.error("Error fetching data:", error));
   };
 
-  const fetchData = (platform: string) => {
+  const fetchCapabilities = (platform: string) => {
     axios
       .get<Capability[]>(
         `http://localhost:8080/capabilities?platform=${platform}`
@@ -52,7 +52,7 @@ const SelectTool = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedPlatform = event.target.value;
-    fetchData(selectedPlatform);
+    fetchCapabilities(selectedPlatform);
     setSelectedPlatform(selectedPlatform);
   };
 
@@ -101,7 +101,9 @@ const SelectTool = () => {
             >
               <option value="All">All</option>
               {platforms.map((platform) => (
-                <option value={platform.name}>{platform.name}</option>
+                <option key={platform.id} value={platform.name}>
+                  {platform.name}
+                </option>
               ))}
             </select>
           </div>
