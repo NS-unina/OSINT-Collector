@@ -69,4 +69,9 @@ public class ToolController {
         return toolRepository.addTool(name, platform, capabilities);
     }
 
+    @PostMapping("/run")
+    public void runTools(@RequestBody List<Map<String, Object>> toolsInputs) {
+        System.out.print(toolsInputs);
+    }
+
 }
