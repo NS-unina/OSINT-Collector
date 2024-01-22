@@ -109,7 +109,7 @@ const SelectTool = () => {
             <Player
               autoplay
               loop
-              src="https://lottie.host/d4f8ec0d-eadf-42be-a573-f03167697e06/EXDDIB9Rg8.json"
+              src="https://lottie.host/376a68e5-90ca-405f-963a-62186614fff8/1FsAPyuRgi.json"
               style={{ height: "300px", width: "300px" }}
               className="fade-in"
             >
