@@ -83,3 +83,22 @@ body {
   display: inline-block;
   width: 45%; /* Imposta la larghezza desiderata */
 }
+
+/* Aggiungi stili per la classe di animazione fade-in */
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Aggiungi stili per la classe di animazione quando è completata */
+.animation-done {
+  animation: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

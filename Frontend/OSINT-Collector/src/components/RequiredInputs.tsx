@@ -8,6 +8,7 @@ import axios from "axios";
 
 interface Props {
   requiredInputs: RequiredInput[];
+  onSubmit: () => void;
 }
 
 const getPlatformIcon = (platform: string) => {
@@ -25,7 +26,7 @@ const getPlatformIcon = (platform: string) => {
   }
 };
 
-const RequiredInputs = ({ requiredInputs }: Props) => {
+const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
   const [formData, setFormData] = useState<RequiredToolInputs[]>([]);
 
   const handleChange = (toolName: string, inputName: string, value: string) => {
@@ -48,6 +49,7 @@ const RequiredInputs = ({ requiredInputs }: Props) => {
       axios
         .post<RequiredToolInputs[]>("http://localhost:8080/tools/run", formData)
         .then(() => {
+          onSubmit();
           setFormData([]);
         })
         .catch((error) => {

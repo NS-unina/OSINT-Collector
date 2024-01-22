@@ -3,6 +3,9 @@ import axios from "axios";
 import SelectCapability from "./SelectCapability";
 import { Platform, Capability, RequiredInput } from "../types";
 import RequiredInputs from "./RequiredInputs";
+import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import AlertMessage from "./AlertMessage";
+import "../App.css";
 
 const SelectTool = () => {
   const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -12,6 +15,7 @@ const SelectTool = () => {
   >([]);
   const [requiredInputs, setRequiredInputs] = useState<RequiredInput[]>([]);
   const [selectedPlatform, setSelectedPlatform] = useState<string>("All");
+  const [submitted, setSubmit] = useState(false);
 
   useEffect(() => {
     fetchPlatform();
@@ -56,6 +60,10 @@ const SelectTool = () => {
     setSelectedPlatform(selectedPlatform);
   };
 
+  const handleSubmit = () => {
+    setSubmit(true);
+  };
+
   useEffect(() => {
     const fetchRequiredInputs = () => {
       if (selectedCapabilities.length > 0) {
@@ -87,36 +95,65 @@ const SelectTool = () => {
   return (
     <div className="container mt-5">
       <div className="row">
-        <div className="col-md-6">
-          <div className="mb-3">
-            <label htmlFor="platform" className="form-label">
-              Platform:
-            </label>
-            <select
-              className="form-select"
-              name="platform"
-              id="platform"
-              value={selectedPlatform}
-              onChange={handlePlatformChange}
+        {submitted ? (
+          <div>
+            <AlertMessage
+              message={"Tool launched!"}
+              type={"primary"}
+              time={8000}
+              onClose={() => {
+                setSelectedCapabilities([]);
+                setSubmit(false);
+              }}
+            />
+            <Player
+              autoplay
+              loop
+              src="https://lottie.host/d4f8ec0d-eadf-42be-a573-f03167697e06/EXDDIB9Rg8.json"
+              style={{ height: "300px", width: "300px" }}
+              className="fade-in"
             >
-              <option value="All">All</option>
-              {platforms.map((platform) => (
-                <option key={platform.id} value={platform.name}>
-                  {platform.name}
-                </option>
-              ))}
-            </select>
+              <Controls
+                visible={false}
+                buttons={["play", "repeat", "frame", "debug"]}
+              />
+            </Player>
           </div>
+        ) : (
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label htmlFor="platform" className="form-label">
+                Platform:
+              </label>
+              <select
+                className="form-select"
+                name="platform"
+                id="platform"
+                value={selectedPlatform}
+                onChange={handlePlatformChange}
+              >
+                <option value="All">All</option>
+                {platforms.map((platform) => (
+                  <option key={platform.id} value={platform.name}>
+                    {platform.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <SelectCapability
-            capabilities={capabilities}
-            selectedCapabilities={selectedCapabilities}
-            handleCapabilityToggle={handleCapabilityToggle}
+            <SelectCapability
+              capabilities={capabilities}
+              selectedCapabilities={selectedCapabilities}
+              handleCapabilityToggle={handleCapabilityToggle}
+            />
+          </div>
+        )}
+
+        {!submitted && requiredInputs.length > 0 && (
+          <RequiredInputs
+            requiredInputs={requiredInputs}
+            onSubmit={handleSubmit}
           />
-        </div>
-
-        {requiredInputs.length > 0 && (
-          <RequiredInputs requiredInputs={requiredInputs} />
         )}
       </div>
     </div>
