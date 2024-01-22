@@ -4,6 +4,7 @@ import { AiFillInstagram, AiFillTwitterCircle } from "react-icons/ai";
 import { FaTelegram } from "react-icons/fa";
 import { CgDarkMode } from "react-icons/cg";
 import { useState } from "react";
+import axios from "axios";
 
 interface Props {
   requiredInputs: RequiredInput[];
@@ -42,7 +43,17 @@ const RequiredInputs = ({ requiredInputs }: Props) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(JSON.stringify(formData));
+
+    if (formData) {
+      axios
+        .post<RequiredToolInputs[]>("http://localhost:8080/tools/run", formData)
+        .then(() => {
+          setFormData([]);
+        })
+        .catch((error) => {
+          console.error("Error removing tool:", error);
+        });
+    }
   };
 
   return (
