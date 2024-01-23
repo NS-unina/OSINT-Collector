@@ -1,0 +1,8 @@
+name: snscrape-telegram
+platform: Telegram
+capabilities:
+  download-last-message:
+    input:
+      - channelName
+    output:
+      - Message
