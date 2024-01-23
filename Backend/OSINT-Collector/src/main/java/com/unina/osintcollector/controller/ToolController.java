@@ -33,7 +33,7 @@ public class ToolController {
     @PostMapping("/remove")
     public Flux<Tool> removeTool(@RequestBody Map<String, String> requestBody) {
         String toolNameToRemove = requestBody.get("remove_tool");
-        return toolRepository.deleteToolByName(toolNameToRemove)
+        return toolRepository.deleteTool(toolNameToRemove)
                 .thenMany(toolRepository.getTools());
     }
 

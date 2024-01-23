@@ -15,6 +15,9 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
     Flux<Tool> getTools();
     Mono<Void> deleteToolByName(String toolName);
 
+    @Query("MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability) WHERE t.name = $toolName DETACH DELETE t, c")
+    Mono<Void> deleteTool(String toolName);
+
     @Query("""
             MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability)-[:NEEDS]->(i:Resource)
             WHERE ANY(substring IN $capabilities WHERE c.name CONTAINS substring)
@@ -24,16 +27,17 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
 
     @Query("""
     MERGE (t:Tool {name: $toolName, platform: $platform})
-    MERGE (t)-[:RUNS_ON]->(p:Platform {name: $platform})
+    MERGE (p:Platform {name: $platform})
+    MERGE (t)-[:RUNS_ON]->(p)
     WITH t, p
     UNWIND $capabilities AS cap
     MERGE (c:Capability {name: cap.name})
     MERGE (t)-[:HAS_CAPABILITY]->(c)
-    WITH c, t, cap, cap.value.inputs AS inputs
+    WITH c, t, cap, cap.inputs AS inputs
     UNWIND inputs AS input
     MATCH (i:Resource {name: input})-[*]->(:Resource {name: $platform})
     FOREACH (ignore IN CASE WHEN i IS NOT NULL THEN [1] ELSE [] END | MERGE (c)-[:NEEDS]->(i))
-    WITH c, t, cap, cap.value.outputs AS outputs
+    WITH c, t, cap, cap.outputs AS outputs
     UNWIND outputs AS output
     MATCH (o:Resource {name: output})-[*]->(:Resource {name: $platform})
     FOREACH (ignore IN CASE WHEN o IS NOT NULL THEN [1] ELSE [] END | MERGE (c)-[:PRODUCES]->(o))
