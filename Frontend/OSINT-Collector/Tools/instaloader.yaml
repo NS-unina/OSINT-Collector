@@ -1,0 +1,14 @@
+name: instaloader
+platform: Instagram
+capabilities:
+  download-public-profile:
+    input:
+      - username
+    output:
+      - instagramAccount
+  download-hashtag-post:
+    input:
+      - username
+      - hashtags
+    output:
+      - Post

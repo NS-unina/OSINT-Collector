@@ -1,29 +1,40 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SelectCapability from "./SelectCapability";
-import { Capability, RequiredInput, ServerResponse } from "../types";
+import { Platform, Capability, RequiredInput } from "../types";
 import RequiredInputs from "./RequiredInputs";
+import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import AlertMessage from "./AlertMessage";
+import "../App.css";
 
 const SelectTool = () => {
+  const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [capabilities, setCapabilities] = useState<Capability[]>([]);
   const [selectedCapabilities, setSelectedCapabilities] = useState<
     Capability[]
   >([]);
   const [requiredInputs, setRequiredInputs] = useState<RequiredInput[]>([]);
   const [selectedPlatform, setSelectedPlatform] = useState<string>("All");
+  const [submitted, setSubmit] = useState(false);
 
   useEffect(() => {
-    fetchData("All");
+    fetchPlatform();
+    fetchCapabilities("All");
   }, []);
 
-  const fetchData = (platform: string) => {
+  const fetchPlatform = () => {
     axios
-      .get<ServerResponse>(
-        `http://127.0.0.1:5000/get_capabilities?platform=${platform}`
+      .get<Platform[]>(`http://localhost:8080/platforms`)
+      .then((res) => setPlatforms(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const fetchCapabilities = (platform: string) => {
+    axios
+      .get<Capability[]>(
+        `http://localhost:8080/capabilities?platform=${platform}`
       )
-      .then((response) =>
-        updateCapabilities(response.data.capability_parameters)
-      )
+      .then((res) => setCapabilities(res.data))
       .catch((error) => console.error("Error fetching data:", error));
   };
 
@@ -45,31 +56,28 @@ const SelectTool = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedPlatform = event.target.value;
-    fetchData(selectedPlatform);
+    fetchCapabilities(selectedPlatform);
     setSelectedPlatform(selectedPlatform);
   };
 
-  const updateCapabilities = (capabilities: string[]) => {
-    setCapabilities(
-      capabilities.map((capability, index) => ({
-        id: index + 1,
-        name: capability,
-      }))
-    );
+  const handleSubmit = () => {
+    setSubmit(true);
   };
 
   useEffect(() => {
     const fetchRequiredInputs = () => {
       if (selectedCapabilities.length > 0) {
         const formData = {
-          platform: selectedPlatform,
           capabilities: selectedCapabilities.map(
             (capability) => capability.name
           ),
         };
 
         axios
-          .post<RequiredInput[]>("http://127.0.0.1:5000/select", formData)
+          .post<RequiredInput[]>(
+            "http://localhost:8080/tools/requiredInputs",
+            formData
+          )
           .then((response) => {
             setRequiredInputs(response.data);
           })
@@ -87,35 +95,65 @@ const SelectTool = () => {
   return (
     <div className="container mt-5">
       <div className="row">
-        <div className="col-md-6">
-          <div className="mb-3">
-            <label htmlFor="platform" className="form-label">
-              Platform:
-            </label>
-            <select
-              className="form-select"
-              name="platform"
-              id="platform"
-              value={selectedPlatform}
-              onChange={handlePlatformChange}
+        {submitted ? (
+          <div>
+            <AlertMessage
+              message={"Tool launched!"}
+              type={"primary"}
+              time={8000}
+              onClose={() => {
+                setSelectedCapabilities([]);
+                setSubmit(false);
+              }}
+            />
+            <Player
+              autoplay
+              loop
+              src="https://lottie.host/376a68e5-90ca-405f-963a-62186614fff8/1FsAPyuRgi.json"
+              style={{ height: "300px", width: "300px" }}
+              className="fade-in"
             >
-              <option value="All">All</option>
-              <option value="Instagram">Instagram</option>
-              <option value="Twitter">Twitter</option>
-              <option value="Telegram">Telegram</option>
-              <option value="DarkWeb">DarkWeb</option>
-            </select>
+              <Controls
+                visible={false}
+                buttons={["play", "repeat", "frame", "debug"]}
+              />
+            </Player>
           </div>
+        ) : (
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label htmlFor="platform" className="form-label">
+                Platform:
+              </label>
+              <select
+                className="form-select"
+                name="platform"
+                id="platform"
+                value={selectedPlatform}
+                onChange={handlePlatformChange}
+              >
+                <option value="All">All</option>
+                {platforms.map((platform) => (
+                  <option key={platform.id} value={platform.name}>
+                    {platform.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <SelectCapability
-            capabilities={capabilities}
-            selectedCapabilities={selectedCapabilities}
-            handleCapabilityToggle={handleCapabilityToggle}
+            <SelectCapability
+              capabilities={capabilities}
+              selectedCapabilities={selectedCapabilities}
+              handleCapabilityToggle={handleCapabilityToggle}
+            />
+          </div>
+        )}
+
+        {!submitted && requiredInputs.length > 0 && (
+          <RequiredInputs
+            requiredInputs={requiredInputs}
+            onSubmit={handleSubmit}
           />
-        </div>
-
-        {requiredInputs.length > 0 && (
-          <RequiredInputs requiredInputs={requiredInputs} />
         )}
       </div>
     </div>

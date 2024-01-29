@@ -56,23 +56,30 @@ const AddTool = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("yaml_file", fileInput[0]);
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const fileContent = event.target?.result;
 
-    axios
-      .post("http://127.0.0.1:5000/add", formData)
-      .then(() => {
-        console.log("Upload completato con successo!");
-        setUploadSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Errore durante la richiesta al server:", error);
-        setUploadSuccess(false);
-      })
-      .finally(() => {
-        setFileInput(null);
-        setSelectedFileName("");
-      });
+      axios
+        .post("http://localhost:8080/tools/add", fileContent, {
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        })
+        .then(() => {
+          console.log("Upload completato con successo!");
+          setUploadSuccess(true);
+        })
+        .catch((error) => {
+          console.error("Errore durante la richiesta al server:", error);
+          setUploadSuccess(false);
+        })
+        .finally(() => {
+          setFileInput(null);
+          setSelectedFileName("");
+        });
+    };
+    reader.readAsText(fileInput[0]);
   };
 
   return (

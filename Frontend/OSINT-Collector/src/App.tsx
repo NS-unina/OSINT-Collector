@@ -74,7 +74,7 @@ const App = () => {
           </div>
         </div>
       </div>
-      {selectedTool && <div className="mt-4 fade-in">{renderPage()}</div>}
+      {selectedTool && <div className="mt-4">{renderPage()}</div>}
     </div>
   );
 };

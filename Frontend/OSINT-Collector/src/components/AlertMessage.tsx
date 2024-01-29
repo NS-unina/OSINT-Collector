@@ -4,7 +4,8 @@ import { MdDone } from "react-icons/md";
 
 interface AlertMessageProps {
   message: string;
-  type: "success" | "danger";
+  type: "success" | "danger" | "primary";
+  time?: number;
   onClose: () => void;
 }
 
@@ -12,22 +13,23 @@ const AlertMessage: React.FC<AlertMessageProps> = ({
   message,
   type,
   onClose,
+  time = 5000,
 }) => {
   useEffect(() => {
-    // Nascondi il messaggio dopo 5 secondi
+    // Nascondi il messaggio dopo "time" secondi
     const timer = setTimeout(() => {
       onClose();
-    }, 5000);
+    }, time);
 
     return () => clearTimeout(timer);
-  }, [onClose]);
+  }, [onClose, time]);
 
   return (
     <div
       className={`alert alert-dismissible fade show alert-${type} mt-3`}
       role="alert"
     >
-      {type == "success" ? <MdDone /> : <BiSolidError />}
+      {type === "success" || type === "primary" ? <MdDone /> : <BiSolidError />}
       {message}
       <button
         type="button"

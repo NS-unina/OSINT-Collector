@@ -1,19 +1,27 @@
 // types.ts
+export interface Platform {
+    id: number;
+    name: string;
+}
+
 export interface Capability {
     id: number;
     name: string;
-  }
+}
   
 export interface ServerResponse {
     capability_parameters: string[];
 }
 
 export interface RequiredInput {
-    input: {
+    inputs: {
+        id: string;
         label: string;
         name: string;
+        uri: string;
     }[];
     tool: {
+        id: string;
         name: string;
         platform: string;
     };
@@ -27,3 +35,10 @@ export interface Tool {
     id: number;
     name: string;
 }
+
+export interface RequiredToolInputs {
+    [toolName: string]: {
+        [inputLabel: string]: string;
+    };
+}
+  
