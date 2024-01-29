@@ -6,14 +6,14 @@ instaloader:
       description: Download public profile informations
       inputs:
         - PROFILE
-      command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/${PROFILE} ${PROFILE}
+      command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/instaloader-${PROFILE} ${PROFILE}
 
     - key: download-hashtag-post
       name: Download hashtag post
       description: Download posts with certain hashtag
       inputs:
         - HASHTAG
-      command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/${HASHTAG} "#${HASHTAG}"
+      command: ./instaloader.py --no-pictures --no-videos --no-captions --no-compress-json --dirname-pattern=/output/instaloader-${HASHTAG} "#${HASHTAG}"
 
   inputs:
     - key: PROFILE

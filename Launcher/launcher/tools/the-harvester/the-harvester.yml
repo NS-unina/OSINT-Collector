@@ -7,7 +7,7 @@ the-harvester:
       inputs:
         - SOURCE
         - DOMAIN
-      command: ./theHarvester.py -d ${DOMAIN} -b ${SOURCE} -f /output/${DOMAIN}.json
+      command: ./theHarvester.py -d ${DOMAIN} -b ${SOURCE} -f /output/the-harvester-${DOMAIN}.json
 
   inputs:
     - key: DOMAIN
