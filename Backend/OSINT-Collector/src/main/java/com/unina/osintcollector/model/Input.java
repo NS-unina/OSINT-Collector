@@ -8,6 +8,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 public class Input {
 
     private final Integer id;
+    private final String value;
 
     @Id
     private final String name;
@@ -16,8 +17,9 @@ public class Input {
     private final String label;
     private final String uri;
 
-    public Input(Integer id, String name, String label, String uri) {
+    public Input(Integer id, String value, String name, String label, String uri) {
         this.id = id;
+        this.value = value;
         this.name = name;
         this.label = label;
         this.uri = uri;
@@ -37,5 +39,9 @@ public class Input {
 
     public String getUri() {
         return uri;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

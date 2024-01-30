@@ -21,7 +21,7 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
     @Query("""
             MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability)-[:NEEDS]->(i:Resource)
             WHERE ANY(substring IN $capabilities WHERE c.name CONTAINS substring)
-            RETURN properties(t) as tool, COLLECT(DISTINCT properties(i)) as inputs
+            RETURN COLLECT(DISTINCT properties(t)) as tool, COLLECT(DISTINCT properties(i)) as inputs, c as capability
             """)
     Flux<ToolInput> getRequiredInputs(List<String> capabilities);
 
