@@ -53,3 +53,8 @@ export interface RequiredToolInputs {
     };
 }
   
+export interface RunToolForm {
+    image: string;
+    entrypoint: string;
+    inputs: string[];
+}

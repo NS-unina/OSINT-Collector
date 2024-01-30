@@ -1,4 +1,4 @@
-import { RequiredInput, RequiredToolInputs } from "../types";
+import { RequiredInput, RunToolForm } from "../types";
 
 import { AiFillInstagram, AiFillTwitterCircle } from "react-icons/ai";
 import { FaTelegram } from "react-icons/fa";
@@ -27,40 +27,33 @@ const getPlatformIcon = (platform: string) => {
 };
 
 const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
-  const [formData, setFormData] = useState<RequiredToolInputs[]>([]);
+  const [formData, setFormData] = useState<RunToolForm[]>([]);
 
   const handleChange = (
     toolName: string,
-    capability: string,
-    inputName: string,
-    value: string
+    capabilityName: string,
+    value: string,
+    inputIndex: number
   ) => {
     setFormData((prevData) => {
       const existingToolIndex = prevData.findIndex(
-        (data) => data.capability.name === capability
+        (data) => data.image === toolName && data.entrypoint === capabilityName
       );
 
       if (existingToolIndex !== -1) {
         const updatedData = [...prevData];
         const existingTool = { ...updatedData[existingToolIndex] };
 
-        const existingInputIndex = existingTool.inputs.findIndex(
-          (input) => input.label === inputName
-        );
-
-        if (existingInputIndex !== -1) {
-          existingTool.inputs[existingInputIndex].value = value;
-        } else {
-          existingTool.inputs.push({ label: inputName, value: value });
-        }
+        // Overwrite the value for the specific input index
+        existingTool.inputs[inputIndex] = value;
 
         updatedData[existingToolIndex] = existingTool;
         return updatedData;
       } else {
-        const newToolData: RequiredToolInputs = {
-          inputs: [{ label: inputName, value: value }],
-          capability: { name: capability },
-          tool: { name: toolName },
+        const newToolData: RunToolForm = {
+          image: toolName,
+          entrypoint: capabilityName,
+          inputs: [value],
         };
         return [...prevData, newToolData];
       }
@@ -72,7 +65,7 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
 
     if (formData) {
       axios
-        .post<RequiredToolInputs[]>("http://localhost:8080/tools/run", formData)
+        .post<RunToolForm[]>("http://localhost:5000/launch", formData)
         .then(() => {
           onSubmit();
           setFormData([]);
@@ -99,8 +92,8 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
               id={input.capability.name}
               value={input.capability.name}
             />
-            {input.inputs.map((inputField) => (
-              <div key={inputField.name} className="mb-3">
+            {input.inputs.map((inputField, inputIndex) => (
+              <div key={inputIndex} className="mb-3">
                 <input
                   type="text"
                   className="form-control"
@@ -110,8 +103,8 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
                     handleChange(
                       input.tool.name,
                       input.capability.name,
-                      inputField.name,
-                      e.target.value
+                      e.target.value,
+                      inputIndex
                     )
                   }
                 />
