@@ -98,7 +98,7 @@ const SelectTool = () => {
         {submitted ? (
           <div>
             <AlertMessage
-              message={"Tool launched!"}
+              message={"Tools launched!"}
               type={"primary"}
               time={8000}
               onClose={() => {
