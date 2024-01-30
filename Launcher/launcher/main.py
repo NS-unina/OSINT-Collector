@@ -6,6 +6,7 @@ import logging
 from flask import Flask, request
 from src.globals import Globals
 from src.launcher import Launcher
+from flask_cors import CORS
 # from src.starter import Starter
 
 if __name__ == "__main__":
@@ -13,6 +14,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     server = Flask(__name__)
+    CORS(server)
 
     @server.route("/help")
     def help_message():
@@ -23,6 +25,7 @@ if __name__ == "__main__":
     def launch():
         """Launcher"""
         data = request.json
+
         _image = data.get("image")
         _entrypoint = data.get("entrypoint")
         _inputs = data.get("inputs")
