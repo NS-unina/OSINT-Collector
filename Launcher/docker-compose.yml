@@ -27,7 +27,7 @@ services:
 
   filebeat:
     user: root
-    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    image: docker.elastic.co/beats/filebeat:8.12.0
     container_name: filebeat
     depends_on:
       - logstash
@@ -41,7 +41,7 @@ services:
 
   logstash:
     user: root
-    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    image: docker.elastic.co/logstash/logstash:8.12.0
     container_name: logstash
     environment:
       xpack.monitoring.enabled: false
