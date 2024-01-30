@@ -1,5 +1,6 @@
 package com.unina.osintcollector.controller;
 
+import com.unina.osintcollector.model.Input;
 import com.unina.osintcollector.model.Tool;
 import com.unina.osintcollector.model.ToolInput;
 import com.unina.osintcollector.repository.ToolRepository;
@@ -71,43 +72,30 @@ public class ToolController {
     }
 
     @PostMapping("/run")
-    public boolean runTools(@RequestBody String toolsInputs) {
+    public boolean runTools(@RequestBody ToolInput[] tools) {
 
-        // Test to verify execution of Python code
+        for (ToolInput tool : tools) {
 
-        try {
-            // Specify the path to the Python script
-            String scriptPath = "/Users/ciromarrazzo/OSINT/OSINT-Collector/test.py";
+            String toolName = tool.getTool().getName();
+            String entrypoint = tool.getCapability().getName();
+            String inputs = "";
 
-            // Set up the process builder for executing the Python script
-            ProcessBuilder processBuilder = new ProcessBuilder("python3.7", scriptPath, toolsInputs);
-
-            // Set the working directory for the process to the location of the Python script
-            processBuilder.directory(new File("/Users/ciromarrazzo/OSINT/OSINT-Collector/"));
-
-            // Start the external process (Python script)
-            Process process = processBuilder.start();
-
-            // Capture and print the output of the Python script
-            InputStream inputStream = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+            System.out.println("Tool: " + toolName);
+            System.out.println("Entrypoint: " + entrypoint);
+            System.out.println("Inputs:");
+            for (Input input : tool.getInputs()) {
+                System.out.println("- " + input.getLabel() + ": " + input.getValue());
+                if (!inputs.isEmpty()) {
+                    inputs = inputs + " ";
+                }
+                inputs = inputs + input.getValue();
             }
+            System.out.println("Command: ./main.py " +  toolName + " -e " + entrypoint + " -i " + inputs);
+            System.out.println("------------------------");
 
-            // Wait for the completion of the Python script execution
-            int exitCode = process.waitFor();
-
-            // Return true if the Python script executed successfully (exit code 0)
-            return exitCode == 0;
-        } catch (IOException | InterruptedException e) {
-            // Print stack trace in case of IOException or InterruptedException
-            e.printStackTrace();
-
-            // Return false if an exception occurs during the execution of the Python script
-            return false;
         }
+
+        return true;
     }
 
 }

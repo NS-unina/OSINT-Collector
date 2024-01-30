@@ -8,7 +8,6 @@ capabilities:
       - instagramAccount
   download-hashtag-post:
     input:
-      - username
       - hashtags
     output:
       - Post

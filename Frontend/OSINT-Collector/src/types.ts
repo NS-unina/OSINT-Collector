@@ -20,6 +20,10 @@ export interface RequiredInput {
         name: string;
         uri: string;
     }[];
+    capability: {
+        id: string;
+        name: string;
+    }
     tool: {
         id: string;
         name: string;
@@ -37,8 +41,20 @@ export interface Tool {
 }
 
 export interface RequiredToolInputs {
-    [toolName: string]: {
-        [inputLabel: string]: string;
+    inputs: {
+        label: string;
+        value: string;
+    }[];
+    capability: {
+        name: string;
+    }
+    tool: {
+        name: string;
     };
 }
   
+export interface RunToolForm {
+    image: string;
+    entrypoint: string;
+    inputs: string[];
+}
