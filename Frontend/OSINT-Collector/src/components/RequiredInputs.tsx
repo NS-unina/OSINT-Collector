@@ -29,14 +29,39 @@ const getPlatformIcon = (platform: string) => {
 const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
   const [formData, setFormData] = useState<RequiredToolInputs[]>([]);
 
-  const handleChange = (toolName: string, inputName: string, value: string) => {
+  const handleChange = (
+    toolName: string,
+    capability: string,
+    inputName: string,
+    value: string
+  ) => {
     setFormData((prevData) => {
-      const toolData = prevData.find((data) => data[toolName]);
-      if (toolData) {
-        toolData[toolName][inputName] = value;
-        return [...prevData];
+      const existingToolIndex = prevData.findIndex(
+        (data) => data.capability.name === capability
+      );
+
+      if (existingToolIndex !== -1) {
+        const updatedData = [...prevData];
+        const existingTool = { ...updatedData[existingToolIndex] };
+
+        const existingInputIndex = existingTool.inputs.findIndex(
+          (input) => input.label === inputName
+        );
+
+        if (existingInputIndex !== -1) {
+          existingTool.inputs[existingInputIndex].value = value;
+        } else {
+          existingTool.inputs.push({ label: inputName, value: value });
+        }
+
+        updatedData[existingToolIndex] = existingTool;
+        return updatedData;
       } else {
-        const newToolData = { [toolName]: { [inputName]: value } };
+        const newToolData: RequiredToolInputs = {
+          inputs: [{ label: inputName, value: value }],
+          capability: { name: capability },
+          tool: { name: toolName },
+        };
         return [...prevData, newToolData];
       }
     });
@@ -66,18 +91,25 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
             <h3>
               {getPlatformIcon(input.tool.platform)} {input.tool.name}
             </h3>
+            <h6 className="mb-3">({input.capability.name})</h6>
+            <input
+              hidden
+              readOnly
+              type="text"
+              id={input.capability.name}
+              value={input.capability.name}
+            />
             {input.inputs.map((inputField) => (
               <div key={inputField.name} className="mb-3">
-                <label htmlFor={inputField.name} className="form-label">
-                  {inputField.label}
-                </label>
                 <input
                   type="text"
                   className="form-control"
+                  placeholder={inputField.name}
                   id={inputField.name}
                   onChange={(e) =>
                     handleChange(
                       input.tool.name,
+                      input.capability.name,
                       inputField.name,
                       e.target.value
                     )
