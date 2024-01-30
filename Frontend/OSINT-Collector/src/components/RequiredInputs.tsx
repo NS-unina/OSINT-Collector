@@ -64,15 +64,24 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
     e.preventDefault();
 
     if (formData) {
-      axios
-        .post<RunToolForm[]>("http://localhost:5000/launch", formData)
-        .then(() => {
-          onSubmit();
-          setFormData([]);
-        })
-        .catch((error) => {
-          console.error("Error removing tool:", error);
-        });
+      //
+      formData.forEach((data) => {
+        axios
+          .post<RunToolForm[]>("http://localhost:5000/launch", data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then(() => {
+            //
+          })
+          .catch((error) => {
+            console.error("Error removing tool:", error);
+          });
+
+        onSubmit();
+        setFormData([]);
+      });
     }
   };
 
