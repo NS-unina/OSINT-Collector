@@ -7,4 +7,5 @@ WORKDIR /app
 COPY . .
 
 RUN python3 -m pip install -r requirements.txt
-RUN chmod +x ./launcher.py
+RUN chmod +x ./main.py
+CMD "./main.py"

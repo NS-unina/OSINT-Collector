@@ -1,0 +1,24 @@
+logging.level: debug
+output.console: pretty:true
+
+filebeat.inputs:
+  - type: filestream
+    id: default-filestream
+    paths:
+      - /usr/share/filebeat/ingest_data/*.json
+
+  - type: filestream
+    id: default-filestream
+    paths:
+      - /usr/share/filebeat/ingest_data/*/*.json
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+processors:
+  - add_docker_metadata: ~
+
+output.logstash:
+  hosts: ["logstash:5044"]

@@ -3,10 +3,8 @@ The module is responsible for handling the startup of the tool and
 manage it's output and lifecycle
 """
 
-import os
 import logging
 from src.globals import Globals
-from src.services.kafka_services import KafkaServices
 from src.services.yaml_services import YAMLServices
 from src.services.docker_services import DockerServices
 
@@ -98,34 +96,10 @@ class Launcher:
             )
 
         # Starting container
-        working_dir = os.getcwd()
-        output_volume = f'{working_dir}/output/{self.tool}'
+        # working_dir = os.getcwd()
+        # output_volume = f'{working_dir}/output/{self.tool}'
         docker = DockerServices()
         docker.build_image(f'./tools/{self.tool}')
         docker.run_container(name=self.tool,
-                             output_volume=output_volume,
+                             output_volume='tools_output_data',
                              entrypoint=filled_entrypoint_cmd)
-
-        # Managing output
-        # self._manage_output(self.tool)
-
-    def _manage_output(self, tool: str):
-        """Function used to manage the tool output and send data to Kafka"""
-
-        folder_path = f'./output/{tool}'
-        if not os.path.exists(folder_path):
-            self._log.error(_Exceptions.invalid_output_folder,
-                            folder_path)
-            exit(1)
-
-        kafka = KafkaServices()
-
-        # Iterate through each folder and subfolder to find
-        # all the .json output file
-        for root, _, files in os.walk(folder_path):
-            for filename in files:
-                file_path = os.path.join(root, filename)
-
-                # Check if file is a json
-                if filename.lower().endswith('.json'):
-                    kafka.write(file_path=file_path)
