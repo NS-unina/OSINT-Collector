@@ -12,10 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import reactor.core.publisher.Mono;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/tools")
@@ -62,11 +59,16 @@ public class ToolController {
             capability.put("name", capabilityName);
             capability.put("inputs", ioMap.get("input"));
             capability.put("outputs", ioMap.get("output"));
+            capability.put("description", ioMap.get("description"));
 
             capabilities.add(capability);
         });
 
         //System.out.println("Name: " + name + "; Platform: " + platform + "; Capabilities: " + capabilities);
+
+        if (Objects.equals(platform, "Multi Platform")) {
+            return toolRepository.addMultiPlatformTool(name, platform, capabilities);
+        }
 
         return toolRepository.addTool(name, platform, capabilities);
     }

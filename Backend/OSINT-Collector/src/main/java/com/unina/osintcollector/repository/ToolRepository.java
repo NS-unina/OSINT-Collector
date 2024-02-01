@@ -31,11 +31,11 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
     MERGE (t)-[:RUNS_ON]->(p)
     WITH t, p
     UNWIND $capabilities AS cap
-    MERGE (c:Capability {name: cap.name})
+    MERGE (c:Capability {name: cap.name, description: cap.description})
     MERGE (t)-[:HAS_CAPABILITY]->(c)
     WITH c, t, cap, cap.inputs AS inputs
     UNWIND inputs AS input
-    MATCH (i:Resource {name: input})-[*]->(:Resource {name: $platform})
+    MATCH (i:Resource {name: input})-[*]->(r:Resource {name: $platform})
     FOREACH (ignore IN CASE WHEN i IS NOT NULL THEN [1] ELSE [] END | MERGE (c)-[:NEEDS]->(i))
     WITH c, t, cap, cap.outputs AS outputs
     UNWIND outputs AS output
@@ -43,6 +43,25 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
     FOREACH (ignore IN CASE WHEN o IS NOT NULL THEN [1] ELSE [] END | MERGE (c)-[:PRODUCES]->(o))
     """)
     Mono<Void> addTool(String toolName, String platform, List<Map<String, Object>> capabilities);
+
+    @Query("""
+    MERGE (t:Tool {name: $toolName, platform: $platform})
+    MERGE (p:Platform {name: $platform})
+    MERGE (t)-[:RUNS_ON]->(p)
+    WITH t, p
+    UNWIND $capabilities AS cap
+    MERGE (c:Capability {name: cap.name, description: cap.description})
+    MERGE (t)-[:HAS_CAPABILITY]->(c)
+    WITH c, t, cap, cap.inputs AS inputs
+    UNWIND inputs AS input
+    MATCH (i:Resource {label: input})
+    FOREACH (ignore IN CASE WHEN i IS NOT NULL THEN [1] ELSE [] END | MERGE (c)-[:NEEDS]->(i))
+    WITH c, t, cap, cap.outputs AS outputs
+    UNWIND outputs AS output
+    MATCH (o:Resource {name: output})
+    FOREACH (ignore IN CASE WHEN o IS NOT NULL THEN [1] ELSE [] END | MERGE (c)-[:PRODUCES]->(o))
+    """)
+    Mono<Void> addMultiPlatformTool(String toolName, String platform, List<Map<String, Object>> capabilities);
 
 }
 
