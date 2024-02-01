@@ -2,11 +2,13 @@ name: instaloader
 platform: Instagram
 capabilities:
   download-public-profile:
+    description: Download Instagram public profile
     input:
       - username
     output:
       - instagramAccount
   download-hashtag-post:
+    description: Download Instagram posts using hashtag
     input:
       - hashtags
     output:

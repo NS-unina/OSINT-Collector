@@ -7,6 +7,7 @@ export interface Platform {
 export interface Capability {
     id: number;
     name: string;
+    description: string;
 }
   
 export interface ServerResponse {

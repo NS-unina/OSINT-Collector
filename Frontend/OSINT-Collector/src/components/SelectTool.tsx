@@ -46,6 +46,7 @@ const SelectTool = () => {
             ...prevSelected,
             capabilities.find((c) => c.id === capabilityId) || {
               id: capabilityId,
+              description: "",
               name: "",
             },
           ]
