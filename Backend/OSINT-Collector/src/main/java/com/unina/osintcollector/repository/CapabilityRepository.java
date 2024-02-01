@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 import reactor.core.publisher.Flux;
 
 public interface CapabilityRepository extends ReactiveNeo4jRepository<Capability, String> {
-    @Query("MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability) WHERE t.platform = $platform OR $platform = 'All' RETURN DISTINCT ID(c) as id, c.name as name")
+    @Query("MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability) WHERE t.platform = $platform OR $platform = 'All' RETURN DISTINCT ID(c) as id, c.name as name, c.description as description")
     Flux<Capability> findCapabilitiesByPlatform(@Param("platform") String platform);
 }

@@ -13,6 +13,7 @@ import static org.springframework.data.neo4j.core.schema.Relationship.Direction.
 public class Capability {
 
     private final Integer id;
+    private final String description;
 
     @Id
     private final String name;
@@ -21,8 +22,9 @@ public class Capability {
     @Relationship(type = "PRODUCES", direction = OUTGOING)
     private Set<Output> outputs = new HashSet<>();
 
-    public Capability(Integer id, String name) {
+    public Capability(Integer id, String description, String name) {
         this.id = id;
+        this.description = description;
         this.name = name;
     }
 
@@ -40,5 +42,9 @@ public class Capability {
 
     public Set<Output> getOutputs() {
         return outputs;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
