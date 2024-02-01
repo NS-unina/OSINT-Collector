@@ -1,0 +1,9 @@
+name: blackbird
+platform: Multi Platform
+capabilities:
+  search-accounts:
+    description: Search accounts by username
+    input:
+      - Username
+    output:
+      - username
