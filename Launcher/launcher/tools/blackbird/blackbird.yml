@@ -1,0 +1,13 @@
+blackbird:
+  description: An OSINT tool to search fast for accounts by username across 581 sites.
+  entrypoints:
+    - key: search-accounts
+      name: Search accounts
+      description: Search accounts by username
+      inputs:
+        - PROFILE
+      command: python blackbird.py -u ${PROFILE} -f /output/blackbird-${PROFILE}.json
+  inputs:
+    - key: PROFILE
+      description: The username to analyze
+      type: string
