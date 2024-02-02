@@ -9,6 +9,13 @@ export interface Capability {
     name: string;
     description: string;
 }
+
+export interface Launch {
+    id: number;
+    image: string;
+    entrypoint: string;
+    inputs: string[];
+}
   
 export interface ServerResponse {
     capability_parameters: string[];

@@ -67,7 +67,7 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
       //
       formData.forEach((data) => {
         axios
-          .post<RunToolForm[]>("http://localhost:5000/launch", data, {
+          .post<RunToolForm[]>("http://localhost:8080/tools/run", data, {
             headers: {
               "Content-Type": "application/json",
             },
