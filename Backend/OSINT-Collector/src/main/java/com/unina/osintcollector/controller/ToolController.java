@@ -1,26 +1,32 @@
 package com.unina.osintcollector.controller;
 
-import com.unina.osintcollector.model.Input;
+import com.unina.osintcollector.model.Launch;
 import com.unina.osintcollector.model.Tool;
 import com.unina.osintcollector.model.ToolInput;
+import com.unina.osintcollector.repository.LaunchRepository;
 import com.unina.osintcollector.repository.ToolRepository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
 import org.yaml.snakeyaml.Yaml;
 import reactor.core.publisher.Mono;
 
-import java.io.*;
 import java.util.*;
 
 @RestController
 @RequestMapping("/tools")
 public class ToolController {
     private final ToolRepository toolRepository;
+    private final LaunchRepository launchRepository;
 
-    public ToolController(ToolRepository toolRepository) {
+    private final RestTemplate restTemplate;
+
+    public ToolController(ToolRepository toolRepository, LaunchRepository launchRepository, RestTemplate restTemplate) {
         this.toolRepository = toolRepository;
+        this.launchRepository = launchRepository;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping(value = { "", "/" }, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,30 +80,14 @@ public class ToolController {
     }
 
     @PostMapping("/run")
-    public boolean runTools(@RequestBody ToolInput[] tools) {
+    public Mono<String> runTools(@RequestBody Launch tool) {
+        Mono<Launch> saveMono = launchRepository.save(tool);
+        Mono<Void> postMono = Mono.fromRunnable(() -> {
+            String launcherUrl = "http://localhost:5000/launch";
+            restTemplate.postForEntity(launcherUrl, tool, Void.class);
+        });
 
-        for (ToolInput tool : tools) {
-
-            String toolName = tool.getTool().getName();
-            String entrypoint = tool.getCapability().getName();
-            String inputs = "";
-
-            System.out.println("Tool: " + toolName);
-            System.out.println("Entrypoint: " + entrypoint);
-            System.out.println("Inputs:");
-            for (Input input : tool.getInputs()) {
-                System.out.println("- " + input.getLabel() + ": " + input.getValue());
-                if (!inputs.isEmpty()) {
-                    inputs = inputs + " ";
-                }
-                inputs = inputs + input.getValue();
-            }
-            System.out.println("Command: ./main.py " +  toolName + " -e " + entrypoint + " -i " + inputs);
-            System.out.println("------------------------");
-
-        }
-
-        return true;
+        return saveMono.then(postMono).then(Mono.just("OK"));
     }
 
 }
