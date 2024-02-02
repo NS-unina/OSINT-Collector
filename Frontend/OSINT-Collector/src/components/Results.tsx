@@ -23,7 +23,7 @@ const Results = () => {
 
   return (
     <div>
-      <div className="mb-3" id="launchesContainer">
+      <div className="mb-3 mt-5" id="launchesContainer">
         <label className="form-label">Launches:</label>
         {launches.map((launch) => (
           <div key={launch.id} className="mb-2">
@@ -37,7 +37,7 @@ const Results = () => {
               onChange={() => handleToolToggle(launch.id)}
             />
             <label
-              className="btn btn-outline-primary tool-label"
+              className="btn btn-outline-success tool-label"
               htmlFor={`tool-${launch.id}`}
             >
               {launch.entrypoint} {">"} {launch.inputs}

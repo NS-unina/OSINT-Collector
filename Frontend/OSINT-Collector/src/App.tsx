@@ -70,15 +70,12 @@ const App = () => {
           <div className="col">
             <div
               className={`card h-100 ${
-                selectedTool === "Results" ? "border-primary selected" : ""
+                selectedTool === "Results" ? "border-success selected" : ""
               }`}
               onClick={() => handleSelectTool("Results")}
             >
               <div className="card-body text-center">
-                <PiGraphDuotone
-                  size={40}
-                  className="mb-3 text-success-emphasis"
-                />
+                <PiGraphDuotone size={40} className="mb-3 text-success" />
                 <h5 className="card-title">Results</h5>
               </div>
             </div>

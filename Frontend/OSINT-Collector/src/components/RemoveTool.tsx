@@ -48,7 +48,7 @@ const RemoveTool = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3" id="toolsContainer">
+        <div className="mb-3 mt-5" id="toolsContainer">
           <label className="form-label">Tools:</label>
           {tools.map((tool) => (
             <div key={tool.id} className="mb-2">
@@ -62,7 +62,7 @@ const RemoveTool = () => {
                 onChange={() => handleToolToggle(tool.id)}
               />
               <label
-                className="btn btn-outline-primary tool-label"
+                className="btn btn-outline-danger tool-label"
                 htmlFor={`tool-${tool.id}`}
               >
                 {tool.name}
