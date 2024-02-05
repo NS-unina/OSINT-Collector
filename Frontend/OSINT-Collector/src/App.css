@@ -44,11 +44,16 @@ body {
   border: 1px solid #dee2e6; /* Bordo della card */
   border-radius: 8px; /* Bordi arrotondati */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+  width: fit-content;
 }
 
 .card:hover {
   cursor: pointer;
   transform: scale(1.05);
+}
+
+.card:hover .invisible {
+  visibility: visible !important;
 }
 
 .card.selected {
