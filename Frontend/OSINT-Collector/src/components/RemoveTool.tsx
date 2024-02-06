@@ -53,7 +53,7 @@ const RemoveTool = () => {
           {tools.map((tool) => (
             <div key={tool.id} className="mb-2">
               <input
-                type="radio"
+                type="checkbox"
                 className="btn-check"
                 id={`tool-${tool.id}`}
                 value={tool.name}
