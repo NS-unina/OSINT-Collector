@@ -18,10 +18,10 @@ const SelectLaunch = ({
         {launches.map((launch) => (
           <div key={launch.id} className="mb-2">
             <input
-              type="radio"
+              type="checkbox"
               className="btn-check"
               id={`tool-${launch.id}`}
-              value={launch.entrypoint}
+              value={launch.id.toString()} // Usiamo l'id come valore per il checkbox
               autoComplete="off"
               checked={selectedLaunch?.id === launch.id}
               onChange={() => handleLaunchToggle(launch.id)}

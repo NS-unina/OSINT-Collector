@@ -18,8 +18,10 @@ const Results = () => {
   const handleLaunchToggle = (launchId: number) => {
     const selected = launches.find((l) => l.id === launchId);
 
-    if (selected) {
-      setSelectedLaunch(selectedLaunch === selected ? null : selected);
+    if (selectedLaunch && selectedLaunch.id === launchId) {
+      setSelectedLaunch(null);
+    } else if (selected) {
+      setSelectedLaunch(selected);
     }
   };
 
