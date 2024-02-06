@@ -1,10 +1,10 @@
 import { RequiredInput, RunToolForm } from "../types";
-
 import { AiFillInstagram, AiFillTwitterCircle } from "react-icons/ai";
-import { FaTelegram } from "react-icons/fa";
+import { FaTelegram, FaGlobe } from "react-icons/fa";
 import { CgDarkMode } from "react-icons/cg";
 import { useState } from "react";
 import axios from "axios";
+import AlertMessage from "./AlertMessage";
 
 interface Props {
   requiredInputs: RequiredInput[];
@@ -22,12 +22,13 @@ const getPlatformIcon = (platform: string) => {
     case "darkweb":
       return <CgDarkMode />;
     default:
-      return null;
+      return <FaGlobe />;
   }
 };
 
 const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
   const [formData, setFormData] = useState<RunToolForm[]>([]);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleChange = (
     toolName: string,
@@ -44,7 +45,6 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
         const updatedData = [...prevData];
         const existingTool = { ...updatedData[existingToolIndex] };
 
-        // Overwrite the value for the specific input index
         existingTool.inputs[inputIndex] = value;
 
         updatedData[existingToolIndex] = existingTool;
@@ -64,22 +64,24 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
     e.preventDefault();
 
     if (formData) {
-      //
       formData.forEach((data) => {
         axios
-          .post<RunToolForm[]>("http://localhost:8080/tools/run", data, {
+          .post<RunToolForm[]>("http://localhost:8080/launches/save", data, {
             headers: {
               "Content-Type": "application/json",
             },
           })
           .then(() => {
-            //
+            onSubmit();
+            axios.post<RunToolForm[]>("http://localhost:8080/tools/run", data, {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
           })
-          .catch((error) => {
-            console.error("Error removing tool:", error);
+          .catch(() => {
+            setSubmitError(" Error running tool. Please try again.");
           });
-
-        onSubmit();
         setFormData([]);
       });
     }
@@ -125,6 +127,13 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
           Submit
         </button>
       </form>
+      {submitError && (
+        <AlertMessage
+          message={submitError}
+          type="danger"
+          onClose={() => setSubmitError(null)}
+        />
+      )}
     </div>
   );
 };
