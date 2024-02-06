@@ -6,7 +6,7 @@ blackbird:
       description: Search accounts by username
       inputs:
         - PROFILE
-      command: python blackbird.py -u ${PROFILE} -f /output/blackbird-${PROFILE}.json
+      command: python blackbird.py -u ${PROFILE} -o /output/blackbird-${PROFILE}.json
 
   inputs:
     - key: PROFILE

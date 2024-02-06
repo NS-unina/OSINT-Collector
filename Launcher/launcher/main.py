@@ -3,7 +3,6 @@
 """Main file"""
 
 import logging
-import json
 from flask import Flask, request
 from flask_cors import CORS
 from src.globals import Globals
