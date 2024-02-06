@@ -57,3 +57,21 @@ class ToolConfig:
             string += "\n"
 
         return string
+
+    def to_json(self):
+        """Return the tool configuration as a json object"""
+
+        _inputs = []
+        for item in self.inputs:
+            _inputs.append(item.to_json())
+
+        _entrypoints = []
+        for item in self.entrypoints:
+            _entrypoints.append(item.to_json())
+
+        return {
+            "name": self.name,
+            "description": self.description,
+            "inputs": _inputs,
+            "entrypoints": _entrypoints
+        }

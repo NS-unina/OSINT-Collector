@@ -27,3 +27,12 @@ class ToolInput:
         format_type = f"format_type={self.format_type}"
 
         return f"ToolInput: {key}, {desc}, {format_type}"
+
+    def to_json(self):
+        """Return the tool inputs as a json object"""
+
+        return {
+            "key": self.key,
+            "description": self.description,
+            "format_type": self.format_type
+        }

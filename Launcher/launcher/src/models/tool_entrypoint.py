@@ -35,3 +35,13 @@ class ToolEntrypoint:
         command = f"command={self.command}"
 
         return f"ToolEntrypoint: {key}, {desc}, {inputs}, {command}"
+
+    def to_json(self):
+        """Return the tool entrypoints as a json object"""
+
+        return {
+            "key": self.key,
+            "description": self.description,
+            "inputs": self.inputs,
+            "command": self.command,
+        }

@@ -3,10 +3,12 @@
 """Main file"""
 
 import logging
+import json
 from flask import Flask, request
+from flask_cors import CORS
 from src.globals import Globals
 from src.launcher import Launcher
-from flask_cors import CORS
+from src.services.yaml_services import YAMLServices
 # from src.starter import Starter
 
 if __name__ == "__main__":
@@ -16,10 +18,21 @@ if __name__ == "__main__":
     server = Flask(__name__)
     CORS(server)
 
-    @server.route("/help")
-    def help_message():
-        """Help message"""
-        return Globals.help_message(), 200
+    @server.route("/tools")
+    def tools_help():
+        """Gives the tool list"""
+        return Globals.tools(), 200
+
+    @server.route("/tools/<tool>")
+    def tool_details_help(tool: str):
+        """
+        Gives the help message for a specific tool
+        """
+
+        tool_config = YAMLServices.read_tool_config(tool)
+        tool_json = tool_config.to_json()
+
+        return tool_json, 200
 
     @server.route("/launch", methods=['POST'])
     def launch():
