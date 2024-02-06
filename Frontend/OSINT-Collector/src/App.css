@@ -107,3 +107,7 @@ body {
     opacity: 1;
   }
 }
+
+.form-control:autofill {
+  -webkit-text-fill-color: #212529;
+}
