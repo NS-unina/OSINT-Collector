@@ -6,6 +6,7 @@ import com.unina.osintcollector.model.ToolInput;
 import com.unina.osintcollector.repository.LaunchRepository;
 import com.unina.osintcollector.repository.ToolRepository;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
@@ -80,14 +81,9 @@ public class ToolController {
     }
 
     @PostMapping("/run")
-    public Mono<String> runTools(@RequestBody Launch tool) {
-        Mono<Launch> saveMono = launchRepository.save(tool);
-        Mono<Void> postMono = Mono.fromRunnable(() -> {
-            String launcherUrl = "http://localhost:5000/launch";
-            restTemplate.postForEntity(launcherUrl, tool, Void.class);
-        });
-
-        return saveMono.then(postMono).then(Mono.just("OK"));
+    public ResponseEntity<Void> runTools(@RequestBody Launch tool) {
+        String launcherUrl = "http://localhost:5000/launch";
+        return restTemplate.postForEntity(launcherUrl, tool, Void.class);
     }
 
 }
