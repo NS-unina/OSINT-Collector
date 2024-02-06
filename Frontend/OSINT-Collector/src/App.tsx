@@ -51,7 +51,13 @@ const App = () => {
       <header className="text-center mb-4">
         <h1 className="display-4">OSINT Collector</h1>
       </header>
-      <div className="row row-cols-1 row-cols-md-4 g-4">
+      <div
+        className={
+          showResults
+            ? "row row-cols-1 row-cols-md-4 g-4"
+            : "row row-cols-1 row-cols-md-3 g-4"
+        }
+      >
         <div className="col">
           <div
             className={`card h-100 ${

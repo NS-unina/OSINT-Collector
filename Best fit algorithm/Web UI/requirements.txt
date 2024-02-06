@@ -1,4 +1,0 @@
-neo4j
-PyYAML
-flask
-werkzeug

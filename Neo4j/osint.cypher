@@ -79,3 +79,14 @@ CALL n10s.inference.nodesInCategory(c, {
 YIELD node
 MATCH (node)<-[:parla_di]-(post)
 RETURN DISTINCT post.id, post.caption, collect(n10s.rdf.getIRILocalName(node.uri)) as explicitTopics
+
+#Blackbird
+
+CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20data/osint%20Blackbird/blackbird-ciro.marrazzo.json") YIELD value
+WITH value, value.`search-params` AS u, value.sites AS sites
+UNWIND sites AS s
+WITH u, s
+WHERE s.`status` = "FOUND"
+MERGE (user:Username {username:u.username})
+MERGE (site:SiteAccount {id: s.id, site:s.app, url:s.url, status:s.status})
+MERGE (user)-[:ASSOCIATED_WITH]->(site)
