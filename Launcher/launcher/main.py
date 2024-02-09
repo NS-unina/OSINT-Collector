@@ -3,12 +3,29 @@
 """Main file"""
 
 import logging
+import os
+import shutil
 from flask import Flask, request
 from flask_cors import CORS
 from src.globals import Globals
 from src.launcher import Launcher
 from src.services.yaml_services import YAMLServices
+from src.services.docker_services import DockerServices
 # from src.starter import Starter
+
+
+def copy_conf_files(source_folder, destination_folder):
+    """Function to copy all logstash conf file """
+
+    for root, _, files in os.walk(source_folder):
+        for file in files:
+            if file.endswith('.conf'):
+                source_file_path = os.path.join(root, file)
+                destination_file_path = os.path.join(destination_folder, file)
+                # Copy the file to the destination folder
+                shutil.copy(source_file_path, destination_file_path)
+                print(f"Copied {source_file_path} to {destination_file_path}")
+
 
 if __name__ == "__main__":
 
@@ -47,6 +64,7 @@ if __name__ == "__main__":
 
         return "OK", 200
 
+    copy_conf_files("./tools", "/tools_conf")
     server.run(host='0.0.0.0', port=5000)
 
     # Help Section

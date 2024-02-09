@@ -100,6 +100,8 @@ class Launcher:
         # output_volume = f'{working_dir}/output/{self.tool}'
         docker = DockerServices()
         docker.build_image(f'./tools/{self.tool}')
-        docker.run_container(name=self.tool,
-                             output_volume='tools_output_data',
-                             entrypoint=filled_entrypoint_cmd)
+        docker.run_tool_container(name=self.tool,
+                                  output_volume='output_data',
+                                  entrypoint=filled_entrypoint_cmd)
+
+        docker.run_logstash_container(tool=self.tool)
