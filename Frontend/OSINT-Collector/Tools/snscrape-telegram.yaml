@@ -1,9 +1,10 @@
 name: snscrape-telegram
 platform: Telegram
 capabilities:
-  download-last-message:
+  download-messages:
     description: Download Telegram channel messages
     input:
       - channelName
+      - nMessages
     output:
       - Message

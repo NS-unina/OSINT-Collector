@@ -124,7 +124,7 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
           </div>
         ))}
         <button type="submit" className="btn btn-primary">
-          Submit
+          Launch
         </button>
       </form>
       {submitError && (

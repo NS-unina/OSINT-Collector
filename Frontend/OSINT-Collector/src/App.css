@@ -70,6 +70,15 @@ body {
   width: 200px;
 }
 
+.card-body.snscrape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
 .row {
   display: flex;
   justify-content: space-around;

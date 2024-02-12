@@ -15,11 +15,14 @@ public class Launch {
     private final String entrypoint;
     private final String[] inputs;
 
-    public Launch(Long id, String image, String entrypoint, String[] inputs) {
+    private final Boolean completed;
+
+    public Launch(Long id, String image, String entrypoint, String[] inputs, Boolean completed) {
         this.id = id;
         this.image = image;
         this.entrypoint = entrypoint;
         this.inputs = inputs;
+        this.completed = completed;
     }
 
     public Long getId() {
@@ -36,5 +39,9 @@ public class Launch {
 
     public String[] getInputs() {
         return inputs;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
     }
 }

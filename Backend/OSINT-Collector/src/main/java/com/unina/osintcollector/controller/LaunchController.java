@@ -30,7 +30,7 @@ public class LaunchController {
     public Mono<Launch> saveOrUpdateLaunch(@RequestBody Launch tool) {
 
         return launchRepository.findByImageAndEntrypointAndInputs(tool.getImage(), tool.getEntrypoint(), tool.getInputs())
-                .switchIfEmpty(launchRepository.save(tool)); // Se non esiste, salva semplicemente il nuovo Launch
+                .switchIfEmpty(launchRepository.save(tool));
 
     }
 

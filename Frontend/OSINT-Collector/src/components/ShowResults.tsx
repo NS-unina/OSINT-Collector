@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Launch } from "../types";
-import { blackbird, instaloader } from "../types/results";
+import { blackbird, instaloader, snscrape } from "../types/results";
 import BlackbirdResults from "./BlackbirdResults";
+import SnscrapeResults from "./SnscrapeResults";
 
 interface Props {
   selectedLaunch: Launch | null;
@@ -13,6 +14,8 @@ const ShowResults = ({ selectedLaunch }: Props) => {
     switch (selectedLaunch?.image) {
       case "blackbird":
         return {} as blackbird;
+      case "snscrape-telegram":
+        return {} as snscrape;
       case "instaloader":
         return {} as instaloader;
       default:
@@ -29,7 +32,7 @@ const ShowResults = ({ selectedLaunch }: Props) => {
         };
 
         axios
-          .post<blackbird | instaloader>(
+          .post<blackbird | instaloader | snscrape>(
             "http://localhost:8080/results/" + selectedLaunch?.image,
             formData
           )
@@ -53,6 +56,16 @@ const ShowResults = ({ selectedLaunch }: Props) => {
     case "blackbird":
       if (results !== null && "sites" in results) {
         return <BlackbirdResults results={results} />;
+      }
+      break;
+    case "snscrape-telegram":
+      if (results !== null && "posts" in results && "name" in results) {
+        return (
+          <SnscrapeResults
+            results={results}
+            filter={parseInt(selectedLaunch.inputs[1])}
+          />
+        );
       }
       break;
     case "instaloader":
