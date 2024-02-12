@@ -4,6 +4,10 @@ manage it's output and lifecycle
 """
 
 import logging
+import time
+import os
+import json
+import requests
 from src.globals import Globals
 from src.services.yaml_services import YAMLServices
 from src.services.docker_services import DockerServices
@@ -22,6 +26,10 @@ class _Exceptions:
                           "should be provided: %s")
 
     invalid_output_folder = "Output folder %s does not exist"
+
+    output_not_found = "Logstash output not found!"
+
+    output_upload_failed = "Logstash output upload failed, status code: %s"
 
 
 class Launcher:
@@ -95,13 +103,81 @@ class Launcher:
                 value
             )
 
-        # Starting container
-        # working_dir = os.getcwd()
-        # output_volume = f'{working_dir}/output/{self.tool}'
         docker = DockerServices()
         docker.build_image(f'./tools/{self.tool}')
         docker.run_tool_container(name=self.tool,
                                   output_volume='output_data',
                                   entrypoint=filled_entrypoint_cmd)
 
+        return True
+
+    def generate_output(self):
+        """Function used to start logstash pipeline """
+        docker = DockerServices()
         docker.run_logstash_container(tool=self.tool)
+
+        file_to_find = f"/app/output/{self.tool}-logstash.json"
+        timeout_seconds = 180
+
+        self._log.info('Waiting for output...')
+
+        output_found = self.wait_for_file(file_to_find, timeout_seconds)
+
+        if output_found:
+            self._log.info('Logstash output generated')
+        else:
+            self._log.error(_Exceptions.output_not_found)
+
+        time.sleep(5)
+        docker.stop_logstash_container()
+
+        return output_found
+
+    def upload_output(self):
+        """Function used to upload output data"""
+
+        json_file_path = f"/app/output/{self.tool}-logstash.json"
+        url = f"http://host.docker.internal:8080/results/logstash/{self.tool}"
+
+        # Read the content of the JSON file
+        with open(json_file_path, 'r', encoding='utf-8') as file:
+            json_content = json.load(file)
+
+        # Send the content of the JSON file over POST request
+        response = requests.post(url, json=json_content, timeout=120)
+
+        # Clear logstash output
+        self._log.info('Cleaning...')
+        os.remove(json_file_path)
+        self._log.info('Logstash output cleaned!')
+
+        # Manage response
+        if response.status_code == 200:
+            self._log.info('Logstash output uploaded!')
+        else:
+            self._log.error(_Exceptions.output_upload_failed,
+                            response.status_code)
+
+        return response.status_code == 200
+
+    def wait_for_file(self, filename, timeout=60):
+        """
+        Wait until the specified file exists or until the timeout (in seconds)
+        is reached.
+
+        Args:
+            filename (str): The name of the file to wait for.
+            timeout (int): The maximum time (in seconds) to wait for the file.
+            Default is 60 seconds.
+
+        Returns:
+            bool: True if the file is found within the timeout period, False
+            otherwise.
+        """
+
+        start_time = time.time()
+        while not os.path.exists(filename):
+            if time.time() - start_time >= timeout:
+                return False  # Timeout reached
+            time.sleep(1)  # Wait for 1 second
+        return True

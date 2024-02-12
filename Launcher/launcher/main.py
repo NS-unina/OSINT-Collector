@@ -60,9 +60,15 @@ if __name__ == "__main__":
         _inputs = data.get("inputs")
 
         launcher = Launcher(_image, _entrypoint, _inputs)
-        launcher.launch_tool()
 
-        return "OK", 200
+        launch_success = launcher.launch_tool()
+        gen_success = launcher.generate_output()
+        upload_success = launcher.upload_output()
+
+        if launch_success and gen_success and upload_success:
+            return "OK", 200
+        else:
+            return "KO", 400
 
     copy_conf_files("./tools", "/tools_conf")
     server.run(host='0.0.0.0', port=5000)
@@ -82,3 +88,5 @@ if __name__ == "__main__":
     # image, entrypoint, inputs_str = Starter.fetch_launcher_params()
     # launcher = Launcher(image, entrypoint, inputs_str)
     # launcher.launch_tool()
+    # launcher.generate_output()
+    # launcher.upload_output()

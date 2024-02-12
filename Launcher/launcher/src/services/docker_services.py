@@ -4,7 +4,6 @@ Module containing methods to properly manage docker images and containers
 
 import os
 import logging
-import time
 import docker
 
 
@@ -23,28 +22,7 @@ class DockerServices:
     _client = docker.from_env()
     _log = logging.getLogger(__name__)
     _image_tag = None
-
-    def wait_for_file(self, filename, timeout=60):
-        """
-        Wait until the specified file exists or until the timeout (in seconds)
-        is reached.
-
-        Args:
-            filename (str): The name of the file to wait for.
-            timeout (int): The maximum time (in seconds) to wait for the file.
-            Default is 60 seconds.
-
-        Returns:
-            bool: True if the file is found within the timeout period, False
-            otherwise.
-        """
-
-        start_time = time.time()
-        while not os.path.exists(filename):
-            if time.time() - start_time >= timeout:
-                return False  # Timeout reached
-            time.sleep(1)  # Wait for 1 second
-        return True
+    _logstash_container = None
 
     def build_image(self, folder_path):
         """
@@ -110,7 +88,7 @@ class DockerServices:
 
         try:
 
-            _logstash_container = self._client.containers.run(
+            self._logstash_container = self._client.containers.run(
                 image=image_name,
                 name=container_name,
                 command=command,
@@ -132,20 +110,14 @@ class DockerServices:
 
             )
 
-            file_to_find = "/app/output/logstash.json"
-            timeout_seconds = 180
-
-            self._log.info('Waiting for output...')
-            if self.wait_for_file(file_to_find, timeout_seconds):
-                self._log.info('Logstash output generated')
-            else:
-                self._log.error('Logstash output not found!')
-
-            time.sleep(5)
-            _logstash_container.stop()
-
         except (docker.errors.ContainerError,
                 docker.errors.ImageNotFound,
                 docker.errors.APIError) as e:
             self._log.error(e)
             exit(1)
+
+    def stop_logstash_container(self):
+        """
+        Stop the logstash container
+        """
+        self._logstash_container.stop()
