@@ -13,4 +13,7 @@ public interface LaunchRepository extends ReactiveNeo4jRepository<Launch, Long> 
 
     Mono<Launch> findByImageAndEntrypointAndInputs(String image, String entrypoint, String[] inputs);
 
+    @Query("MATCH (l:Launch {id: $id}) SET l.completed = completed RETURN l")
+    Mono<Launch> updateCompleted(Long id, Boolean completed);
+
 }
