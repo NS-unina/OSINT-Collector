@@ -10,7 +10,7 @@ const blacklist = ["BugBounty", "Independent academia", "parola3"];
 const BlackbirdResults = ({ results }: Props) => {
   return (
     <div>
-      <div className="row mt-3">
+      <div className="row mt-5">
         {results.sites
           .filter((site) => {
             return !blacklist.some((word) =>

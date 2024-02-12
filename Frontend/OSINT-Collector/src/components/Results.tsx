@@ -28,11 +28,20 @@ const Results = () => {
   return (
     <div className="container mt-5">
       <div className="row">
-        <SelectLaunch
-          launches={launches}
-          selectedLaunch={selectedLaunch}
-          handleLaunchToggle={handleLaunchToggle}
-        />
+        {!selectedLaunch && (
+          <SelectLaunch
+            launches={launches}
+            selectedLaunch={selectedLaunch}
+            handleLaunchToggle={handleLaunchToggle}
+          />
+        )}
+        {selectedLaunch && (
+          <SelectLaunch
+            launches={[selectedLaunch]}
+            selectedLaunch={selectedLaunch}
+            handleLaunchToggle={handleLaunchToggle}
+          />
+        )}
         <ShowResults selectedLaunch={selectedLaunch} />
       </div>
     </div>

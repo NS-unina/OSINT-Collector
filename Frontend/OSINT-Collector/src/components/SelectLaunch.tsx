@@ -21,7 +21,7 @@ const SelectLaunch = ({
               type="checkbox"
               className="btn-check"
               id={`tool-${launch.id}`}
-              value={launch.id.toString()} // Usiamo l'id come valore per il checkbox
+              value={launch.id.toString()}
               autoComplete="off"
               checked={selectedLaunch?.id === launch.id}
               onChange={() => handleLaunchToggle(launch.id)}
@@ -30,7 +30,15 @@ const SelectLaunch = ({
               className="btn btn-outline-success tool-label"
               htmlFor={`tool-${launch.id}`}
             >
-              {launch.entrypoint} {">"} {launch.inputs}
+              {launch.entrypoint} {">"}
+              {" ["}
+              {[
+                launch.inputs.slice(0, -1).map((input) => {
+                  return input + "; ";
+                }),
+                launch.inputs.slice(-1),
+              ]}
+              {"]"}
             </label>
           </div>
         ))}

@@ -14,6 +14,7 @@ export interface Launch {
     id: number;
     image: string;
     entrypoint: string;
+    completed: boolean;
     inputs: string[];
 }
   
