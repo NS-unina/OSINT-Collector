@@ -26,6 +26,11 @@ public class LaunchController {
         return launchRepository.save(tool);
     }
 
+    @PostMapping(value = "/delete")
+    public Mono<Void> deleteLaunch(@RequestBody Launch tool) {
+        return launchRepository.delete(tool);
+    }
+
     @PostMapping(value = "/update")
     public Mono<Launch> saveOrUpdateLaunch(@RequestBody Launch tool) {
 
