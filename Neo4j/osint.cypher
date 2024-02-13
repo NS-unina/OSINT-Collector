@@ -90,3 +90,41 @@ WHERE s.`status` = "FOUND"
 MERGE (user:Username {username:u.username})
 MERGE (site:SiteAccount {id: s.id, site:s.app, url:s.url, status:s.status})
 MERGE (user)-[:ASSOCIATED_WITH]->(site)
+
+#Instaloader
+
+// Create InstagramPost node
+
+CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20data/osint%20Instagram/2024-01-29_19-47-32_UTC.json") YIELD value
+WITH value as post
+MERGE (p:InstagramPost {id: post.node.id})
+ON CREATE SET
+    p.url = post.node.display_url,
+    p.shortcode = post.node.shortcode,
+    p.likes = post.node.edge_liked_by.count,
+    p.comments = post.node.edge_media_to_comment.count,
+    p.timestamp = post.node.taken_at_timestamp,
+    p.text = post.node.edge_media_to_caption.edges[0].node.text;
+
+CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20data/osint%20Instagram/2024-01-29_19-47-32_UTC.json") YIELD value
+WITH value as post
+MERGE (a:InstagramAccount {id: post.node.owner.id})
+ON CREATE SET
+    a.full_name = post.node.owner.full_name,
+    a.username = post.node.owner.username,
+    a.profile_pic_url = post.node.owner.profile_pic_url,
+    a.biography = post.node.owner.biography,
+    a.follow = post.node.owner.edge_follow.count,
+    a.followers = post.node.owner.edge_followed_by.count;
+
+CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20data/osint%20Instagram/2024-01-29_19-47-32_UTC.json") YIELD value
+WITH value as post
+MATCH (a:InstagramAccount {id: post.node.owner.id})
+MATCH (p:InstagramPost {id: post.node.id})
+MERGE (a)-[:PUBLISHED]->(p);
+
+CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20data/osint%20Instagram/2024-01-09_19-39-12_UTC.json") YIELD value
+WITH value as post
+UNWIND post.node.edge_media_to_tagged_user.edges as user
+MATCH (p:InstagramPost {id: post.node.id}) SET p.taggedAccounts = [user.node.user.username]
+
