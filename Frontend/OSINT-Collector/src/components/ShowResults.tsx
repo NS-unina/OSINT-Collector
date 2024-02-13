@@ -4,6 +4,7 @@ import { Launch } from "../types";
 import { blackbird, instaloader, snscrape } from "../types/results";
 import BlackbirdResults from "./BlackbirdResults";
 import SnscrapeResults from "./SnscrapeResults";
+import InstaloaderResults from "./InstaloaderResults";
 
 interface Props {
   selectedLaunch: Launch | null;
@@ -69,7 +70,9 @@ const ShowResults = ({ selectedLaunch }: Props) => {
       }
       break;
     case "instaloader":
-      // Gestisci i risultati per l'instaloader
+      if (results !== null && "posts" in results && "full_name" in results) {
+        return <InstaloaderResults results={results} />;
+      }
       break;
     case "image2":
       return <div></div>;

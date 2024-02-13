@@ -1,5 +1,4 @@
 import { Launch } from "../types";
-
 interface Props {
   launches: Launch[];
   selectedLaunch: Launch | null;
@@ -13,7 +12,11 @@ const SelectLaunch = ({
 }: Props) => {
   return (
     <div>
-      <div className="mb-3" id="launchesContainer">
+      <div
+        className="mb-3"
+        id="launchesContainer"
+        style={{ maxHeight: "400px", overflowY: "scroll" }}
+      >
         <label className="form-label">Launches:</label>
         {launches.map((launch) => (
           <div key={launch.id} className="mb-2">

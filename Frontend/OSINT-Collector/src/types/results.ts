@@ -24,6 +24,28 @@ export interface snscrape {
 }
 
 export interface instaloader {
-    pippo: string;
-    posts: string[];
+    full_name: string;
+    followers: number;
+    bio_links: string[];
+    biography: string;
+    id: string;
+    follow: number;
+    profile_pic_url: string;
+    username: string;
+    posts: {
+        id: string;
+        url: string;
+        shortcode: string;
+        text: string;
+        timestamp: number;
+        likes: number;
+        comments: number;
+        taggedAccounts: string[];
+        processed: boolean;
+        categories: {
+            uri: string;
+            name: string;
+            alsoKnownAs: string;
+        } [];
+    } [];
 }
