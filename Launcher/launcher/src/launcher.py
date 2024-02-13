@@ -137,7 +137,7 @@ class Launcher:
         """Function used to upload output data"""
 
         json_file_path = f"/app/output/{self.tool}-logstash.json"
-        url = f"http://host.docker.internal:8080/results/logstash/{self.tool}"
+        url = f"http://host.docker.internal:8080/logstash/{self.tool}"
 
         # Read the content of the JSON file
         with open(json_file_path, 'r', encoding='utf-8') as file:
