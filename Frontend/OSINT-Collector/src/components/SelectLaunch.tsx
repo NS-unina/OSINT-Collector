@@ -15,7 +15,7 @@ const SelectLaunch = ({
       <div
         className="mb-3"
         id="launchesContainer"
-        style={{ maxHeight: "400px", overflowY: "scroll" }}
+        style={{ maxHeight: "500px", overflowY: "scroll" }}
       >
         <label className="form-label">Launches:</label>
         {launches.map((launch) => (

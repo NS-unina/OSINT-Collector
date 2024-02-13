@@ -10,6 +10,7 @@ export interface blackbird {
 
 export interface snscrape {
     name: string;
+    flag: boolean;
     posts : {
         url: string;
         date: string;
@@ -48,4 +49,9 @@ export interface instaloader {
             alsoKnownAs: string;
         } [];
     } [];
+}
+
+export interface TelegramChannel {
+    name: string;
+    flag: boolean;
 }
