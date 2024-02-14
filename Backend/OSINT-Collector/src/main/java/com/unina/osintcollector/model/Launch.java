@@ -14,14 +14,16 @@ public class Launch {
     private final String image;
     private final String entrypoint;
     private final String[] inputs;
+    private final String timestamp;
 
     private final Boolean completed;
 
-    public Launch(Long id, String image, String entrypoint, String[] inputs, Boolean completed) {
+    public Launch(Long id, String image, String entrypoint, String[] inputs, String timestamp, Boolean completed) {
         this.id = id;
         this.image = image;
         this.entrypoint = entrypoint;
         this.inputs = inputs;
+        this.timestamp = timestamp;
         this.completed = completed;
     }
 
@@ -39,6 +41,10 @@ public class Launch {
 
     public String[] getInputs() {
         return inputs;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public Boolean getCompleted() {
