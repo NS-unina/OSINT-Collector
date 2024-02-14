@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { TelegramChannel } from "../types/results";
 import { GoAlertFill } from "react-icons/go";
+import { FaSortAlphaDown, FaSortAlphaUpAlt } from "react-icons/fa";
 
 interface Props {
   accounts: TelegramChannel[];
@@ -12,6 +14,16 @@ const TelegramChannelList = ({
   selectedChannel,
   handleChannelToggle,
 }: Props) => {
+  const [ascending, setAscending] = useState(true);
+
+  const sortedAccounts = [...accounts].sort((a, b) => {
+    if (ascending) {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
   return (
     <div>
       <div
@@ -19,8 +31,22 @@ const TelegramChannelList = ({
         id="telegramAccountsContainer"
         style={{ maxHeight: "400px", overflowY: "scroll" }}
       >
-        <label className="form-label">Telegram Channels:</label>
-        {accounts.map((account) => (
+        <div className="d-flex justify-content-center align-items-center">
+          <label className="form-label d-flex align-items-center">
+            <div
+              className="pe-2 btn-link"
+              onClick={() => setAscending(!ascending)}
+            >
+              {ascending ? (
+                <FaSortAlphaDown type="button" />
+              ) : (
+                <FaSortAlphaUpAlt type="button" />
+              )}
+            </div>
+            <div>Telegram Channels:</div>
+          </label>
+        </div>
+        {sortedAccounts.map((account) => (
           <div key={account.name} className="mb-2">
             <input
               type="checkbox"

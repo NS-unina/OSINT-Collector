@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { FaSortAlphaDown, FaSortAlphaUpAlt } from "react-icons/fa";
 import { blackbird } from "../types/results";
 
 interface Props {
@@ -11,6 +13,16 @@ const UsernameList = ({
   selectedUsername,
   handleUsernameToggle,
 }: Props) => {
+  const [ascending, setAscending] = useState(true);
+
+  const sortedUsernames = [...usernames].sort((a, b) => {
+    if (ascending) {
+      return a.username.localeCompare(b.username);
+    } else {
+      return b.username.localeCompare(a.username);
+    }
+  });
+
   return (
     <div>
       <div
@@ -18,8 +30,22 @@ const UsernameList = ({
         id="sernameContainer"
         style={{ maxHeight: "400px", overflowY: "scroll" }}
       >
-        <label className="form-label">Usernames:</label>
-        {usernames.map((username) => (
+        <div className="d-flex justify-content-center align-items-center">
+          <label className="form-label d-flex align-items-center">
+            <div
+              className="pe-2 btn-link"
+              onClick={() => setAscending(!ascending)}
+            >
+              {ascending ? (
+                <FaSortAlphaDown type="button" />
+              ) : (
+                <FaSortAlphaUpAlt type="button" />
+              )}
+            </div>
+            <div>Usernames:</div>
+          </label>
+        </div>
+        {sortedUsernames.map((username) => (
           <div key={username.username} className="mb-2">
             <input
               type="checkbox"

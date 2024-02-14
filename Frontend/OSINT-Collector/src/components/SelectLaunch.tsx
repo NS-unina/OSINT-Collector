@@ -1,4 +1,5 @@
 import { IoCalendar } from "react-icons/io5";
+import { FaSort } from "react-icons/fa6";
 import { Launch } from "../types";
 import { useEffect, useState } from "react";
 
@@ -14,14 +15,25 @@ const SelectLaunch = ({
   handleLaunchToggle,
 }: Props) => {
   const [sortedLaunches, setSortedLaunches] = useState<Launch[]>([]);
+  const [ascending, setAscending] = useState(false);
 
   useEffect(() => {
+    sortLaunches();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [launches, ascending]);
+
+  const sortLaunches = () => {
     const sorted = [...launches].sort((a, b) => {
-      // Ordina i lanci in ordine decrescente di timestamp
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      return ascending
+        ? new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        : new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     });
     setSortedLaunches(sorted);
-  }, [launches]);
+  };
+
+  const handleSortToggle = () => {
+    setAscending(!ascending);
+  };
 
   return (
     <div>
@@ -30,7 +42,16 @@ const SelectLaunch = ({
         id="launchesContainer"
         style={{ maxHeight: "500px", overflowY: "scroll" }}
       >
-        <label className="form-label">Launches:</label>
+        <div className="d-flex justify-content-center align-items-center">
+          <label className="form-label d-flex align-items-center">
+            <FaSort
+              type="button"
+              className="pe-1 btn-link"
+              onClick={handleSortToggle}
+            />
+            Launches:
+          </label>
+        </div>
         {sortedLaunches.map((launch) => (
           <div key={launch.id} className="mb-2">
             <input

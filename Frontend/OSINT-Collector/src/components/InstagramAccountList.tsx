@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { FaSortAlphaDown, FaSortAlphaUpAlt } from "react-icons/fa";
 import { instaloader } from "../types/results";
 
 interface Props {
@@ -11,6 +13,16 @@ const InstagramAccountList = ({
   selectedAccount,
   handleAccountToggle,
 }: Props) => {
+  const [ascending, setAscending] = useState(true);
+
+  const sortedAccounts = [...accounts].sort((a, b) => {
+    if (ascending) {
+      return a.username.localeCompare(b.username);
+    } else {
+      return b.username.localeCompare(a.username);
+    }
+  });
+
   return (
     <div>
       <div
@@ -18,13 +30,27 @@ const InstagramAccountList = ({
         id="instagramAccountsContainer"
         style={{ maxHeight: "400px", overflowY: "scroll" }}
       >
-        <label className="form-label">Instagram Accounts:</label>
-        {accounts.map((account) => (
+        <div className="d-flex justify-content-center align-items-center">
+          <label className="form-label d-flex align-items-center">
+            <div
+              className="pe-2 btn-link"
+              onClick={() => setAscending(!ascending)}
+            >
+              {ascending ? (
+                <FaSortAlphaDown type="button" />
+              ) : (
+                <FaSortAlphaUpAlt type="button" />
+              )}
+            </div>
+            <div>Instagram Accounts:</div>
+          </label>
+        </div>
+        {sortedAccounts.map((account) => (
           <div key={account.id} className="mb-2">
             <input
               type="checkbox"
               className="btn-check"
-              id={`telegram-${account.id}`}
+              id={`instagram-${account.id}`}
               value={account.username}
               autoComplete="off"
               checked={selectedAccount?.id === account.id}
@@ -32,7 +58,7 @@ const InstagramAccountList = ({
             />
             <label
               className="btn btn-outline-success tool-label"
-              htmlFor={`telegram-${account.id}`}
+              htmlFor={`instagram-${account.id}`}
             >
               {account.username}
             </label>
