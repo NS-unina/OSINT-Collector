@@ -138,7 +138,7 @@ class Launcher:
         """Function used to upload output data"""
 
         json_file_path = f"/app/output/{self.tool}-logstash.json"
-        url = f"http://host.docker.internal:8080/results/logstash/{self.tool}"
+        url = f"http://host.docker.internal:8080/logstash/{self.tool}"
 
         success = True
 

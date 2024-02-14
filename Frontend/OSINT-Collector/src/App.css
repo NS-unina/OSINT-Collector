@@ -120,3 +120,28 @@ body {
 .form-control:autofill {
   -webkit-text-fill-color: #212529;
 }
+
+/* CSS */
+::-webkit-scrollbar {
+  width: 4px; /* Cambia la larghezza della barra di scorrimento */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3c3c3c; /* Cambia il colore della barra di scorrimento */
+  border-radius: 4px; /* Aggiunge un bordo arrotondato */
+}
+
+.icon-red {
+  color: rgb(220, 52, 68);
+}
+
+.icon-wrapper {
+  background-color: rgb(245, 245, 245);
+  border-radius: 50%;
+  width: 24px; /* Imposta la larghezza desiderata */
+  height: 24px; /* Imposta l'altezza desiderata */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

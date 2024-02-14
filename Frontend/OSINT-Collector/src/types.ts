@@ -15,6 +15,7 @@ export interface Launch {
     image: string;
     entrypoint: string;
     completed: boolean;
+    timestamp: number;
     inputs: string[];
 }
   
@@ -63,6 +64,7 @@ export interface RequiredToolInputs {
 }
   
 export interface RunToolForm {
+    timestamp: string;
     image: string;
     entrypoint: string;
     inputs: string[];

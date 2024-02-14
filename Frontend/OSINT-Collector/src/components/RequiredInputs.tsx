@@ -1,4 +1,5 @@
 import { RequiredInput, RunToolForm } from "../types";
+import { format } from "date-fns";
 import { AiFillInstagram, AiFillTwitterCircle } from "react-icons/ai";
 import { FaTelegram, FaGlobe } from "react-icons/fa";
 import { CgDarkMode } from "react-icons/cg";
@@ -37,6 +38,8 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
     inputIndex: number
   ) => {
     setFormData((prevData) => {
+      const timestamp = format(new Date(), "yyyy-MM-dd HH:mm"); // Ottieni la data attuale formattata
+
       const existingToolIndex = prevData.findIndex(
         (data) => data.image === toolName && data.entrypoint === capabilityName
       );
@@ -51,6 +54,7 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
         return updatedData;
       } else {
         const newToolData: RunToolForm = {
+          timestamp: timestamp,
           image: toolName,
           entrypoint: capabilityName,
           inputs: [value],

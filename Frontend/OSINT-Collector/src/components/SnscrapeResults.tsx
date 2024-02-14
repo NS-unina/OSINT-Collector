@@ -4,7 +4,7 @@ import { MdOpenInNew } from "react-icons/md";
 
 interface Props {
   results: snscrape;
-  filter: number;
+  filter?: number;
 }
 
 const SnscrapeResults = ({ results, filter }: Props) => {
@@ -22,49 +22,64 @@ const SnscrapeResults = ({ results, filter }: Props) => {
 
   return (
     <div>
-      <div className="d-flex justify-content-center align-items-center mb-3 mt-5">
+      <div className="d-flex justify-content-center align-items-center mb-4">
         <button
-          className="btn btn-primary mx-2"
+          className={`btn mx-2 ${
+            showAll ? "btn-primary" : "btn-outline-primary"
+          }`}
           onClick={() => setShowAll(true)}
         >
           All posts
         </button>
         <button
-          className="btn btn-danger mx-2"
+          className={`btn mx-2 ${
+            !showAll ? "btn-danger" : "btn-outline-danger"
+          }`}
           onClick={() => setShowAll(false)}
         >
           Marked posts
         </button>
       </div>
       <div className="row mt-3">
-        {filteredPosts.slice(0, filter).map((post) => (
-          <div key={post.url} className="col-sm-6 mb-3 mb-sm-3">
-            <a
-              href={post.url}
-              target="_blank"
-              className="card-link position-relative"
-            >
-              <div className="card h-100 w-100">
-                <div className="card-body snscrape">
-                  <h5 className="card-title">{results.name}</h5>
-                  <p className="card-text">{post.text}</p>
-                  <div className="d-flex flex-wrap">
-                    {post.categories.map((category) => (
-                      <div
-                        key={category.uri}
-                        className="badge bg-danger me-1 mb-1"
-                        role="alert"
-                      >
-                        {category.name}
-                      </div>
-                    ))}
+        {filteredPosts
+          .slice(
+            0,
+            filter != null && filter >= 0 ? filter : filteredPosts.length
+          )
+          .map((post) => (
+            <div key={post.url} className="col-sm-4 mb-3">
+              <a
+                href={post.url}
+                target="_blank"
+                className="card-link position-relative"
+              >
+                <div className="card h-100 w-100">
+                  <div className="card-body snscrape text-center">
+                    <h5 className="card-title">{results.name}</h5>
+                    <p
+                      id="cardText"
+                      className="card-text p-1"
+                      style={{ maxHeight: "300px", overflowY: "scroll" }}
+                    >
+                      "{post.text}"
+                    </p>
+                    <div className="d-flex flex-wrap">
+                      {post.categories.map((category) => (
+                        <div
+                          key={category.uri}
+                          className="badge bg-danger me-1 mb-1"
+                          role="alert"
+                        >
+                          {category.name}
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                  <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
                 </div>
-                <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
-              </div>
-            </a>
-          </div>
-        ))}
+              </a>
+            </div>
+          ))}
       </div>
     </div>
   );
