@@ -6,6 +6,7 @@ manage it's output and lifecycle
 import logging
 import time
 import os
+import re
 import json
 import requests
 from src.globals import Globals
@@ -117,7 +118,7 @@ class Launcher:
         docker.run_logstash_container(tool=self.tool)
 
         file_to_find = f"/app/output/{self.tool}-logstash.json"
-        timeout_seconds = 180
+        timeout_seconds = 60
 
         self._log.info('Waiting for output...')
 
@@ -139,26 +140,70 @@ class Launcher:
         json_file_path = f"/app/output/{self.tool}-logstash.json"
         url = f"http://host.docker.internal:8080/results/logstash/{self.tool}"
 
+        success = True
+
         # Read the content of the JSON file
         with open(json_file_path, 'r', encoding='utf-8') as file:
-            json_content = json.load(file)
 
-        # Send the content of the JSON file over POST request
-        response = requests.post(url, json=json_content, timeout=120)
+            self._log.info("Logstash output file opened")
 
-        # Clear logstash output
-        self._log.info('Cleaning...')
-        os.remove(json_file_path)
-        self._log.info('Logstash output cleaned!')
+            # Read the whole content of the file
+            file_content = file.read()
+
+            # Use regular expressions to find JSON-like objects
+            json_like_objects = re.findall(r'\{(?:.*?)\}', file_content)
+
+            # Process each JSON-like object found
+            for obj_str in json_like_objects:
+                try:
+                    # Load the JSON-like object as JSON
+                    json_content = json.loads(obj_str)
+
+                    self._log.info(
+                        "Sending POST request with: %s",
+                        json_content
+                    )
+
+                    # Send the content of the JSON file over POST request
+                    response = requests.post(
+                        url,
+                        json=json_content,
+                        timeout=120
+                    )
+
+                    if response.status_code != 200:
+                        success = False
+
+                except json.JSONDecodeError:
+                    self._log.error("Error decoding JSON: %s", obj_str)
 
         # Manage response
-        if response.status_code == 200:
+        if success:
             self._log.info('Logstash output uploaded!')
         else:
             self._log.error(_Exceptions.output_upload_failed,
                             response.status_code)
 
-        return response.status_code == 200
+        return success
+
+    def clear_artifacts(self):
+        """Function to clean output data"""
+
+        self._log.info('Cleaning...')
+
+        output_dir = "/app/output"
+        for root, dirs, files in os.walk(output_dir, topdown=False):
+            for file_name in files:
+                # Removes each file
+                file_path = os.path.join(root, file_name)
+                os.remove(file_path)
+
+            for dir_name in dirs:
+                # Removes each directory
+                dir_path = os.path.join(root, dir_name)
+                os.rmdir(dir_path)
+
+        self._log.info('Logstash output cleaned!')
 
     def wait_for_file(self, filename, timeout=60):
         """
