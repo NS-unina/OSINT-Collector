@@ -3,20 +3,26 @@ import { Launch } from "../types";
 import axios from "axios";
 import SelectLaunch from "./SelectLaunch";
 import ShowResults from "./ShowResults";
-import { instaloader, snscrape } from "../types/results";
+import { blackbird, instaloader, snscrape } from "../types/results";
 import TelegramChannelList from "./TelegramChannelList";
 import SnscrapeResults from "./SnscrapeResults";
 import InstaloaderResults from "./InstaloaderResults";
 import InstagramAccountList from "./InstagramAccountList";
+import UsernameList from "./UsernameList"; // Aggiunto UsernameList
+import BlackbirdResults from "./BlackbirdResults";
 
 const Results = () => {
   const [launches, setLaunches] = useState<Launch[]>([]);
   const [telegramChannels, setTelegramChannels] = useState<snscrape[]>([]);
   const [instagramAccounts, setInstagramAccounts] = useState<instaloader[]>([]);
+  const [usernames, setUsernames] = useState<blackbird[]>([]);
   const [selectedLaunch, setSelectedLaunch] = useState<Launch | null>(null);
   const [selectedChannel, setSelectedChannel] = useState<snscrape | null>(null);
   const [selectedInstagramAccount, setSelectedInstagramAccount] =
     useState<instaloader | null>(null);
+  const [selectedUsername, setSelectedUsername] = useState<blackbird | null>(
+    null
+  ); // Aggiunto selectedUsername
   const [selectedComponent, setSelectedComponent] =
     useState<string>("Launches");
 
@@ -42,6 +48,13 @@ const Results = () => {
     axios
       .get<instaloader[]>(`http://localhost:8080/instagram/accounts`)
       .then((res) => setInstagramAccounts(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const fetchUsernames = () => {
+    axios
+      .get<blackbird[]>(`http://localhost:8080/usernames`)
+      .then((res) => setUsernames(res.data))
       .catch((error) => console.error("Error fetching data:", error));
   };
 
@@ -75,6 +88,16 @@ const Results = () => {
     }
   };
 
+  const handleUsernameToggle = (username: string) => {
+    const selected = usernames.find((u) => u.username === username);
+
+    if (selectedUsername && selectedUsername.username === username) {
+      setSelectedUsername(null);
+    } else if (selected) {
+      setSelectedUsername(selected);
+    }
+  };
+
   const handleComponentChange = (component: string) => {
     setSelectedComponent(component);
     if (component === "Instagram" && !instagramAccounts.length) {
@@ -83,16 +106,26 @@ const Results = () => {
     if (component === "Telegram" && !telegramChannels.length) {
       fetchTelegramChannels();
     }
+    if (component === "Usernames" && !usernames.length) {
+      fetchUsernames();
+    }
 
     if (component === "Launches") {
       setSelectedChannel(null);
       setSelectedInstagramAccount(null);
+      setSelectedUsername(null);
     } else if (component === "Telegram") {
       setSelectedInstagramAccount(null);
       setSelectedLaunch(null);
+      setSelectedUsername(null);
     } else if (component === "Instagram") {
       setSelectedChannel(null);
       setSelectedLaunch(null);
+      setSelectedUsername(null);
+    } else if (component === "Usernames") {
+      setSelectedChannel(null);
+      setSelectedLaunch(null);
+      setSelectedInstagramAccount(null);
     }
   };
 
@@ -130,6 +163,16 @@ const Results = () => {
           >
             Instagram
           </button>
+          <button
+            className={`btn mx-2 ${
+              selectedComponent === "Usernames"
+                ? "btn-success"
+                : "btn-outline-success"
+            }`}
+            onClick={() => handleComponentChange("Usernames")}
+          >
+            Usernames
+          </button>
         </div>
       </div>
       <div className="row mt-4">
@@ -162,11 +205,21 @@ const Results = () => {
               handleAccountToggle={handleInstagramAccountToggle}
             />
           )}
+          {selectedComponent === "Usernames" && (
+            <UsernameList
+              usernames={!selectedUsername ? usernames : [selectedUsername]}
+              selectedUsername={selectedUsername}
+              handleUsernameToggle={handleUsernameToggle}
+            />
+          )}
           {selectedChannel != null && (
             <SnscrapeResults results={selectedChannel} />
           )}
           {selectedInstagramAccount != null && (
             <InstaloaderResults results={selectedInstagramAccount} />
+          )}
+          {selectedUsername != null && (
+            <BlackbirdResults results={selectedUsername} />
           )}
         </div>
       </div>

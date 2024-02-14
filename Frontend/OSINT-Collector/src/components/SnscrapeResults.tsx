@@ -22,7 +22,7 @@ const SnscrapeResults = ({ results, filter }: Props) => {
 
   return (
     <div>
-      <div className="d-flex justify-content-center align-items-center mb-3">
+      <div className="d-flex justify-content-center align-items-center mb-4">
         <button
           className={`btn mx-2 ${
             showAll ? "btn-primary" : "btn-outline-primary"
@@ -58,8 +58,8 @@ const SnscrapeResults = ({ results, filter }: Props) => {
                     <h5 className="card-title">{results.name}</h5>
                     <p
                       id="cardText"
-                      className="card-text"
-                      style={{ maxHeight: "200px", overflowY: "scroll" }}
+                      className="card-text p-1"
+                      style={{ maxHeight: "300px", overflowY: "scroll" }}
                     >
                       "{post.text}"
                     </p>

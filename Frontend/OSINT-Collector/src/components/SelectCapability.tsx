@@ -29,7 +29,7 @@ const SelectCapability = ({
             className="btn btn-outline-primary capability-label"
             htmlFor={`capability-${capability.id}`}
           >
-            {capability.name}
+            {capability.description}
           </label>
         </div>
       ))}
