@@ -124,13 +124,16 @@ class Launcher:
 
         output_found = self.wait_for_file(file_to_find, timeout_seconds)
 
+        time.sleep(5)
+        docker.stop_logstash_container()
+        time.sleep(10)
+
+        output_found = os.path.exists(file_to_find)
+
         if output_found:
             self._log.info('Logstash output generated')
         else:
             self._log.error(_Exceptions.output_not_found)
-
-        time.sleep(5)
-        docker.stop_logstash_container()
 
         return output_found
 

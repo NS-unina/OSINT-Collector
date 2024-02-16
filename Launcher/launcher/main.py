@@ -61,27 +61,26 @@ if __name__ == "__main__":
 
         launcher = Launcher(_image, _entrypoint, _inputs)
 
-        (message, code) = "", 0
-
         launch_success = launcher.launch_tool()
 
         if launch_success:
             gen_success = launcher.generate_output()
         else:
-            (message, code) = "Launch failed", 400
+            launcher.clear_artifacts()
+            return "Launch failed", 400
 
         if gen_success:
             upload_success = launcher.upload_output()
         else:
-            (message, code) = "Output Generation Failed", 400
+            launcher.clear_artifacts()
+            return "Output Generation Failed", 400
 
-        if upload_success:
-            (message, code) = "OK", 200
-        else:
-            (message, code) = "Output upload failed", 400
+        if upload_success is False:
+            launcher.clear_artifacts()
+            return "Output upload failed", 400
 
         launcher.clear_artifacts()
-        return (message, code)
+        return "OK", 200
 
     copy_conf_files("./tools", "/tools_conf")
     server.run(host='0.0.0.0', port=5000)
