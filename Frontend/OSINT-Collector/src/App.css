@@ -70,6 +70,10 @@ body {
   width: 200px;
 }
 
+.card-text {
+  max-width: 100%;
+}
+
 .card-body.snscrape {
   display: flex;
   flex-direction: column;

@@ -11,8 +11,8 @@ const SnscrapeResults = ({ results, filter }: Props) => {
   const [showAll, setShowAll] = useState(true);
 
   const sortedPosts = [...results.posts].sort((a, b) => {
-    if (a.url < b.url) return 1;
-    if (a.url > b.url) return -1;
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
     return 0;
   });
 
