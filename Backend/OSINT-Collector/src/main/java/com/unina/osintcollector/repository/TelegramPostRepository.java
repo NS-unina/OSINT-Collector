@@ -8,24 +8,24 @@ import reactor.core.publisher.Mono;
 public interface TelegramPostRepository extends ReactiveNeo4jRepository<TelegramPost, String> {
 
     @Query("""
-          MERGE (c:TelegramChannel {name: $channel})
-          MERGE (c)-[:PUBLISHED]->(p:TelegramPost {url: $url, text: $content})
-          WITH collect(p) AS posts
-          CALL apoc.nlp.gcp.entities.stream(posts, {
-             nodeProperty: 'text',
-             key: 'AIzaSyC_RV2nb7vjC32i1jd6mj92p1ww6BPga0g'
-           })
-           YIELD node, value
-           WITH node, value
-           UNWIND value.entities AS entity
-           WITH entity, node
-           MATCH (c:Category) WHERE c.name = entity.name OR c.alsoKnownAs = entity.name
-           MERGE (node)-[:REFERS_TO]->(c)
-           WITH node, count(c) as matchedCategories
-           FOREACH (ignoreMe IN CASE WHEN matchedCategories > 0 THEN [1] ELSE [] END |
-                 SET node.processed = true
-           )
-           """)
-    Mono<TelegramPost> saveChannelAndPost(String channel, String url, String content);
+            MERGE (channel:TelegramChannel {name: $channel})
+            MERGE (channel)-[:PUBLISHED]->(p:TelegramPost {url: $url, text: $content, date: $date})
+            WITH channel, collect(p) AS posts
+            CALL apoc.nlp.gcp.entities.stream(posts, {
+                nodeProperty: 'text',
+                key: 'AIzaSyC_RV2nb7vjC32i1jd6mj92p1ww6BPga0g'
+            })
+            YIELD node, value
+            WITH node, value, channel
+            UNWIND value.entities AS entity
+            WITH entity, node, channel
+            MATCH (cat:Category) WHERE cat.name = entity.name OR cat.alsoKnownAs = entity.name
+            MERGE (node)-[:REFERS_TO]->(cat)
+            WITH node, count(cat) as matchedCategories, channel
+            FOREACH (ignoreMe IN CASE WHEN matchedCategories > 0 THEN [1] ELSE [] END |
+                SET node.processed = true, channel.flag = true
+            )
+            """)
+    Mono<TelegramPost> saveChannelAndPost(String channel, String url, String content, String date);
 
 }

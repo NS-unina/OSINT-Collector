@@ -15,14 +15,14 @@ public class TelegramPost {
     @Id
     private final String url;
 
-    private final Date date;
+    private final String date;
     private final String text;
     private final Boolean processed;
 
     @Relationship(type = "REFERS_TO", direction = OUTGOING)
     private Set<Category> categories;
 
-    public TelegramPost(String url, Date date, String text, Boolean processed) {
+    public TelegramPost(String url, String date, String text, Boolean processed) {
         this.url = url;
         this.date = date;
         this.text = text;
@@ -33,7 +33,7 @@ public class TelegramPost {
         return url;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
