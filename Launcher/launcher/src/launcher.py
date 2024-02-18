@@ -30,7 +30,9 @@ class _Exceptions:
 
     output_not_found = "Logstash output not found!"
 
-    output_upload_failed = "Logstash output upload failed, status code: %s"
+    output_upload_failed = ("Logstash output upload failed, last failed"
+                            "request respond with status code: %s,"
+                            "the request sent was: %s")
 
 
 class Launcher:
@@ -104,6 +106,12 @@ class Launcher:
                 value
             )
 
+        self._log.info(
+            'Launching %s with entrypoint %s',
+            self.tool,
+            filled_entrypoint_cmd
+        )
+
         docker = DockerServices()
         docker.build_image(f'./tools/{self.tool}')
         docker.run_tool_container(name=self.tool,
@@ -120,7 +128,7 @@ class Launcher:
         file_to_find = f"/app/output/{self.tool}-logstash.json"
         timeout_seconds = 60
 
-        self._log.info('Waiting for output...')
+        self._log.info('Waiting for output')
 
         output_found = self.wait_for_file(file_to_find, timeout_seconds)
 
@@ -131,7 +139,7 @@ class Launcher:
         output_found = os.path.exists(file_to_find)
 
         if output_found:
-            self._log.info('Logstash output generated')
+            self._log.info('Logstash output found')
         else:
             self._log.error(_Exceptions.output_not_found)
 
@@ -140,59 +148,56 @@ class Launcher:
     def upload_output(self):
         """Function used to upload output data"""
 
+        self._log.info("Reading Logstash output file")
+
         json_file_path = f"/app/output/{self.tool}-logstash.json"
         url = f"http://host.docker.internal:8080/logstash/{self.tool}"
 
         success = True
+        last_failed_req = None
 
-        # Read the content of the JSON file
-        with open(json_file_path, 'r', encoding='utf-8') as file:
+        json_contents = self.read_json_file(json_file_path)
 
-            self._log.info("Logstash output file opened")
+        # Process each JSON-like object found
+        for obj_str in json_contents:
 
-            # Read the whole content of the file
-            file_content = file.read()
+            try:
+                # Load the JSON-like object as JSON
+                json_content = json.loads(obj_str)
 
-            # Use regular expressions to find JSON-like objects
-            json_like_objects = re.findall(r'\{(?:.*?)\}', file_content)
+                self._log.debug(
+                    "Sending POST request with: %s",
+                    json_content
+                )
 
-            # Process each JSON-like object found
-            for obj_str in json_like_objects:
-                try:
-                    # Load the JSON-like object as JSON
-                    json_content = json.loads(obj_str)
+                # Send the content of the JSON file over POST request
+                response = requests.post(
+                    url,
+                    json=json_content,
+                    timeout=120
+                )
 
-                    self._log.info(
-                        "Sending POST request with: %s",
-                        json_content
-                    )
+                if response.status_code != 200:
+                    success = False
+                    last_failed_req = url + " " + str(json_content)
 
-                    # Send the content of the JSON file over POST request
-                    response = requests.post(
-                        url,
-                        json=json_content,
-                        timeout=120
-                    )
-
-                    if response.status_code != 200:
-                        success = False
-
-                except json.JSONDecodeError:
-                    self._log.error("Error decoding JSON: %s", obj_str)
+            except json.JSONDecodeError:
+                self._log.error("Error decoding JSON: %s", obj_str)
 
         # Manage response
         if success:
             self._log.info('Logstash output uploaded!')
         else:
             self._log.error(_Exceptions.output_upload_failed,
-                            response.status_code)
+                            response.status_code,
+                            last_failed_req)
 
         return success
 
     def clear_artifacts(self):
         """Function to clean output data"""
 
-        self._log.info('Cleaning...')
+        self._log.info('Cleaning')
 
         output_dir = "/app/output"
         for root, dirs, files in os.walk(output_dir, topdown=False):
@@ -206,7 +211,7 @@ class Launcher:
                 dir_path = os.path.join(root, dir_name)
                 os.rmdir(dir_path)
 
-        self._log.info('Logstash output cleaned!')
+        self._log.info('All artifacts cleaned!')
 
     def wait_for_file(self, filename, timeout=60):
         """
@@ -229,3 +234,50 @@ class Launcher:
                 return False  # Timeout reached
             time.sleep(1)  # Wait for 1 second
         return True
+
+    def read_json_file(self, file_path):
+        """
+        Read a JSON file and return its content as a list of JSON strings.
+
+        Args:
+        file_path (str): The path to the JSON file.
+
+        Returns:
+        list: A list of JSON strings.
+
+        If the file contains a single JSON object, it will be returned
+        as a list with one element.
+
+        If the file contains multiple JSON objects separated by '}{',
+        each object will be returned as a separate string in the list.
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+
+                json_data = ""
+                for line in file.readlines():
+                    line = line.strip()
+                    line = line.replace("\n", "")
+                    line = line.replace("\t", "")
+                    json_data += line
+
+                if '}{' not in json_data:
+                    return [json_data]
+
+                output = []
+                segments = json_data.split('}{')
+                for index, segment in enumerate(segments):
+                    if index == 0:
+                        segment += "}"
+                    elif index == len(segments)-1:
+                        segment = "{" + segment
+                    else:
+                        segment = "{" + segment + "}"
+
+                    output.append(segment)
+
+                return output
+
+        except FileNotFoundError:
+            self._log.error(_Exceptions.output_not_found)
+            return []

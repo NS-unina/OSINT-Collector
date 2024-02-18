@@ -30,7 +30,7 @@ class DockerServices:
         folder_path folder
         """
 
-        self._log.info('Building image...')
+        self._log.info('Building Dockerfile image in %s', folder_path)
         tag = os.path.basename(folder_path)
 
         try:
@@ -55,7 +55,7 @@ class DockerServices:
             self._log.error(_Exceptions.invalid_order)
             exit(1)
 
-        self._log.info('Running container...')
+        self._log.info('Running %s container', name)
         try:
 
             self._client.containers.run(image=self._image_tag,
@@ -78,7 +78,7 @@ class DockerServices:
         Run a logstash container for the provided tool
         """
 
-        self._log.info('Running logstash...')
+        self._log.info('Running logstash container')
 
         image_name = "docker.elastic.co/logstash/logstash:8.12.0"
         container_name = "logstash"
@@ -101,7 +101,9 @@ class DockerServices:
                 },
                 environment={
                     'xpack.monitoring.enabled': 'false',
-                    'log.level': 'info'
+                    'log.level': 'info',
+                    # 'queue.checkpoint.writes': '1',
+                    # 'pipeline.batch.size': '10'
                 },
                 volumes=[
                     output_vol,
@@ -120,4 +122,5 @@ class DockerServices:
         """
         Stop the logstash container
         """
+        self._log.info('Stopping logstash container')
         self._logstash_container.stop()
