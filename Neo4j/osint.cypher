@@ -125,6 +125,6 @@ MERGE (a)-[:PUBLISHED]->(p);
 
 CALL apoc.load.json("https://raw.githubusercontent.com/ciro-99/OSINT/main/osint%20data/osint%20Instagram/2024-01-09_19-39-12_UTC.json") YIELD value
 WITH value as post
-UNWIND post.node.edge_media_to_tagged_user.edges as user
+UNWIND post.node.post.node.edge_media_to_tagged_user.edges as user
 MATCH (p:InstagramPost {id: post.node.id}) SET p.taggedAccounts = [user.node.user.username]
 
