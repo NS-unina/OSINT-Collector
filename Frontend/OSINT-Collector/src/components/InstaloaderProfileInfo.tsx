@@ -1,5 +1,5 @@
 import { MdOpenInNew } from "react-icons/md";
-import ImageComponent from "./ImageComponent";
+// import ImageComponent from "./ImageComponent";
 
 interface ProfileInfoProps {
   full_name: string;
@@ -17,7 +17,6 @@ const InstaloaderProfileInfo = ({
   bio_links,
   biography,
   follow,
-  profile_pic_url,
   username,
 }: ProfileInfoProps) => {
   return (
@@ -28,8 +27,8 @@ const InstaloaderProfileInfo = ({
     >
       <div className="card mb-3">
         <div className="card-body" style={{ width: "400px" }}>
-          <h5 className="card-title text-center mb-4">Profile</h5>
-          <div className="d-flex justify-content-center align-items-center">
+          <h5 className="card-title text-center">Profile:</h5>
+          {/* <div className="d-flex justify-content-center align-items-center">
             <div
               className="rounded-circle overflow-hidden border border-primary d-flex justify-content-center align-items-center p-1"
               style={{ width: "150px", height: "150px" }}
@@ -42,10 +41,10 @@ const InstaloaderProfileInfo = ({
                   borderRadius: "50%",
                 }}
               >
-                <ImageComponent imageUrl={profile_pic_url} size={"150px"} />
+                { <ImageComponent imageUrl={profile_pic_url} size={"150px"} /> }
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row g-0">
             <div className="h-100 w-100">
               <div className="card-body" style={{ width: "400px" }}>

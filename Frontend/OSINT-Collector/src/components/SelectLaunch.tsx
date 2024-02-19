@@ -2,6 +2,7 @@ import { IoCalendar } from "react-icons/io5";
 import { FaSort } from "react-icons/fa6";
 import { Launch } from "../types";
 import { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 
 interface Props {
   launches: Launch[];
@@ -64,12 +65,21 @@ const SelectLaunch = ({
               onChange={() => handleLaunchToggle(launch.id)}
             />
             <label
-              className="btn btn-outline-success tool-label"
+              className={`btn btn-outline-success tool-label ${
+                launch.id === selectedLaunch?.id ? "position-relative" : ""
+              }`}
               htmlFor={`tool-${launch.id}`}
             >
               <div className="me-2">
                 <IoCalendar className="ms-3" /> {launch.timestamp}
               </div>
+              {launch.id === selectedLaunch?.id && (
+                <div className="position-absolute top-0 start-100 translate-middle mt-1">
+                  <div className="icon-wrapper">
+                    <FaTimes className="icon-red" />
+                  </div>
+                </div>
+              )}
               {launch.entrypoint} {">"}
               {" ["}
               {[

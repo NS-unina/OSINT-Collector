@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaSortAlphaDown, FaSortAlphaUpAlt } from "react-icons/fa";
+import { FaSortAlphaDown, FaSortAlphaUpAlt, FaTimes } from "react-icons/fa";
 import { instaloader } from "../types/results";
 
 interface Props {
@@ -57,10 +57,21 @@ const InstagramAccountList = ({
               onChange={() => handleAccountToggle(account.id)}
             />
             <label
-              className="btn btn-outline-success tool-label"
+              className={`btn btn-outline-success tool-label ${
+                account.username === selectedAccount?.username
+                  ? "position-relative"
+                  : ""
+              }`}
               htmlFor={`instagram-${account.id}`}
             >
               {account.username}
+              {account.username === selectedAccount?.username && (
+                <div className="position-absolute top-0 start-100 translate-middle mt-1">
+                  <div className="icon-wrapper">
+                    <FaTimes className="icon-red" />
+                  </div>
+                </div>
+              )}
             </label>
           </div>
         ))}

@@ -12,6 +12,7 @@ const BlackbirdResults = ({ results }: Props) => {
     <div>
       <div className="row mt-5">
         {results.sites
+          .filter((site) => site.status === "FOUND")
           .filter((site) => {
             return !blacklist.some((word) =>
               site.site.toLowerCase().includes(word.toLowerCase())
