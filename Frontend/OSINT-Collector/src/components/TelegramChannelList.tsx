@@ -59,7 +59,9 @@ const TelegramChannelList = ({
             />
             <label
               className={`btn btn-outline-success tool-label ${
-                account.flag ? "position-relative" : ""
+                account.name === selectedChannel?.name || account.flag
+                  ? "position-relative"
+                  : ""
               }`}
               htmlFor={`telegram-${account.name}`}
             >

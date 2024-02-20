@@ -33,6 +33,7 @@ export interface instaloader {
     follow: number;
     profile_pic_url: string;
     username: string;
+    flag: boolean;
     posts: {
         id: string;
         url: string;
