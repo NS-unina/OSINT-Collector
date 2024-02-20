@@ -18,8 +18,10 @@ public interface InstagramPostRepository extends ReactiveNeo4jRepository<Instagr
         MERGE (account)-[:PUBLISHED]->(p:InstagramPost {id: $post.id})
         ON CREATE SET p.url = $post.url, p.shortcode = $post.shortcode, p.likes = $post.likes, p.comments = $post.comments, p.taggedAccounts = $post.taggedAccounts, p.timestamp = $post.timestamp, p.text = $post.text
         ON MATCH SET p.url = $post.url, p.shortcode = $post.shortcode, p.likes = $post.likes, p.comments = $post.comments, p.taggedAccounts = $post.taggedAccounts, p.timestamp = $post.timestamp, p.text = $post.text
-        MERGE (p)-[:TAKEN_AT]->(l:Location {name: $post.location.name})
-        WITH account, collect(p) AS posts
+        FOREACH(ignoreMe IN CASE WHEN $post.location IS NOT NULL THEN [1] ELSE [] END |
+            MERGE (p)-[:TAKEN_AT]->(l:Location {name: $post.location.name})
+        )
+        WITH account, p AS posts
         CALL apoc.nlp.gcp.entities.stream(posts, {
             nodeProperty: 'text',
             key: 'AIzaSyC_RV2nb7vjC32i1jd6mj92p1ww6BPga0g'
@@ -36,6 +38,5 @@ public interface InstagramPostRepository extends ReactiveNeo4jRepository<Instagr
         )
         """)
     Mono<InstagramPost> saveAccountAndPost(Map<String, Object> account, Map<String, Object> post);
-
 
 }
