@@ -2,7 +2,8 @@ import { useState } from "react";
 import { instaloader } from "../types/results";
 import { MdOpenInNew, MdPersonAdd } from "react-icons/md";
 import { MdFavorite, MdMessage } from "react-icons/md";
-import { IoCalendar } from "react-icons/io5"; // Importa l'icona del calendario
+import { IoCalendar } from "react-icons/io5";
+import { FaLocationDot } from "react-icons/fa6";
 import InstaloaderProfileInfo from "./InstaloaderProfileInfo";
 
 interface Props {
@@ -88,6 +89,14 @@ const InstaloaderResults = ({ results }: Props) => {
                           @{account}
                         </div>
                       ))}
+                    </div>
+                  )}
+                  {post.location != null && (
+                    <div className="d-flex flex-wrap mt-2">
+                      <FaLocationDot className="me-1" />
+                      <div className="badge bg-success me-1 mb-1" role="alert">
+                        {post.location.name}
+                      </div>
                     </div>
                   )}
                   {post.categories && post.categories.length > 0 && (

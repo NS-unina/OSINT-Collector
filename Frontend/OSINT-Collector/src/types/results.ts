@@ -43,6 +43,9 @@ export interface instaloader {
         likes: number;
         comments: number;
         taggedAccounts: string[];
+        location: {
+            name: string;
+        }
         processed: boolean;
         categories: {
             uri: string;
