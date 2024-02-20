@@ -1,9 +1,7 @@
 package com.unina.osintcollector.controller;
 
-import com.unina.osintcollector.model.InstagramPost;
-import com.unina.osintcollector.model.SiteAccount;
-import com.unina.osintcollector.model.SiteAccountList;
-import com.unina.osintcollector.model.TelegramPost;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unina.osintcollector.model.*;
 import com.unina.osintcollector.repository.InstagramPostRepository;
 import com.unina.osintcollector.repository.SiteAccountRepository;
 import com.unina.osintcollector.repository.TelegramPostRepository;
@@ -42,9 +40,17 @@ public class LogstashController {
     }
 
     @PostMapping("/instaloader")
-    public Mono<ResponseEntity<Object>> getInstaloaderResults(@RequestBody InstagramPost post) {
-        System.out.println(post.getId());
-        return instagramPostRepository.save(post).thenReturn(ResponseEntity.status(HttpStatus.OK).build());
+    public Mono<ResponseEntity<Object>> getInstaloaderResults(@RequestBody InstagramRecord instagramRecord) {
+
+        InstagramAccount instagramAccount = instagramRecord.owner();
+        InstagramPost instagramPost = instagramRecord.post();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> accountMap = mapper.convertValue(instagramAccount, Map.class);
+        Map<String, Object> postMap = mapper.convertValue(instagramPost, Map.class);
+
+        return instagramPostRepository.saveAccountAndPost(accountMap, postMap).thenReturn(ResponseEntity.status(HttpStatus.OK).build());
+
     }
 
     @PostMapping("/blackbird")

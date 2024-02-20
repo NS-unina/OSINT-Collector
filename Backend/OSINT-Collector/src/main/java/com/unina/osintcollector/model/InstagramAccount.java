@@ -21,11 +21,12 @@ public class InstagramAccount {
     private final String biography;
     private final Long follow;
     private final Long followers;
+    private final Boolean flag;
 
     @Relationship(type = "PUBLISHED", direction = OUTGOING)
     private Set<InstagramPost> posts;
 
-    public InstagramAccount(String id, String full_name, String username, String profile_pic_url, String[] bio_links, String biography, Long follow, Long followers) {
+    public InstagramAccount(String id, String full_name, String username, String profile_pic_url, String[] bio_links, String biography, Long follow, Long followers, Boolean flag) {
         this.id = id;
         this.full_name = full_name;
         this.username = username;
@@ -34,6 +35,7 @@ public class InstagramAccount {
         this.biography = biography;
         this.follow = follow;
         this.followers = followers;
+        this.flag = flag;
     }
 
     public String getId() {
@@ -66,6 +68,10 @@ public class InstagramAccount {
 
     public Long getFollowers() {
         return followers;
+    }
+
+    public Boolean getFlag() {
+        return flag;
     }
 
     public Set<InstagramPost> getPosts() {
