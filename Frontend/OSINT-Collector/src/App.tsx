@@ -1,29 +1,17 @@
-import { useState, ReactElement, useEffect } from "react";
+import { useState, ReactElement } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { BsCursor, BsTrash, BsPlus } from "react-icons/bs";
 import { PiGraphDuotone } from "react-icons/pi";
+import { SiGraphql } from "react-icons/si";
 import SelectTool from "./components/SelectTool";
 import RemoveTool from "./components/RemoveTool";
 import AddTool from "./components/AddTool";
 import Results from "./components/Results";
-import axios from "axios";
-import { Launch } from "./types";
+import Inference from "./components/Inference";
 
 const App = () => {
   const [selectedTool, setSelectedTool] = useState<string>("");
-  const [showResults, setShowResults] = useState<boolean>(false);
-
-  useEffect(() => {
-    fetchLaunches();
-  }, []);
-
-  const fetchLaunches = () => {
-    axios
-      .get<Launch[]>(`http://localhost:8080/launches`)
-      .then((res) => setShowResults(res.data.length !== 0))
-      .catch((error) => console.error("Error fetching data:", error));
-  };
 
   const handleSelectTool = (tool: string) => {
     setSelectedTool((prevSelectedTool) =>
@@ -41,6 +29,8 @@ const App = () => {
         return <AddTool />;
       case "Results":
         return <Results />;
+      case "Inference":
+        return <Inference />;
       default:
         return <div></div>;
     }
@@ -52,13 +42,7 @@ const App = () => {
         <h1 className="display-4">OSINT Collector</h1>
       </header>
       <div className="d-flex justify-content-center">
-        <div
-          className={
-            showResults
-              ? "row row-cols-1 row-cols-md-4 g-4"
-              : "row row-cols-1 row-cols-md-3 g-4"
-          }
-        >
+        <div className={"row row-cols-1 row-cols-md-5 g-4"}>
           <div className="col">
             <div
               className={`card h-100 ${
@@ -72,25 +56,32 @@ const App = () => {
               </div>
             </div>
           </div>
-
-          {showResults ? (
-            <div className="col">
-              <div
-                className={`card h-100 ${
-                  selectedTool === "Results" ? "border-success selected" : ""
-                }`}
-                onClick={() => handleSelectTool("Results")}
-              >
-                <div className="card-body text-center">
-                  <PiGraphDuotone size={40} className="mb-3 text-success" />
-                  <h5 className="card-title">Results</h5>
-                </div>
+          <div className="col">
+            <div
+              className={`card h-100 ${
+                selectedTool === "Results" ? "border-success selected" : ""
+              }`}
+              onClick={() => handleSelectTool("Results")}
+            >
+              <div className="card-body text-center">
+                <PiGraphDuotone size={40} className="mb-3 text-success" />
+                <h5 className="card-title">Results</h5>
               </div>
             </div>
-          ) : (
-            <></>
-          )}
-
+          </div>
+          <div className="col">
+            <div
+              className={`card h-100 ${
+                selectedTool === "Inference" ? "border-warning selected" : ""
+              }`}
+              onClick={() => handleSelectTool("Inference")}
+            >
+              <div className="card-body text-center">
+                <SiGraphql size={40} className="mb-3 text-warning" />
+                <h5 className="card-title">Inference</h5>
+              </div>
+            </div>
+          </div>
           <div className="col">
             <div
               className={`card h-100 ${

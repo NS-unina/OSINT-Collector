@@ -59,3 +59,9 @@ export interface TelegramChannel {
     name: string;
     flag: boolean;
 }
+
+export interface Category {
+    uri: string;
+    name: string;
+    alsoKnownAs: string;
+}
