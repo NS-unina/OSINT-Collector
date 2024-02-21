@@ -2,12 +2,32 @@ import axios from "axios";
 import InferenceCard from "./InferenceCard";
 import { useState } from "react";
 import { MdOpenInNew } from "react-icons/md";
+import {
+  InstagramAccount,
+  InstagramPost,
+  TelegramChannel,
+  TelegramPost,
+} from "../types/results";
+
+import { AiFillInstagram } from "react-icons/ai";
+import { FaTelegram } from "react-icons/fa";
 
 interface InferenceResult {
-  shortcode: string;
-  text: string;
-  url: string;
+  post: InstagramPost | TelegramPost;
+  account: InstagramAccount | TelegramChannel;
 }
+
+const isInstagramPost = (
+  post: InstagramPost | TelegramPost
+): post is InstagramPost => {
+  return (post as InstagramPost).shortcode !== undefined;
+};
+
+const isInstagramAccount = (
+  account: InstagramAccount | TelegramChannel
+): account is InstagramAccount => {
+  return (account as InstagramAccount).username !== undefined;
+};
 
 const Inference = () => {
   const [inferenceResults, setInferenceResults] = useState<InferenceResult[]>(
@@ -19,7 +39,6 @@ const Inference = () => {
       .get(`http://localhost:8080/inference/${endpoint}?input=${input}`)
       .then((response) => {
         setInferenceResults(response.data);
-        console.log("Richiesta GET inviata con successo:", response);
       })
       .catch((error) => {
         console.error("Errore durante l'invio della richiesta GET:", error);
@@ -34,7 +53,7 @@ const Inference = () => {
     <div className="container mt-4">
       <div className="row mt-3">
         <InferenceCard
-          title="Find all posts that refer directly or indirectly to "
+          title="Find all posts that refers directly or indirectly to "
           tag="category"
           endpoint="categories"
           onSendRequest={handleSendRequest}
@@ -47,22 +66,34 @@ const Inference = () => {
             <div key={index} className="col-sm-4 mb-3">
               <a
                 href={
-                  result.shortcode
-                    ? "https://www.instagram.com/p/" + result.shortcode
-                    : result.url
+                  isInstagramPost(result.post)
+                    ? "https://www.instagram.com/p/" + result.post.shortcode
+                    : result.post.url
                 }
                 target="_blank"
                 className="card-link position-relative"
               >
                 <div className="card h-100 w-100">
                   <div className="card-body snscrape text-center">
+                    <h5 className="card-title">
+                      {isInstagramPost(result.post) ? (
+                        <AiFillInstagram />
+                      ) : (
+                        <FaTelegram />
+                      )}
+                      <> </>
+                      {isInstagramAccount(result.account)
+                        ? result.account.username
+                        : result.account.name}
+                    </h5>
                     <p
                       id="cardText"
                       className="card-text p-1"
                       style={{ maxHeight: "300px", overflowY: "scroll" }}
                     >
-                      "{result.text}"
+                      "{result.post.text}"
                     </p>
+                    <div className="d-flex flex-wrap"></div>
                   </div>
                   <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
                 </div>
