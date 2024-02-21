@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TelegramChannel } from "../types/results";
 import { GoAlertFill } from "react-icons/go";
-import { FaSortAlphaDown, FaSortAlphaUpAlt } from "react-icons/fa";
+import { FaSortAlphaDown, FaSortAlphaUpAlt, FaTimes } from "react-icons/fa";
 
 interface Props {
   accounts: TelegramChannel[];
@@ -59,15 +59,24 @@ const TelegramChannelList = ({
             />
             <label
               className={`btn btn-outline-success tool-label ${
-                account.flag ? "position-relative" : ""
+                account.name === selectedChannel?.name || account.flag
+                  ? "position-relative"
+                  : ""
               }`}
               htmlFor={`telegram-${account.name}`}
             >
               <span>{account.name}</span>
-              {account.flag && (
-                <div className="position-absolute top-50 start-100 translate-middle ms-1">
+              {account.name === selectedChannel?.name && (
+                <div className="position-absolute top-0 start-100 translate-middle mt-1">
                   <div className="icon-wrapper">
-                    <GoAlertFill className="icon-red" />
+                    <FaTimes className="icon-red" />
+                  </div>
+                </div>
+              )}
+              {account.flag && (
+                <div className="position-absolute top-50 start-0 translate-middle ms-1">
+                  <div className="icon-wrapper">
+                    <GoAlertFill className="icon-red mb-1" />
                   </div>
                 </div>
               )}

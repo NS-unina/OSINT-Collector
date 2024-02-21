@@ -33,6 +33,7 @@ export interface instaloader {
     follow: number;
     profile_pic_url: string;
     username: string;
+    flag: boolean;
     posts: {
         id: string;
         url: string;
@@ -42,6 +43,9 @@ export interface instaloader {
         likes: number;
         comments: number;
         taggedAccounts: string[];
+        location: {
+            name: string;
+        }
         processed: boolean;
         categories: {
             uri: string;
@@ -51,7 +55,57 @@ export interface instaloader {
     } [];
 }
 
+export interface InstagramAccount {
+    full_name: string;
+    followers: number;
+    bio_links: string[];
+    biography: string;
+    id: string;
+    follow: number;
+    profile_pic_url: string;
+    username: string;
+    flag: boolean;
+}
+
 export interface TelegramChannel {
     name: string;
     flag: boolean;
+}
+
+export interface InstagramPost {
+    id: string;
+    url: string;
+    shortcode: string;
+    text: string;
+    timestamp: number;
+    likes: number;
+    comments: number;
+    taggedAccounts: string[];
+    location: {
+        name: string;
+    }
+    processed: boolean;
+    categories: {
+        uri: string;
+        name: string;
+        alsoKnownAs: string;
+    } [];
+}
+
+export interface TelegramPost { 
+    url: string;
+    date: string;
+    text: string;
+    processed: boolean;
+    categories: {
+        uri: string;
+        name: string;
+        alsoKnownAs: string;
+    } [];
+}
+
+export interface Category {
+    uri: string;
+    name: string;
+    alsoKnownAs: string;
 }

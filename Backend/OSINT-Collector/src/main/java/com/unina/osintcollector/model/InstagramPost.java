@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import java.util.Date;
 import java.util.Set;
 
+import static org.springframework.data.neo4j.core.schema.Relationship.Direction.INCOMING;
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
 @Node("InstagramPost")
@@ -26,8 +27,10 @@ public class InstagramPost {
 
     @Relationship(type = "REFERS_TO", direction = OUTGOING)
     private Set<Category> categories;
+    @Relationship(type = "TAKEN_AT", direction = OUTGOING)
+    private Location location;
 
-    public InstagramPost(String id, String url, String shortcode, Long likes, Long comments, String[] taggedAccounts, Long timestamp, String text, Boolean processed) {
+    public InstagramPost(String id, String url, String shortcode, Long likes, Long comments, String[] taggedAccounts, Long timestamp, String text, Boolean processed, Location location) {
         this.id = id;
         this.url = url;
         this.shortcode = shortcode;
@@ -37,6 +40,7 @@ public class InstagramPost {
         this.timestamp = timestamp;
         this.text = text;
         this.processed = processed;
+        this.location = location;
     }
 
     public String getId() {
@@ -78,4 +82,9 @@ public class InstagramPost {
     public Boolean getProcessed() {
         return processed;
     }
+
+    public Location getLocation() {
+        return location;
+    }
+
 }

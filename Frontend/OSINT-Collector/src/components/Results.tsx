@@ -22,12 +22,15 @@ const Results = () => {
     useState<instaloader | null>(null);
   const [selectedUsername, setSelectedUsername] = useState<blackbird | null>(
     null
-  ); // Aggiunto selectedUsername
+  );
   const [selectedComponent, setSelectedComponent] =
     useState<string>("Launches");
 
   useEffect(() => {
     fetchLaunches();
+    fetchTelegramChannels();
+    fetchInstagramAccounts();
+    fetchUsernames();
   }, []);
 
   const fetchLaunches = () => {
@@ -100,15 +103,15 @@ const Results = () => {
 
   const handleComponentChange = (component: string) => {
     setSelectedComponent(component);
-    if (component === "Instagram" && !instagramAccounts.length) {
-      fetchInstagramAccounts();
-    }
-    if (component === "Telegram" && !telegramChannels.length) {
-      fetchTelegramChannels();
-    }
-    if (component === "Usernames" && !usernames.length) {
-      fetchUsernames();
-    }
+    // if (component === "Instagram" && !instagramAccounts.length) {
+    //   fetchInstagramAccounts();
+    // }
+    // if (component === "Telegram" && !telegramChannels.length) {
+    //   fetchTelegramChannels();
+    // }
+    // if (component === "Usernames" && !usernames.length) {
+    //   fetchUsernames();
+    // }
 
     if (component === "Launches") {
       setSelectedChannel(null);

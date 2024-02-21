@@ -13,7 +13,9 @@ public class SiteAccount {
 
     @Property
     private final String site;
+    @Property
     private final String status;
+    @Property
     private final String url;
 
     public SiteAccount(Long id, String site, String status, String url) {
