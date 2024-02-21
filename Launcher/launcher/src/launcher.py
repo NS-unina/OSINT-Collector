@@ -8,7 +8,6 @@ import time
 import os
 import json
 import requests
-from src.globals import Globals
 from src.services.yaml_services import YAMLServices
 from src.services.docker_services import DockerServices
 
