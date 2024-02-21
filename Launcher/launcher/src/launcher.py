@@ -6,7 +6,6 @@ manage it's output and lifecycle
 import logging
 import time
 import os
-import re
 import json
 import requests
 from src.globals import Globals
@@ -45,53 +44,29 @@ class Launcher:
 
     def __init__(self, tool: str, entrypoint: str, inputs: [str]):
         """
-        Initialize the launcher with the provided value
+        Initialize the launcher with the provided values.
 
-        Raises: LauncherException
-        If there is an error during the initialization.
+        Args:
+            tool (str): The name of the tool.
+            entrypoint (str): The entry point of the tool.
+            inputs ([str]): List of inputs for the tool.
         """
         self.tool = tool
         self.entrypoint = entrypoint
         self.inputs = inputs
         self.tool_config = YAMLServices.read_tool_config(self.tool)
 
-        # Check if tool is valid
-        available_tools = Globals.tools()
-        if self.tool not in available_tools:
-            self._log.error(
-                _Exceptions.invalid_tool,
-                ", ".join(available_tools)
-            )
-            exit(1)
-
-        # Check if entrypoint is valid
-        matching_entrypoints = list(filter(lambda item: item.key == entrypoint,
-                                           self.tool_config.entrypoints))
-        if not any(matching_entrypoints):
-
-            tool_cfg_entry_keys = map(lambda item: item.key,
-                                      self.tool_config.entrypoints)
-
-            self._log.error(
-                _Exceptions.invalid_entrypoint,
-                ", ".join(tool_cfg_entry_keys)
-            )
-            exit(1)
-
-        # Check if all inputs has been provided
-        entrypoint_config = matching_entrypoints[0]
-        tool_cfg_in = entrypoint_config.inputs
-        if len(tool_cfg_in) != len(inputs):
-            expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
-
-            self._log.error(
-                _Exceptions.invalid_inputs,
-                ", ".join(expected_inputs_keys)
-            )
-            exit(1)
-
     def launch_tool(self):
-        """Function used to start the docker container with the choosed tool"""
+        """
+        Function used to start the Docker container with the chosen tool.
+
+        This method fills the entry point with provided inputs by replacing
+        input keys, then logs the launch information, builds the Docker
+        image, and runs the tool container.
+
+        Returns:
+            bool: True if the tool is successfully launched, False otherwise.
+        """
 
         # Filling entrypoint with provided inputs by replacing input keys
         filtered_entrypoints = filter(lambda item: item.key == self.entrypoint,
@@ -121,7 +96,17 @@ class Launcher:
         return True
 
     def generate_output(self):
-        """Function used to start logstash pipeline """
+        """
+        Start the Logstash pipeline to generate output.
+
+        This method starts the Logstash pipeline, waits for
+        the output file to be generated, and stops the Logstash
+        container afterwards.
+
+        Returns:
+            bool: True if the output file is found, False otherwise.
+        """
+
         docker = DockerServices()
         docker.run_logstash_container(tool=self.tool)
 
@@ -146,7 +131,15 @@ class Launcher:
         return output_found
 
     def upload_output(self):
-        """Function used to upload output data"""
+        """
+        Upload the output data to a specified URL.
+
+        This method reads the Logstash output file, processes each JSON-like
+        object found, and sends it over a POST request to the specified URL.
+
+        Returns:
+            bool: True if the upload is successful, False otherwise.
+        """
 
         self._log.info("Reading Logstash output file")
 
@@ -195,7 +188,12 @@ class Launcher:
         return success
 
     def clear_artifacts(self):
-        """Function to clean output data"""
+        """
+        Clean up output data.
+
+        This method removes all files and directories within
+        the output directory.
+        """
 
         self._log.info('Cleaning')
 
@@ -220,7 +218,7 @@ class Launcher:
 
         Args:
             filename (str): The name of the file to wait for.
-            timeout (int): The maximum time (in seconds) to wait for the file.
+            timeout (int): Th e maximum time (in seconds) to wait for the file.
             Default is 60 seconds.
 
         Returns:
