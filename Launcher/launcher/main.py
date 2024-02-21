@@ -57,8 +57,14 @@ if __name__ == "__main__":
             request.json
         )
 
-        if _image is None or _entrypoint is None or _inputs is None:
-            return "Bad request", 400
+        if _image is None:
+            return "Invalid tool", 400
+
+        if _entrypoint is None:
+            return "Invalid entrypoint", 400
+
+        if _inputs is None:
+            return "Invalid inputs", 400
 
         launcher = Launcher(_image, _entrypoint, _inputs)
 

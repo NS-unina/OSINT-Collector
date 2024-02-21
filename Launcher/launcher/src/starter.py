@@ -106,10 +106,10 @@ class Starter:
             return None, None, None
 
         if not Starter._check_entry_validity(_tool, _entry):
-            return None, None, None
+            return _tool, None, None
 
         if not Starter._check_inputs_validity(_tool, _entry, _inputs):
-            return None, None, None
+            return _tool, _entry, None
 
         return _tool, _entry, _inputs
 
