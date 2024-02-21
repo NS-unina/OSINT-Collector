@@ -12,8 +12,8 @@ public interface InferenceRepository extends ReactiveNeo4jRepository<Category, S
     @Query("""
         MATCH (c:Category {name: $category})
         CALL n10s.inference.nodesInCategory(c, { inCatRel: "REFERS_TO", subCatRel: "SUB_CAT_OF"}) yield node as post
-        MATCH (post)<-[:PUBLISHED]-(user)
-        RETURN post
+        MATCH (post)<-[:PUBLISHED]-(u)
+        RETURN DISTINCT post
         """)
     Flux<Map<String, Object>> inferenceByCategory(String category);
 
