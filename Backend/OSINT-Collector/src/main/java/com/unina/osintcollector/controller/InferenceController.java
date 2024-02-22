@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,7 +21,12 @@ public class InferenceController {
     }
 
     @GetMapping(value = {"/category" }, produces = MediaType.APPLICATION_JSON_VALUE)
-    Flux<Map<String, Object>> getPosts(@RequestParam String input) {
-        return inferenceRepository.inferenceByCategory(input);
+    Flux<Map<String, Object>> getPosts(@RequestParam String input1) {
+        return inferenceRepository.inferenceByCategory(input1);
+    }
+
+    @GetMapping(value = {"/location" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    Flux<Map<String, Object>> getUsers(@RequestParam String input1, String input2) {
+        return inferenceRepository.inferenceByLocationAndCategory(input1, input2);
     }
 }
