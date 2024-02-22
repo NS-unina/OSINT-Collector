@@ -26,8 +26,12 @@ class DockerServices:
 
     def build_image(self, folder_path):
         """
-        Build the docker image for the Dockerfile provided into the
-        folder_path folder
+        Build a Docker image using the Dockerfile provided in the
+        specified folder.
+
+        Args:
+            folder_path (str): The path to the folder containing
+            the Dockerfile.
         """
 
         self._log.info('Building Dockerfile image in %s', folder_path)
@@ -48,7 +52,13 @@ class DockerServices:
 
     def run_tool_container(self, name, output_volume, entrypoint):
         """
-        Run a docker container with the provided image
+        Run a Docker container with the provided image.
+
+        Args:
+            name (str): The name of the container.
+            output_volume (str): The name of the volume to mount for output.
+            entrypoint (str): The entry point command to run within
+                              the container.
         """
 
         if self._image_tag is None:
@@ -75,7 +85,10 @@ class DockerServices:
 
     def run_logstash_container(self, tool):
         """
-        Run a logstash container for the provided tool
+        Run a Logstash Docker container for the provided tool.
+
+        Args:
+            tool (str): The name of the tool.
         """
 
         self._log.info('Running logstash container')
@@ -102,8 +115,6 @@ class DockerServices:
                 environment={
                     'xpack.monitoring.enabled': 'false',
                     'log.level': 'info',
-                    # 'queue.checkpoint.writes': '1',
-                    # 'pipeline.batch.size': '10'
                 },
                 volumes=[
                     output_vol,

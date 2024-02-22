@@ -14,7 +14,15 @@ class Globals:
 
     @staticmethod
     def tools():
-        """Return the available tool"""
+        """
+        Return a list of available tools.
+
+        This method retrieves the names of folders located within the 'tools'
+        directory in the current working directory.
+
+        Returns:
+            list: A list containing the names of available tools (folders).
+        """
         complete_path = os.path.join(os.getcwd(), 'tools')
         path_content = os.listdir(complete_path)
 

@@ -80,8 +80,53 @@ class Starter:
         return tool, entry, inputs
 
     @staticmethod
+    def fetch_launcher_params_from_json(json: dict):
+        """
+        Determine the tool, entry point, and inputs based on the
+        provided JSON data.
+
+        This method extracts the tool name, entry point, and inputs from
+        the provided JSON data, and then performs validity checks for
+        the tool, entry point, and inputs.
+
+        Args:
+            json (dict): A dictionary containing the tool, entry point
+            and inputs information.
+
+        Returns:
+            tuple: A tuple containing the tool name, entry point, and
+            inputs if they are valid or None if not valid.
+        """
+
+        _tool = json.get("image")
+        _entry = json.get("entrypoint")
+        _inputs = json.get("inputs")
+
+        if not Starter._check_tool_validity(_tool):
+            return None, None, None
+
+        if not Starter._check_entry_validity(_tool, _entry):
+            return _tool, None, None
+
+        if not Starter._check_inputs_validity(_tool, _entry, _inputs):
+            return _tool, _entry, None
+
+        return _tool, _entry, _inputs
+
+    @staticmethod
     def _check_tool_validity(tool: str):
-        """Check if tool is valid"""
+        """
+        Check the validity of a tool.
+
+        This method checks if the specified tool is valid by comparing it
+        with the list of available tools.
+
+        Args:
+            tool (str): The name of the tool to be checked for validity.
+
+        Returns:
+            bool: A bool containing the check result.
+        """
         available_tools = Globals.tools()
         if tool not in available_tools:
 
@@ -89,12 +134,32 @@ class Starter:
                 _Exceptions.invalid_tool,
                 ", ".join(available_tools)
             )
-            exit(1)
+
+            return False
+
+        return True
 
     @staticmethod
     def _check_entry_validity(tool: str, entry: str):
-        """Check if the entrypoint has been provided"""
+        """
+        Check the validity of an entry point for the specified tool.
+
+        This method checks if the provided entry point is valid for
+        the specified tool by comparing it with the entry points
+        defined in the tool's configuration.
+
+        Args:
+            tool (str): The name of the tool.
+            entry (str): The entry point to be checked.
+
+        Returns:
+            bool: True if the entry point is valid, False otherwise.
+        """
         tool_config = YAMLServices.read_tool_config(tool)
+
+        if tool_config is None:
+            return False
+
         tool_cfg_entry = tool_config.entrypoints
 
         filtered = filter(lambda item: item.key == entry, tool_cfg_entry)
@@ -108,25 +173,51 @@ class Starter:
                 _Exceptions.invalid_entrypoint,
                 ", ".join(tool_cfg_entry_keys)
             )
-            exit(1)
+
+            return False
+
+        return True
 
     @staticmethod
     def _check_inputs_validity(tool: str, entry: str, inputs: [str]):
-        """Check if all inputs has been provided"""
+        """
+        Check the validity of provided inputs for the specified
+        entry point of a tool.
+
+        This method checks if all the required inputs for the specified
+        entry point of the tool have been provided.
+
+        Args:
+            tool (str): The name of the tool.
+            entry (str): The entry point of the tool.
+            inputs (list of str): List of inputs provided for the entry point.
+
+        Returns:
+            bool: True if all inputs are valid, False otherwise.
+
+        """
+
         tool_config = YAMLServices.read_tool_config(tool)
+        if tool_config is None:
+            return False
+
         tool_cfg_entry = tool_config.entrypoints
         filtered = filter(lambda item: item.key == entry, tool_cfg_entry)
         filtered_list = list(filtered)
         entrypoint = filtered_list[0]
+
         tool_cfg_in = entrypoint.inputs
+
         if len(tool_cfg_in) != len(inputs):
-            expected_inputs_keys = map(lambda item: item.key, tool_cfg_in)
+            expected_inputs_keys = map(lambda item: item, tool_cfg_in)
 
             Starter._log.error(
                 _Exceptions.invalid_inputs,
                 ", ".join(expected_inputs_keys)
             )
-            exit(1)
+            return False
+
+        return True
 
     @staticmethod
     def _command_line_interface():

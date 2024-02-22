@@ -10,7 +10,7 @@ from flask_cors import CORS
 from src.globals import Globals
 from src.launcher import Launcher
 from src.services.yaml_services import YAMLServices
-# from src.starter import Starter
+from src.starter import Starter
 
 
 def copy_conf_files(source_folder, destination_folder):
@@ -52,11 +52,19 @@ if __name__ == "__main__":
     @server.route("/launch", methods=['POST'])
     def launch():
         """Launcher"""
-        data = request.json
 
-        _image = data.get("image")
-        _entrypoint = data.get("entrypoint")
-        _inputs = data.get("inputs")
+        _image, _entrypoint, _inputs = Starter.fetch_launcher_params_from_json(
+            request.json
+        )
+
+        if _image is None:
+            return "Invalid tool", 400
+
+        if _entrypoint is None:
+            return "Invalid entrypoint", 400
+
+        if _inputs is None:
+            return "Invalid inputs", 400
 
         launcher = Launcher(_image, _entrypoint, _inputs)
 

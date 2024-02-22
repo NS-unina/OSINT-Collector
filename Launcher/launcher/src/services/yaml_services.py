@@ -27,8 +27,20 @@ class YAMLServices:
     @staticmethod
     def read_tool_config(tool: str):
         """
-        Read the configuration yaml file relative to the provided
-        tool to retrive the tool informations
+        Read the YAML configuration file associated with the provided tool.
+
+        This method reads the YAML configuration file corresponding
+        to the specified tool to retrieve information about the tool.
+
+        Args:
+            tool (str): The name of the tool for which configuration
+            is to be read.
+
+        Returns:
+            ToolConfig or None: An instance of ToolConfig class containing
+                                tool information if the configuration file
+                                exists and is successfully parsed, otherwise
+                                returns None.
         """
 
         file_path = f'./tools/{tool}/{tool}.yml'
@@ -43,10 +55,9 @@ class YAMLServices:
 
         except FileNotFoundError:
             YAMLServices._log.error(_Exceptions.unable_to_read_file, file_path)
-            exit(1)
 
         except yaml.YAMLError as e:
             YAMLServices._log.error(_Exceptions.unable_to_parse_file,
                                     file_path, e)
-            exit(1)
+
         return None

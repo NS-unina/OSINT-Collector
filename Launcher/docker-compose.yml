@@ -9,8 +9,6 @@ volumes:
     name: "output_data"
   tools_conf:
     name: "tools_conf"
-  # pipeline_output_data:
-  #   name: "pipeline_output_data"
 
 services:
 
@@ -29,37 +27,3 @@ services:
     networks:
       - elastic
     command: ./main.py
-
-
-  # filebeat:
-  #   user: root
-  #   image: docker.elastic.co/beats/filebeat:8.12.0
-  #   container_name: filebeat
-  #   depends_on:
-  #     - logstash
-  #   volumes:
-  #     - /var/run/docker.sock:/host_docker/docker.sock
-  #     - /var/lib/docker:/host_docker/var/lib/docker
-  #     - ./pipeline/filebeat.yml:/usr/share/filebeat/filebeat.yml
-  #     - tools_output_data:/usr/share/filebeat/ingest_data
-  #   networks:
-  #     - elastic
-
-  # logstash:
-  #   user: root
-  #   image: docker.elastic.co/logstash/logstash:8.12.0
-  #   container_name: logstash
-  #   environment:
-  #     xpack.monitoring.enabled: false
-  #     log.level: debug
-  #   volumes:
-  #     - ./pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-  #     - pipeline_output_data:/usr/share/logstash/output_data/
-  #   ports:
-  #     - 5044:5044
-  #     - 50000:50000/tcp
-  #     - 50000:50000/udp
-  #     - 9600:9600
-  #   networks:
-  #     - elastic
-  #   command: logstash -f /usr/share/logstash/pipeline/logstash.conf
