@@ -109,3 +109,8 @@ export interface Category {
     name: string;
     alsoKnownAs: string;
 }
+
+export interface Location {
+    id: string;
+    name: string;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Category } from "../types/results";
+import { Category, Location } from "../types/results";
 import axios from "axios";
 import { FaTimes } from "react-icons/fa";
 
@@ -7,18 +7,18 @@ interface Props {
   id: number;
   title: string;
   tags: string[];
-  endpoint: string;
-  onSendRequest: (endpoint: string, input: string[]) => void;
+  endpoints: string[];
+  onSendRequest: (endpoint: string, inputs: string[]) => void;
   handleCloseInput: () => void;
   handleCloseCard: () => void;
   setSelectedCard: (id: number) => void;
 }
 
-const InferenceCard = ({
+const LocationCategoryInferenceCard = ({
   id,
   title,
   tags,
-  endpoint,
+  endpoints,
   onSendRequest,
   handleCloseInput,
   handleCloseCard,
@@ -33,17 +33,26 @@ const InferenceCard = ({
   );
   const [selected, setSelected] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [suggestedCategories, setSuggestedCategories] = useState<Category[]>(
     []
   );
+  const [suggestedLocations, setSuggestedLocations] = useState<Location[]>([]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>(
     new Array(tags.length).fill(null)
   );
 
   const fetchCategories = () => {
     axios
-      .get<Category[]>(`http://localhost:8080/` + endpoint)
+      .get<Category[]>(`http://localhost:8080/` + endpoints[0])
       .then((res) => setCategories(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const fetchLocations = () => {
+    axios
+      .get<Location[]>(`http://localhost:8080/` + endpoints[1])
+      .then((res) => setLocations(res.data))
       .catch((error) => console.error("Error fetching data:", error));
   };
 
@@ -54,10 +63,21 @@ const InferenceCard = ({
   }, [inputVisible]);
 
   useEffect(() => {
-    if (inputVisible && inputValues.some((value) => value.trim() !== "")) {
+    if (inputVisible && inputValues[0].length > 0) {
+      const similarLocations = locations
+        .filter((location) =>
+          location.name.toLowerCase().includes(inputValues[0].toLowerCase())
+        )
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .slice(0, 5);
+      setSuggestedLocations(similarLocations);
+    } else {
+      setSuggestedLocations([]);
+    }
+    if (inputVisible && inputValues[1].length > 0) {
       const similarCategories = categories
         .filter((category) =>
-          category.name.toLowerCase().includes(inputValues[0].toLowerCase())
+          category.name.toLowerCase().includes(inputValues[1].toLowerCase())
         )
         .sort((a, b) => a.name.localeCompare(b.name))
         .slice(0, 5);
@@ -65,11 +85,12 @@ const InferenceCard = ({
     } else {
       setSuggestedCategories([]);
     }
-  }, [inputValues, inputVisible, categories]);
+  }, [inputValues, inputVisible, categories, locations]);
 
   const handleCardClick = () => {
     if (!selected) {
       fetchCategories();
+      fetchLocations();
       setInputVisible(true);
       setSelected(true);
       setSelectedCard(id);
@@ -85,15 +106,27 @@ const InferenceCard = ({
     setInputValues(newInputValues);
   };
 
-  const handleBadgeClick = (category: Category, index: number) => {
-    onSendRequest(tags[index], [category.name]);
+  const isLocation = (category: Category | Location): category is Location => {
+    return (category as Location).id !== undefined;
+  };
+
+  const handleBadgeClick = (category: Category | Location, index: number) => {
     const newSelectedInputs = [...selectedInputs];
-    newSelectedInputs[index] = category.name;
+    newSelectedInputs[index] = isLocation(category)
+      ? (category as Location).name
+      : category.name;
     setSelectedInputs(newSelectedInputs);
+
     const newInputValues = [...inputValues];
-    newInputValues[index] = category.name;
+    newInputValues[index] = isLocation(category)
+      ? (category as Location).name
+      : category.name;
     setInputValues(newInputValues);
-    setInputVisible(false);
+
+    if (newInputValues.every((input) => input !== "")) {
+      onSendRequest("location", newInputValues);
+      setInputVisible(false);
+    }
   };
 
   const handleCategoryClose = () => {
@@ -104,10 +137,10 @@ const InferenceCard = ({
   };
 
   const handleCardClose = () => {
-    handleCloseCard();
     setInputVisible(false);
     setSelectedInputs(new Array(tags.length).fill(""));
     setSelected(false);
+    handleCloseCard();
   };
 
   const renderTitleWithTags = () => {
@@ -146,26 +179,48 @@ const InferenceCard = ({
               <div>
                 {tags.map((tag, index) => (
                   <div key={index}>
-                    <input
-                      ref={(el) => (inputRefs.current[index] = el)}
-                      type="text"
-                      className="form-control border border-2 border-primary mt-3"
-                      placeholder={tag}
-                      value={inputValues[index]}
-                      onChange={(event) => handleInputChange(event, index)}
-                      autoFocus={index === 0}
-                    />
-                    <div className="suggested-categories d-flex flex-wrap mt-3">
-                      {suggestedCategories.map((category) => (
-                        <div
-                          key={category.uri}
-                          className="badge bg-primary me-1 mb-1"
-                          onClick={() => handleBadgeClick(category, index)}
-                        >
-                          {category.name}
-                        </div>
-                      ))}
-                    </div>
+                    {!selectedInputs[index] && (
+                      <input
+                        ref={(el) => (inputRefs.current[index] = el)}
+                        type="text"
+                        className="form-control border border-2 border-primary mt-3"
+                        placeholder={tag}
+                        value={inputValues[index]}
+                        onChange={(event) => handleInputChange(event, index)}
+                        autoFocus={index === 0}
+                      />
+                    )}
+                    {tag === "category"
+                      ? !selectedInputs[index] && (
+                          <div className="suggested-categories d-flex flex-wrap mt-3">
+                            {suggestedCategories.map((category) => (
+                              <div
+                                key={category.uri}
+                                className="badge bg-primary me-1 mb-1"
+                                onClick={() =>
+                                  handleBadgeClick(category, index)
+                                }
+                              >
+                                {category.name}
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      : !selectedInputs[index] && (
+                          <div className="suggested-locations d-flex flex-wrap mt-3">
+                            {suggestedLocations.map((location) => (
+                              <div
+                                key={location.name}
+                                className="badge bg-primary me-1 mb-1"
+                                onClick={() =>
+                                  handleBadgeClick(location, index)
+                                }
+                              >
+                                {location.name}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                   </div>
                 ))}
               </div>
@@ -187,4 +242,4 @@ const InferenceCard = ({
   );
 };
 
-export default InferenceCard;
+export default LocationCategoryInferenceCard;
