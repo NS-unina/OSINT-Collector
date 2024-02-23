@@ -13,6 +13,7 @@ import { AiFillInstagram } from "react-icons/ai";
 import { FaTelegram } from "react-icons/fa";
 import LocationCategoryInferenceCard from "./LocationCategoryInferenceCard";
 import InstaloaderProfileInfo from "./InstaloaderProfileInfo";
+import UsernameInferenceCard from "./UsernameInferenceCard";
 
 interface InferenceResult {
   post: InstagramPost | TelegramPost;
@@ -93,54 +94,72 @@ const Inference = () => {
             setSelectedCard={handleSelectedCard}
           />
         )}
+        {(selectedCardIndex === null || selectedCardIndex === 3) && (
+          <UsernameInferenceCard
+            id={3}
+            title="Finds all users who tagged [account]"
+            tags={["account"]}
+            endpoint="instagram/accounts"
+            onSendRequest={handleSendRequest}
+            handleCloseInput={handleCloseInput}
+            handleCloseCard={handleCloseCard}
+            setSelectedCard={handleSelectedCard}
+          />
+        )}
       </div>
       <div className="d-flex justify-content-center align-items-center">
         <div className="row mt-4">
-          {selectedCardIndex === 1
-            ? inferenceResults.map((result, index) => (
-                <div key={index} className="col-sm-4 mb-3">
-                  <a
-                    href={
-                      isInstagramPost(result.post)
-                        ? "https://www.instagram.com/p/" + result.post.shortcode
-                        : result.post.url
-                    }
-                    target="_blank"
-                    className="card-link position-relative"
-                  >
-                    <div className="card h-100 w-100">
-                      <div className="card-body snscrape text-center">
-                        <h5 className="card-title">
-                          {isInstagramPost(result.post) ? (
-                            <AiFillInstagram />
-                          ) : (
-                            <FaTelegram />
-                          )}
-                          <> </>
-                          {isInstagramAccount(result.account)
-                            ? result.account.username
-                            : result.account.name}
-                        </h5>
-                        <p
-                          id="cardText"
-                          className="card-text p-1"
-                          style={{ maxHeight: "300px", overflowY: "scroll" }}
-                        >
-                          "{result.post.text}"
-                        </p>
-                        <div className="d-flex flex-wrap"></div>
-                      </div>
-                      <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
+          {selectedCardIndex === 1 ? (
+            inferenceResults.map((result, index) => (
+              <div key={index} className="col-sm-4 mb-3">
+                <a
+                  href={
+                    isInstagramPost(result.post)
+                      ? "https://www.instagram.com/p/" + result.post.shortcode
+                      : result.post.url
+                  }
+                  target="_blank"
+                  className="card-link position-relative"
+                >
+                  <div className="card h-100 w-100">
+                    <div className="card-body snscrape text-center">
+                      <h5 className="card-title">
+                        {isInstagramPost(result.post) ? (
+                          <AiFillInstagram />
+                        ) : (
+                          <FaTelegram />
+                        )}
+                        <> </>
+                        {isInstagramAccount(result.account)
+                          ? result.account.username
+                          : result.account.name}
+                      </h5>
+                      <p
+                        id="cardText"
+                        className="card-text p-1"
+                        style={{ maxHeight: "300px", overflowY: "scroll" }}
+                      >
+                        "{result.post.text}"
+                      </p>
+                      <div className="d-flex flex-wrap"></div>
                     </div>
-                  </a>
-                </div>
-              ))
-            : inferenceResults.map(
+                    <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
+                  </div>
+                </a>
+              </div>
+            ))
+          ) : (
+            <div className="row mt-3">
+              {inferenceResults.map(
                 (result, index) =>
                   isInstagramAccount(result.account) && (
-                    <InstaloaderProfileInfo key={index} {...result.account} />
+                    <div key={index} className="col-sm-4 mb-3 mb-sm-3">
+                      <InstaloaderProfileInfo {...result.account} />
+                    </div>
                   )
               )}
+            </div>
+          )}
         </div>
       </div>
     </div>
