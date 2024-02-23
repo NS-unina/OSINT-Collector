@@ -28,5 +28,13 @@ public interface InferenceRepository extends ReactiveNeo4jRepository<Category, S
         RETURN DISTINCT {account: properties(account)} as result
         """)
     Flux<Map<String, Object>> inferenceByLocationAndCategory(String location, String category);
+
+    @Query("""
+        MATCH (account:InstagramAccount)-[:PUBLISHED]->(p:InstagramPost)
+        WHERE ANY(taggedAccount IN p.taggedAccounts WHERE taggedAccount = $username)
+        RETURN DISTINCT {account: properties(account)} as result
+        """)
+    Flux<Map<String, Object>> inferenceByTag(String username);
+
 }
 

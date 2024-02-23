@@ -29,4 +29,9 @@ public class InferenceController {
     Flux<Map<String, Object>> getUsers(@RequestParam String input1, String input2) {
         return inferenceRepository.inferenceByLocationAndCategory(input1, input2);
     }
+
+    @GetMapping(value = {"/account" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    Flux<Map<String, Object>> getUsersByTag(@RequestParam String input1) {
+        return inferenceRepository.inferenceByTag(input1);
+    }
 }
