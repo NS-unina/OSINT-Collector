@@ -49,7 +49,10 @@ const InstagramAccountList = ({
             )}
             <div
               className="ms-2 pe-2 btn-link"
-              onClick={() => setAscending(!ascending)}
+              onClick={(event) => {
+                event.preventDefault();
+                setAscending(!ascending);
+              }}
             >
               {ascending ? (
                 <FaSortAlphaDown type="button" />
