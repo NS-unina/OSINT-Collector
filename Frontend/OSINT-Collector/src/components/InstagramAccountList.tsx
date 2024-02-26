@@ -35,7 +35,7 @@ const InstagramAccountList = ({
       <div
         className="mb-3"
         id="instagramAccountsContainer"
-        style={{ maxHeight: "400px", overflowY: "scroll" }}
+        style={{ maxHeight: "500px", overflowY: "scroll" }}
       >
         <div className="d-flex justify-content-center align-items-center mb-2">
           <label className="form-label d-flex align-items-center">

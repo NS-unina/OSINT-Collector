@@ -157,7 +157,7 @@ const LocationCategoryInferenceCard = ({
   };
 
   return (
-    <div className="col-sm-4 mt-3">
+    <div className={`col-sm-4 mt-3`} style={selected ? { width: "500px" } : {}}>
       <div
         className={`card h-100 w-100 ${selected ? "selected" : ""}`}
         onClick={handleCardClick}

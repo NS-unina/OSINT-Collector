@@ -25,7 +25,7 @@ const InstaloaderProfileInfo = ({
       target="_blank"
       className="card-link position-relative"
     >
-      <div className="card h-100 w-100">
+      <div className="card h-100" style={{ width: "500px" }}>
         <div className="card-body snscrape text-center">
           <h5 className="card-title">{full_name}</h5>
           <h6 className="card-subtitle mb-4 text-body-secondary">{username}</h6>
