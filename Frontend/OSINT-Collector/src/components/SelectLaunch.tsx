@@ -68,6 +68,7 @@ const SelectLaunch = ({
               className={`btn btn-outline-success tool-label ${
                 launch.id === selectedLaunch?.id ? "position-relative" : ""
               }`}
+              style={{ width: "70%" }}
               htmlFor={`tool-${launch.id}`}
             >
               <div className="me-2">

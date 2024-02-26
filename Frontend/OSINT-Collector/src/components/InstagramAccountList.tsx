@@ -42,6 +42,8 @@ const InstagramAccountList = ({
             {selectedAccount == null && (
               <Switch
                 isOn={!showAll}
+                type="alert"
+                color="#f44336"
                 handleToggle={() => {
                   setShowAll(!showAll);
                 }}

@@ -16,7 +16,7 @@ const TelegramChannelList = ({
   handleChannelToggle,
 }: Props) => {
   const [ascending, setAscending] = useState(true);
-  const [showAll, setShowAll] = useState(true);
+  const [showAllChannels, setShowAllChannels] = useState(true);
 
   const sortedAccounts = [...accounts].sort((a, b) => {
     if (ascending) {
@@ -26,7 +26,11 @@ const TelegramChannelList = ({
     }
   });
 
-  const filteredChannels = showAll
+  const handleSetShowAllChannels = () => {
+    setShowAllChannels(!showAllChannels);
+  };
+
+  const filteredChannels = showAllChannels
     ? sortedAccounts
     : accounts.filter((account) => account.flag);
 
@@ -41,10 +45,10 @@ const TelegramChannelList = ({
           <label className="form-label d-flex align-items-center">
             {selectedChannel == null && (
               <Switch
-                isOn={!showAll}
-                handleToggle={() => {
-                  setShowAll(!showAll);
-                }}
+                isOn={!showAllChannels}
+                type="alert"
+                color="#f44336"
+                handleToggle={handleSetShowAllChannels}
               />
             )}
             <div
