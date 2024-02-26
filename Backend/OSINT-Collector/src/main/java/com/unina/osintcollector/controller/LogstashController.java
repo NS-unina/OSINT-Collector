@@ -6,8 +6,10 @@ import com.unina.osintcollector.repository.InstagramPostRepository;
 import com.unina.osintcollector.repository.SiteAccountRepository;
 import com.unina.osintcollector.repository.TelegramPostRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -62,6 +64,8 @@ public class LogstashController {
         List<SiteAccount> sites = sitesList.sites();
         List<Map<String, Object>> siteMaps = new ArrayList<>();
 
+        WebClient webClient = WebClient.create(); // create a WebClient instance
+
         for (SiteAccount site : sites) {
             Map<String, Object> siteMap = new HashMap<>();
             siteMap.put("id", site.getId());
@@ -69,6 +73,31 @@ public class LogstashController {
             siteMap.put("url", site.getUrl());
             siteMap.put("status", site.getStatus());
             siteMaps.add(siteMap);
+
+            if (Objects.equals(site.getSite(), "Instagram") && Objects.equals(site.getStatus(), "FOUND")) {
+                String url = "http://localhost:5000/launch";
+
+                // Create the body of the request
+                Map<String, Object> body = new HashMap<>();
+                body.put("image", "instaloader");
+                body.put("entrypoint", "download-public-profile");
+                body.put("inputs", Collections.singletonList(username));
+
+                System.out.print("INSTALOADER SEND: " + body);
+
+                Mono<String> response = webClient.post()
+                        .uri(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(body)
+                        .retrieve()
+                        .bodyToMono(String.class);
+
+                response.subscribe(result -> {
+                    System.out.println(result); // print the result to the console
+                }, error -> {
+                    System.err.println(error.getMessage()); // print the error message to the console
+                });
+            }
         }
 
         return siteAccountRepository.saveSites(username, siteMaps).thenReturn(ResponseEntity.status(HttpStatus.OK).build());
