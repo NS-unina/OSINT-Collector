@@ -61,6 +61,18 @@ const Results = () => {
       .catch((error) => console.error("Error fetching data:", error));
   };
 
+  const handleInstaRef = (username: string) => {
+    setSelectedComponent("Instagram");
+    setSelectedUsername(null);
+
+    const selected = instagramAccounts.find(
+      (account) => account.username === username
+    );
+    if (selected) {
+      setSelectedInstagramAccount(selected);
+    }
+  };
+
   const handleLaunchToggle = (launchId: number) => {
     const selected = launches.find((l) => l.id === launchId);
 
@@ -187,7 +199,10 @@ const Results = () => {
                 selectedLaunch={selectedLaunch}
                 handleLaunchToggle={handleLaunchToggle}
               />
-              <ShowResults selectedLaunch={selectedLaunch} />
+              <ShowResults
+                selectedLaunch={selectedLaunch}
+                instaRef={handleInstaRef}
+              />
             </>
           )}
           {selectedComponent === "Telegram" && (
@@ -222,7 +237,10 @@ const Results = () => {
             <InstaloaderResults results={selectedInstagramAccount} />
           )}
           {selectedUsername != null && (
-            <BlackbirdResults results={selectedUsername} />
+            <BlackbirdResults
+              results={selectedUsername}
+              instaRef={handleInstaRef}
+            />
           )}
         </div>
       </div>

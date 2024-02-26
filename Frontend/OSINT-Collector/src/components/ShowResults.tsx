@@ -8,9 +8,10 @@ import InstaloaderResults from "./InstaloaderResults";
 
 interface Props {
   selectedLaunch: Launch | null;
+  instaRef: (username: string) => void;
 }
 
-const ShowResults = ({ selectedLaunch }: Props) => {
+const ShowResults = ({ selectedLaunch, instaRef }: Props) => {
   const [results, setResults] = useState(() => {
     switch (selectedLaunch?.image) {
       case "blackbird":
@@ -56,7 +57,7 @@ const ShowResults = ({ selectedLaunch }: Props) => {
   switch (selectedLaunch.image) {
     case "blackbird":
       if (results !== null && "sites" in results) {
-        return <BlackbirdResults results={results} />;
+        return <BlackbirdResults results={results} instaRef={instaRef} />;
       }
       break;
     case "snscrape-telegram":
