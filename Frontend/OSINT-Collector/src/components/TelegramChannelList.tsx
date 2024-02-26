@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TelegramChannel } from "../types/results";
 import { GoAlertFill } from "react-icons/go";
 import { FaSortAlphaDown, FaSortAlphaUpAlt, FaTimes } from "react-icons/fa";
+import Switch from "./Switch";
 
 interface Props {
   accounts: TelegramChannel[];
@@ -15,6 +16,7 @@ const TelegramChannelList = ({
   handleChannelToggle,
 }: Props) => {
   const [ascending, setAscending] = useState(true);
+  const [showAll, setShowAll] = useState(true);
 
   const sortedAccounts = [...accounts].sort((a, b) => {
     if (ascending) {
@@ -24,6 +26,10 @@ const TelegramChannelList = ({
     }
   });
 
+  const filteredChannels = showAll
+    ? sortedAccounts
+    : accounts.filter((account) => account.flag);
+
   return (
     <div>
       <div
@@ -31,11 +37,22 @@ const TelegramChannelList = ({
         id="telegramAccountsContainer"
         style={{ maxHeight: "400px", overflowY: "scroll" }}
       >
-        <div className="d-flex justify-content-center align-items-center">
+        <div className="d-flex justify-content-center align-items-center mb-2">
           <label className="form-label d-flex align-items-center">
+            {selectedChannel == null && (
+              <Switch
+                isOn={!showAll}
+                handleToggle={() => {
+                  setShowAll(!showAll);
+                }}
+              />
+            )}
             <div
-              className="pe-2 btn-link"
-              onClick={() => setAscending(!ascending)}
+              className="ms-2 pe-2 btn-link"
+              onClick={(event) => {
+                event.preventDefault();
+                setAscending(!ascending);
+              }}
             >
               {ascending ? (
                 <FaSortAlphaDown type="button" />
@@ -46,7 +63,7 @@ const TelegramChannelList = ({
             <div>Telegram Channels:</div>
           </label>
         </div>
-        {sortedAccounts.map((account) => (
+        {filteredChannels.map((account) => (
           <div key={account.name} className="mb-2">
             <input
               type="checkbox"

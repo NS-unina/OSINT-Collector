@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaSortAlphaDown, FaSortAlphaUpAlt, FaTimes } from "react-icons/fa";
 import { instaloader } from "../types/results";
 import { GoAlertFill } from "react-icons/go";
+import Switch from "./Switch";
 
 interface Props {
   accounts: instaloader[];
@@ -15,6 +16,7 @@ const InstagramAccountList = ({
   handleAccountToggle,
 }: Props) => {
   const [ascending, setAscending] = useState(true);
+  const [showAll, setShowAll] = useState(true);
 
   const sortedAccounts = [...accounts].sort((a, b) => {
     if (ascending) {
@@ -24,6 +26,10 @@ const InstagramAccountList = ({
     }
   });
 
+  const filteredAccounts = showAll
+    ? sortedAccounts
+    : accounts.filter((account) => account.flag);
+
   return (
     <div>
       <div
@@ -31,10 +37,18 @@ const InstagramAccountList = ({
         id="instagramAccountsContainer"
         style={{ maxHeight: "400px", overflowY: "scroll" }}
       >
-        <div className="d-flex justify-content-center align-items-center">
+        <div className="d-flex justify-content-center align-items-center mb-2">
           <label className="form-label d-flex align-items-center">
+            {selectedAccount == null && (
+              <Switch
+                isOn={!showAll}
+                handleToggle={() => {
+                  setShowAll(!showAll);
+                }}
+              />
+            )}
             <div
-              className="pe-2 btn-link"
+              className="ms-2 pe-2 btn-link"
               onClick={() => setAscending(!ascending)}
             >
               {ascending ? (
@@ -46,7 +60,7 @@ const InstagramAccountList = ({
             <div>Instagram Accounts:</div>
           </label>
         </div>
-        {sortedAccounts.map((account) => (
+        {filteredAccounts.map((account) => (
           <div key={account.id} className="mb-2">
             <input
               type="checkbox"
