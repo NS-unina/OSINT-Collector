@@ -69,3 +69,61 @@ export interface RunToolForm {
     entrypoint: string;
     inputs: string[];
 }
+
+export interface SearchResult {
+    cacheUrl: string;
+    clicktrackUrl: string;
+    content: string;
+    contentNoFormatting: string;
+    title: string;
+    titleNoFormatting: string;
+    formattedUrl: string;
+    unescapedUrl: string;
+    url: string;
+    visibleUrl: string;
+    richSnippet: {
+      cseImage: {
+        src: string;
+      };
+      metatags: {
+        twitterTitle: string;
+        twitterSite: string;
+        handheldfriendly: string;
+        ogTitle: string;
+        ogDescription: string;
+        twitterDescription: string;
+    }
+    };
+    breadcrumbUrl: {
+        "host": string;
+        "crumbs": [
+            string
+        ]
+    }
+  }
+
+export interface GoogleSearchResponse {
+    error: {
+        code: number;
+        message: string;
+    };
+    cursor: {
+      currentPageIndex: number;
+      estimatedResultCount: string;
+      moreResultsUrl: string;
+      resultCount: string;
+      searchResultTime: string;
+      pages: {
+        label: number;
+        start: string;
+      }[];
+    };
+    context: {
+      title: string;
+      total_results: string;
+    };
+    results: SearchResult[];
+    findMoreOnGoogle: {
+      url: string;
+    };
+  }

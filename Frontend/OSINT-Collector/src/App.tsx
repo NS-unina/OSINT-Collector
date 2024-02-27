@@ -1,7 +1,7 @@
 import { useState, ReactElement } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { BsCursor, BsTrash, BsPlus } from "react-icons/bs";
+import { BsCursor, BsSearch, BsTrash, BsPlus } from "react-icons/bs";
 import { PiGraphDuotone } from "react-icons/pi";
 import { SiGraphql } from "react-icons/si";
 import SelectTool from "./components/SelectTool";
@@ -10,6 +10,8 @@ import AddTool from "./components/AddTool";
 import Results from "./components/Results";
 import Inference from "./components/Inference";
 import Switch from "./components/Switch";
+import { FaTimes } from "react-icons/fa";
+import SearchEngine from "./components/SearchEngine";
 
 const App = () => {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -35,6 +37,8 @@ const App = () => {
         return <AddTool />;
       case "Results":
         return <Results />;
+      case "Search":
+        return <SearchEngine />;
       case "Inference":
         return <Inference />;
       default:
@@ -61,49 +65,98 @@ const App = () => {
         <div
           className={
             showAllTools
-              ? "row row-cols-1 row-cols-md-5 g-4"
-              : "row row-cols-1 row-cols-md-3 g-4"
+              ? "row row-cols-1 row-cols-md-2 g-4"
+              : "row row-cols-1 row-cols-md-4 g-4"
           }
         >
-          <div className="col">
-            <div
-              className={`card h-100 ${
-                selectedTool === "Select Tool" ? "border-primary selected" : ""
-              }`}
-              onClick={() => handleSelectTool("Select Tool")}
-            >
-              <div className="card-body text-center">
-                <BsCursor size={40} className="mb-3 text-primary" />
-                <h5 className="card-title">Select Tool</h5>
+          {!showAllTools && (
+            <>
+              <div className="col">
+                <div
+                  className={`card h-100 ${
+                    selectedTool === "Select Tool"
+                      ? "border-primary selected"
+                      : ""
+                  }`}
+                  onClick={() => handleSelectTool("Select Tool")}
+                >
+                  {selectedTool === "Select Tool" && (
+                    <div className="position-absolute top-0 start-100 translate-middle mt-1">
+                      <div className="icon-wrapper">
+                        <FaTimes className="icon-red" />
+                      </div>
+                    </div>
+                  )}
+                  <div className="card-body text-center">
+                    <BsCursor size={40} className="mb-3 text-primary" />
+                    <h5 className="card-title">Select Tool</h5>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col">
-            <div
-              className={`card h-100 ${
-                selectedTool === "Results" ? "border-success selected" : ""
-              }`}
-              onClick={() => handleSelectTool("Results")}
-            >
-              <div className="card-body text-center">
-                <PiGraphDuotone size={40} className="mb-3 text-success" />
-                <h5 className="card-title">Results</h5>
+              <div className="col">
+                <div
+                  className={`card h-100 ${
+                    selectedTool === "Search" ? "border-warning selected" : ""
+                  }`}
+                  onClick={() => handleSelectTool("Search")}
+                >
+                  {selectedTool === "Search" && (
+                    <div className="position-absolute top-0 start-100 translate-middle mt-1">
+                      <div className="icon-wrapper">
+                        <FaTimes className="icon-red" />
+                      </div>
+                    </div>
+                  )}
+                  <div className="card-body text-center">
+                    <BsSearch size={40} className="mb-3 text-warning" />
+                    <h5 className="card-title">Search</h5>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col">
-            <div
-              className={`card h-100 ${
-                selectedTool === "Inference" ? "border-warning selected" : ""
-              }`}
-              onClick={() => handleSelectTool("Inference")}
-            >
-              <div className="card-body text-center">
-                <SiGraphql size={40} className="mb-3 text-warning" />
-                <h5 className="card-title">Inference</h5>
+              <div className="col">
+                <div
+                  className={`card h-100 ${
+                    selectedTool === "Results" ? "border-success selected" : ""
+                  }`}
+                  onClick={() => handleSelectTool("Results")}
+                >
+                  {selectedTool === "Results" && (
+                    <div className="position-absolute top-0 start-100 translate-middle mt-1">
+                      <div className="icon-wrapper">
+                        <FaTimes className="icon-red" />
+                      </div>
+                    </div>
+                  )}
+                  <div className="card-body text-center">
+                    <PiGraphDuotone size={40} className="mb-3 text-success" />
+                    <h5 className="card-title">Results</h5>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+              <div className="col">
+                <div
+                  className={`card h-100 ${
+                    selectedTool === "Inference"
+                      ? "border-warning selected"
+                      : ""
+                  }`}
+                  onClick={() => handleSelectTool("Inference")}
+                >
+                  {selectedTool === "Inference" && (
+                    <div className="position-absolute top-0 start-100 translate-middle mt-1">
+                      <div className="icon-wrapper">
+                        <FaTimes className="icon-red" />
+                      </div>
+                    </div>
+                  )}
+                  <div className="card-body text-center">
+                    <SiGraphql size={40} className="mb-3 text-warning" />
+                    <h5 className="card-title">Inference</h5>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           {showAllTools && (
             <>
               <div className="col">
