@@ -3,6 +3,7 @@ import InferenceCard from "./InferenceCard";
 import { useState } from "react";
 import { MdOpenInNew } from "react-icons/md";
 import {
+  Category,
   InstagramAccount,
   InstagramPost,
   TelegramChannel,
@@ -18,6 +19,7 @@ import UsernameInferenceCard from "./UsernameInferenceCard";
 interface InferenceResult {
   post: InstagramPost | TelegramPost;
   account: InstagramAccount | TelegramChannel;
+  categories: Category[];
 }
 
 const isInstagramPost = (
@@ -142,6 +144,17 @@ const Inference = () => {
                         "{result.post.text}"
                       </p>
                       <div className="d-flex flex-wrap"></div>
+                      <div className="d-flex flex-wrap">
+                        {result.categories.map((category) => (
+                          <div
+                            key={category.uri}
+                            className="badge bg-danger me-1 mb-1"
+                            role="alert"
+                          >
+                            {category.name}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
                   </div>
@@ -153,7 +166,10 @@ const Inference = () => {
               {inferenceResults.map(
                 (result, index) =>
                   isInstagramAccount(result.account) && (
-                    <div key={index} className="col-sm-4 mb-3 mb-sm-3">
+                    <div
+                      key={index}
+                      className="d-flex justify-content-center mb-3"
+                    >
                       <InstaloaderProfileInfo {...result.account} />
                     </div>
                   )

@@ -12,7 +12,7 @@ import Inference from "./components/Inference";
 import Switch from "./components/Switch";
 
 const App = () => {
-  const [selectedTool, setSelectedTool] = useState<string | null>("");
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [showAllTools, setShowAllTools] = useState(false);
 
   const handleSelectTool = (tool: string) => {
