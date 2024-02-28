@@ -1,0 +1,14 @@
+telegram-tracker:
+  description: Download messages from the given telegram channel.
+  entrypoints:
+    - key: download-messages
+      name: Download messages
+      description: Download the last message in the provided channel
+      inputs:
+        - CHANNEL
+      command: python3 main.py --telegram-channel ${CHANNEL} -o /output
+
+  inputs:
+    - key: CHANNEL
+      description: The telegram channel where to extract the last message
+      type: string

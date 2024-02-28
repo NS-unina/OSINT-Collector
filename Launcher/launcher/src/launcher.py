@@ -41,7 +41,7 @@ class Launcher:
 
     _log = logging.getLogger(__name__)
 
-    def __init__(self, tool: str, entrypoint: str, inputs: [str]):
+    def __init__(self, tool: str, entrypoint: str, inputs: list[str]):
         """
         Initialize the launcher with the provided values.
 
@@ -116,9 +116,10 @@ class Launcher:
 
         output_found = self.wait_for_file(file_to_find, timeout_seconds)
 
-        time.sleep(5)
-        docker.stop_logstash_container()
-        time.sleep(10)
+        if not output_found:
+            time.sleep(5)
+            docker.stop_logstash_container()
+            time.sleep(10)
 
         output_found = os.path.exists(file_to_find)
 
