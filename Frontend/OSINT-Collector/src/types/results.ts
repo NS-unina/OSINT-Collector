@@ -92,6 +92,12 @@ export interface InstagramPost {
     } [];
 }
 
+export interface Category {
+    uri: string;
+    name: string;
+    alsoKnownAs: string;
+}
+
 export interface TelegramPost { 
     url: string;
     date: string;
@@ -113,4 +119,43 @@ export interface Category {
 export interface Location {
     id: string;
     name: string;
+}
+
+export interface TelegramUser {
+    id: string;
+    first_name: string;
+    last_name: string;
+    username: string;
+    phone: string;
+    bot: boolean;
+    verified: boolean;
+    premium: boolean;
+    flag: boolean;
+    messages?: TelegramMessage[];
+}
+
+export interface TelegramMessage {
+    id: string;
+    messageType: string;
+    peer_id: string;
+    from_id: string;
+    date: string;
+    edit_date: string;
+    message: string;
+    pinned: boolean;
+    reply_to_id: string;
+    processed: boolean;
+    categories?: Category[];
+    repliedMessage?: TelegramMessage;
+}
+
+export interface TelegramGroup {
+    id: string;
+    about: string;
+    title: string;
+    username: string;
+    date: string;
+    participants_count: string;
+    flag: boolean;
+    messages?: TelegramMessage[];
 }
