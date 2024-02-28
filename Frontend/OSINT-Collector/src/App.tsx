@@ -162,6 +162,19 @@ const App = () => {
               <div className="col">
                 <div
                   className={`card h-100 ${
+                    selectedTool === "Add Tool" ? "border-success selected" : ""
+                  }`}
+                  onClick={() => handleSelectTool("Add Tool")}
+                >
+                  <div className="card-body text-center">
+                    <BsPlus size={40} className="mb-3 text-success" />
+                    <h5 className="card-title">Add Tool</h5>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div
+                  className={`card h-100 ${
                     selectedTool === "Delete Tool"
                       ? "border-danger selected"
                       : ""
@@ -171,19 +184,6 @@ const App = () => {
                   <div className="card-body text-center">
                     <BsTrash size={40} className="mb-3 text-danger" />
                     <h5 className="card-title">Remove Tool</h5>
-                  </div>
-                </div>
-              </div>
-              <div className="col">
-                <div
-                  className={`card h-100 ${
-                    selectedTool === "Add Tool" ? "border-success selected" : ""
-                  }`}
-                  onClick={() => handleSelectTool("Add Tool")}
-                >
-                  <div className="card-body text-center">
-                    <BsPlus size={50} className="mb-3 text-success" />
-                    <h5 className="card-title">Add Tool</h5>
                   </div>
                 </div>
               </div>
