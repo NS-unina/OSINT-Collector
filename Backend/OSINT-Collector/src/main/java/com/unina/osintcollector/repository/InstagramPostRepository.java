@@ -19,7 +19,10 @@ public interface InstagramPostRepository extends ReactiveNeo4jRepository<Instagr
         ON CREATE SET p.url = $post.url, p.shortcode = $post.shortcode, p.likes = $post.likes, p.comments = $post.comments, p.taggedAccounts = $post.taggedAccounts, p.timestamp = $post.timestamp, p.text = $post.text
         ON MATCH SET p.url = $post.url, p.shortcode = $post.shortcode, p.likes = $post.likes, p.comments = $post.comments, p.taggedAccounts = $post.taggedAccounts, p.timestamp = $post.timestamp, p.text = $post.text
         FOREACH(ignoreMe IN CASE WHEN $post.location IS NOT NULL THEN [1] ELSE [] END |
-            MERGE (p)-[:TAKEN_AT]->(l:Location {name: $post.location.name})
+            MERGE (l:Location {id: $post.location.id})
+            ON CREATE SET l.name = $post.location.name
+            ON MATCH SET l.name = $post.location.name
+            MERGE (p)-[:TAKEN_AT]->(l)
         )
         WITH account, p AS posts
         CALL apoc.nlp.gcp.entities.stream(posts, {

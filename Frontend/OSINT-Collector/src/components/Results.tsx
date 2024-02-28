@@ -3,24 +3,35 @@ import { Launch } from "../types";
 import axios from "axios";
 import SelectLaunch from "./SelectLaunch";
 import ShowResults from "./ShowResults";
-import { blackbird, instaloader, snscrape } from "../types/results";
+import {
+  TelegramGroup,
+  blackbird,
+  instaloader,
+  snscrape,
+} from "../types/results";
 import TelegramChannelList from "./TelegramChannelList";
 import SnscrapeResults from "./SnscrapeResults";
 import InstaloaderResults from "./InstaloaderResults";
 import InstagramAccountList from "./InstagramAccountList";
 import UsernameList from "./UsernameList"; // Aggiunto UsernameList
 import BlackbirdResults from "./BlackbirdResults";
+import TelegramGroupList from "./TelegramGroupList";
+import TelegramTrackerResults from "./TelegramTrackerResults";
 
 const Results = () => {
   const [launches, setLaunches] = useState<Launch[]>([]);
   const [telegramChannels, setTelegramChannels] = useState<snscrape[]>([]);
   const [instagramAccounts, setInstagramAccounts] = useState<instaloader[]>([]);
   const [usernames, setUsernames] = useState<blackbird[]>([]);
+  const [telegramGroups, setTelegramGroups] = useState<TelegramGroup[]>([]);
   const [selectedLaunch, setSelectedLaunch] = useState<Launch | null>(null);
   const [selectedChannel, setSelectedChannel] = useState<snscrape | null>(null);
   const [selectedInstagramAccount, setSelectedInstagramAccount] =
     useState<instaloader | null>(null);
   const [selectedUsername, setSelectedUsername] = useState<blackbird | null>(
+    null
+  );
+  const [selectedGroup, setSelectedGroup] = useState<TelegramGroup | null>(
     null
   );
   const [selectedComponent, setSelectedComponent] =
@@ -31,6 +42,7 @@ const Results = () => {
     fetchTelegramChannels();
     fetchInstagramAccounts();
     fetchUsernames();
+    fetchGroups();
   }, []);
 
   const fetchLaunches = () => {
@@ -59,6 +71,25 @@ const Results = () => {
       .get<blackbird[]>(`http://localhost:8080/usernames`)
       .then((res) => setUsernames(res.data))
       .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const fetchGroups = () => {
+    axios
+      .get<TelegramGroup[]>(`http://localhost:8080/telegram/groups`)
+      .then((res) => setTelegramGroups(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const handleInstaRef = (username: string) => {
+    setSelectedComponent("Instagram");
+    setSelectedUsername(null);
+
+    const selected = instagramAccounts.find(
+      (account) => account.username === username
+    );
+    if (selected) {
+      setSelectedInstagramAccount(selected);
+    }
   };
 
   const handleLaunchToggle = (launchId: number) => {
@@ -101,6 +132,16 @@ const Results = () => {
     }
   };
 
+  const handleGroupToggle = (groupId: string) => {
+    const selected = telegramGroups.find((g) => g.id === groupId);
+
+    if (selectedGroup && selectedGroup.id === groupId) {
+      setSelectedGroup(null);
+    } else if (selected) {
+      setSelectedGroup(selected);
+    }
+  };
+
   const handleComponentChange = (component: string) => {
     setSelectedComponent(component);
     // if (component === "Instagram" && !instagramAccounts.length) {
@@ -117,18 +158,27 @@ const Results = () => {
       setSelectedChannel(null);
       setSelectedInstagramAccount(null);
       setSelectedUsername(null);
+      setSelectedGroup(null);
     } else if (component === "Telegram") {
       setSelectedInstagramAccount(null);
       setSelectedLaunch(null);
       setSelectedUsername(null);
+      setSelectedGroup(null);
     } else if (component === "Instagram") {
       setSelectedChannel(null);
       setSelectedLaunch(null);
       setSelectedUsername(null);
+      setSelectedGroup(null);
     } else if (component === "Usernames") {
       setSelectedChannel(null);
       setSelectedLaunch(null);
       setSelectedInstagramAccount(null);
+      setSelectedGroup(null);
+    } else if (component === "TelegramGroups") {
+      setSelectedLaunch(null);
+      setSelectedChannel(null);
+      setSelectedInstagramAccount(null);
+      setSelectedUsername(null);
     }
   };
 
@@ -154,7 +204,17 @@ const Results = () => {
             }`}
             onClick={() => handleComponentChange("Telegram")}
           >
-            Telegram
+            Telegram Channels
+          </button>
+          <button
+            className={`btn mx-2 ${
+              selectedComponent === "TelegramGroups"
+                ? "btn-success"
+                : "btn-outline-success"
+            }`}
+            onClick={() => handleComponentChange("TelegramGroups")}
+          >
+            Telegram Groups
           </button>
           <button
             className={`btn mx-2 ${
@@ -187,7 +247,10 @@ const Results = () => {
                 selectedLaunch={selectedLaunch}
                 handleLaunchToggle={handleLaunchToggle}
               />
-              <ShowResults selectedLaunch={selectedLaunch} />
+              <ShowResults
+                selectedLaunch={selectedLaunch}
+                instaRef={handleInstaRef}
+              />
             </>
           )}
           {selectedComponent === "Telegram" && (
@@ -215,14 +278,30 @@ const Results = () => {
               handleUsernameToggle={handleUsernameToggle}
             />
           )}
+          {selectedComponent === "TelegramGroups" && (
+            <TelegramGroupList
+              groups={telegramGroups}
+              selectedGroup={selectedGroup}
+              handleGroupToggle={handleGroupToggle}
+            />
+          )}
           {selectedChannel != null && (
             <SnscrapeResults results={selectedChannel} />
+          )}
+          {selectedGroup != null && selectedGroup.messages && (
+            <TelegramTrackerResults
+              results={selectedGroup.messages}
+              channelUsername={selectedGroup.username}
+            />
           )}
           {selectedInstagramAccount != null && (
             <InstaloaderResults results={selectedInstagramAccount} />
           )}
           {selectedUsername != null && (
-            <BlackbirdResults results={selectedUsername} />
+            <BlackbirdResults
+              results={selectedUsername}
+              instaRef={handleInstaRef}
+            />
           )}
         </div>
       </div>

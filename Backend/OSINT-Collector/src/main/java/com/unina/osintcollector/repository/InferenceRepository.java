@@ -12,10 +12,29 @@ public interface InferenceRepository extends ReactiveNeo4jRepository<Category, S
     @Query("""
         MATCH (c:Category {name: $category})
         CALL n10s.inference.nodesInCategory(c, { inCatRel: "REFERS_TO", subCatRel: "SUB_CAT_OF"}) yield node as post
-        MATCH (post)<-[:PUBLISHED]-(account)
-        RETURN DISTINCT {post: properties(post), account: properties(account)} as result
+        MATCH (categories:Category)<-[REFERS_TO]-(post)<-[:PUBLISHED]-(account)
+        RETURN DISTINCT {post: properties(post), account: properties(account), categories: COLLECT(DISTINCT properties(categories))} as result
         """)
     Flux<Map<String, Object>> inferenceByCategory(String category);
+
+    @Query("""
+        MATCH (c:Category {name: $category})
+        CALL n10s.inference.nodesInCategory(c, { inCatRel: "REFERS_TO", subCatRel: "SUB_CAT_OF"}) yield node as post
+        MATCH (post)<-[:PUBLISHED]-(account)
+        WITH account
+        MATCH (l:Location {name: $location})
+        CALL n10s.inference.nodesInCategory(l, { inCatRel: "TAKEN_AT", subCatRel: "SUB_CAT_OF"}) yield node as post
+        MATCH (post)<-[:PUBLISHED]-(account)
+        RETURN DISTINCT {account: properties(account)} as result
+        """)
+    Flux<Map<String, Object>> inferenceByLocationAndCategory(String location, String category);
+
+    @Query("""
+        MATCH (account:InstagramAccount)-[:PUBLISHED]->(p:InstagramPost)
+        WHERE ANY(taggedAccount IN p.taggedAccounts WHERE taggedAccount = $username)
+        RETURN DISTINCT {account: properties(account)} as result
+        """)
+    Flux<Map<String, Object>> inferenceByTag(String username);
 
 }
 

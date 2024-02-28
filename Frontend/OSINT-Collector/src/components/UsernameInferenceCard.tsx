@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Category } from "../types/results";
+import { InstagramAccount } from "../types/results";
 import axios from "axios";
 import { FaTimes } from "react-icons/fa";
 
@@ -14,7 +14,7 @@ interface Props {
   setSelectedCard: (id: number) => void;
 }
 
-const InferenceCard = ({
+const UsernameInferenceCard = ({
   id,
   title,
   tags,
@@ -32,18 +32,18 @@ const InferenceCard = ({
     new Array(tags.length).fill("")
   );
   const [selected, setSelected] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [suggestedCategories, setSuggestedCategories] = useState<Category[]>(
-    []
-  );
+  const [usernames, setusernames] = useState<InstagramAccount[]>([]);
+  const [suggestedusernames, setSuggestedusernames] = useState<
+    InstagramAccount[]
+  >([]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>(
     new Array(tags.length).fill(null)
   );
 
-  const fetchCategories = () => {
+  const fetchusernames = () => {
     axios
-      .get<Category[]>(`http://localhost:8080/` + endpoint)
-      .then((res) => setCategories(res.data))
+      .get<InstagramAccount[]>(`http://localhost:8080/` + endpoint)
+      .then((res) => setusernames(res.data))
       .catch((error) => console.error("Error fetching data:", error));
   };
 
@@ -55,21 +55,21 @@ const InferenceCard = ({
 
   useEffect(() => {
     if (inputVisible && inputValues.some((value) => value.trim() !== "")) {
-      const similarCategories = categories
-        .filter((category) =>
-          category.name.toLowerCase().includes(inputValues[0].toLowerCase())
+      const similarusernames = usernames
+        .filter((account) =>
+          account.username.toLowerCase().includes(inputValues[0].toLowerCase())
         )
-        .sort((a, b) => a.name.localeCompare(b.name))
+        .sort((a, b) => a.username.localeCompare(b.username))
         .slice(0, 5);
-      setSuggestedCategories(similarCategories);
+      setSuggestedusernames(similarusernames);
     } else {
-      setSuggestedCategories([]);
+      setSuggestedusernames([]);
     }
-  }, [inputValues, inputVisible, categories]);
+  }, [inputValues, inputVisible, usernames]);
 
   const handleCardClick = () => {
     if (!selected) {
-      fetchCategories();
+      fetchusernames();
       setInputVisible(true);
       setSelected(true);
       setSelectedCard(id);
@@ -85,18 +85,18 @@ const InferenceCard = ({
     setInputValues(newInputValues);
   };
 
-  const handleBadgeClick = (category: Category, index: number) => {
-    onSendRequest(tags[index], [category.name]);
+  const handleBadgeClick = (account: InstagramAccount, index: number) => {
+    onSendRequest(tags[index], [account.username]);
     const newSelectedInputs = [...selectedInputs];
-    newSelectedInputs[index] = category.name;
+    newSelectedInputs[index] = account.username;
     setSelectedInputs(newSelectedInputs);
     const newInputValues = [...inputValues];
-    newInputValues[index] = category.name;
+    newInputValues[index] = account.username;
     setInputValues(newInputValues);
     setInputVisible(false);
   };
 
-  const handleCategoryClose = () => {
+  const handleInstagramAccountClose = () => {
     setInputVisible(true);
     setSelectedInputs(new Array(tags.length).fill(""));
     setInputValues(new Array(tags.length).fill(""));
@@ -157,14 +157,14 @@ const InferenceCard = ({
                       onChange={(event) => handleInputChange(event, index)}
                       autoFocus={index === 0}
                     />
-                    <div className="suggested-categories d-flex flex-wrap mt-3">
-                      {suggestedCategories.map((category) => (
+                    <div className="suggested-usernames d-flex flex-wrap mt-3">
+                      {suggestedusernames.map((account) => (
                         <div
-                          key={category.uri}
+                          key={account.id}
                           className="badge bg-warning me-1 mb-1"
-                          onClick={() => handleBadgeClick(category, index)}
+                          onClick={() => handleBadgeClick(account, index)}
                         >
-                          {category.name}
+                          {account.username}
                         </div>
                       ))}
                     </div>
@@ -175,7 +175,7 @@ const InferenceCard = ({
           </div>
           {selectedInputs.some((input) => input !== "") && (
             <div
-              onClick={handleCategoryClose}
+              onClick={handleInstagramAccountClose}
               className="position-absolute top-0 start-100 translate-middle mt-1"
             >
               <div className="icon-wrapper">
@@ -189,4 +189,4 @@ const InferenceCard = ({
   );
 };
 
-export default InferenceCard;
+export default UsernameInferenceCard;

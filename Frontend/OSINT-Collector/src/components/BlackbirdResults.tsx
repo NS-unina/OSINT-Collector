@@ -3,11 +3,19 @@ import { MdOpenInNew } from "react-icons/md";
 
 interface Props {
   results: blackbird;
+  instaRef: (username: string) => void;
 }
 
-const blacklist = ["BugBounty", "Independent academia", "parola3"];
+const blacklist = [
+  "BugBounty",
+  "Independent academia",
+  "Academia.edu",
+  "Xhamster",
+  "TryHackMe",
+  "HackenProof",
+];
 
-const BlackbirdResults = ({ results }: Props) => {
+const BlackbirdResults = ({ results, instaRef }: Props) => {
   return (
     <div>
       <div className="row mt-5">
@@ -32,6 +40,19 @@ const BlackbirdResults = ({ results }: Props) => {
                     <h6 className="card-subtitle mb-2 text-body-secondary">
                       {results.username}
                     </h6>
+                    {site.site == "Instagram" ? (
+                      <a
+                        onClick={(event) => {
+                          event.preventDefault();
+                          instaRef(results.username);
+                        }}
+                        className="btn btn-primary"
+                      >
+                        ANALYZED
+                      </a>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                   <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
                 </div>

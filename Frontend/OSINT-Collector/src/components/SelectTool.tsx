@@ -94,7 +94,7 @@ const SelectTool = () => {
   }, [selectedCapabilities, selectedPlatform]);
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-4">
       <div className="row">
         {submitted ? (
           <div>
@@ -121,33 +121,35 @@ const SelectTool = () => {
             </Player>
           </div>
         ) : (
-          <div className="col-md-6">
-            <div className="mb-3">
-              <label htmlFor="platform" className="form-label">
-                Platform:
-              </label>
-              <select
-                className="form-select"
-                name="platform"
-                id="platform"
-                value={selectedPlatform}
-                onChange={handlePlatformChange}
-              >
-                <option value="All">All</option>
-                {platforms.map((platform) => (
-                  <option key={platform.id} value={platform.name}>
-                    {platform.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <>
+            <div className="col-md-6">
+              <div className="mb-3">
+                <label htmlFor="platform" className="form-label">
+                  Platform:
+                </label>
+                <select
+                  className="form-select"
+                  name="platform"
+                  id="platform"
+                  value={selectedPlatform}
+                  onChange={handlePlatformChange}
+                >
+                  <option value="All">All</option>
+                  {platforms.map((platform) => (
+                    <option key={platform.id} value={platform.name}>
+                      {platform.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <SelectCapability
-              capabilities={capabilities}
-              selectedCapabilities={selectedCapabilities}
-              handleCapabilityToggle={handleCapabilityToggle}
-            />
-          </div>
+              <SelectCapability
+                capabilities={capabilities}
+                selectedCapabilities={selectedCapabilities}
+                handleCapabilityToggle={handleCapabilityToggle}
+              />
+            </div>
+          </>
         )}
 
         {!submitted && requiredInputs.length > 0 && (

@@ -1,38 +1,38 @@
 import { useState } from "react";
-import { TelegramChannel } from "../types/results";
+import { TelegramGroup } from "../types/results";
 import { GoAlertFill } from "react-icons/go";
 import { FaSortAlphaDown, FaSortAlphaUpAlt, FaTimes } from "react-icons/fa";
 import Switch from "./Switch";
 
 interface Props {
-  accounts: TelegramChannel[];
-  selectedChannel: TelegramChannel | null;
-  handleChannelToggle: (channelName: string) => void;
+  groups: TelegramGroup[];
+  selectedGroup: TelegramGroup | null;
+  handleGroupToggle: (groupId: string) => void;
 }
 
-const TelegramChannelList = ({
-  accounts,
-  selectedChannel,
-  handleChannelToggle,
+const TelegramGroupList = ({
+  groups,
+  selectedGroup,
+  handleGroupToggle,
 }: Props) => {
   const [ascending, setAscending] = useState(true);
-  const [showAllChannels, setShowAllChannels] = useState(true);
+  const [showAllGroups, setShowAllGroups] = useState(true);
 
-  const sortedAccounts = [...accounts].sort((a, b) => {
+  const sortedAccounts = [...groups].sort((a, b) => {
     if (ascending) {
-      return a.name.localeCompare(b.name);
+      return a.username.localeCompare(b.username);
     } else {
-      return b.name.localeCompare(a.name);
+      return b.username.localeCompare(a.username);
     }
   });
 
-  const handleSetShowAllChannels = () => {
-    setShowAllChannels(!showAllChannels);
+  const handleSetShowAllGroups = () => {
+    setShowAllGroups(!showAllGroups);
   };
 
-  const filteredChannels = showAllChannels
+  const filteredChannels = showAllGroups
     ? sortedAccounts
-    : accounts.filter((account) => account.flag);
+    : groups.filter((group) => group.flag);
 
   return (
     <div>
@@ -43,12 +43,12 @@ const TelegramChannelList = ({
       >
         <div className="d-flex justify-content-center align-items-center mb-2">
           <label className="form-label d-flex align-items-center">
-            {selectedChannel == null && (
+            {selectedGroup == null && (
               <Switch
-                isOn={!showAllChannels}
+                isOn={!showAllGroups}
                 type="alert"
                 color="#f44336"
-                handleToggle={handleSetShowAllChannels}
+                handleToggle={handleSetShowAllGroups}
               />
             )}
             <div
@@ -64,30 +64,30 @@ const TelegramChannelList = ({
                 <FaSortAlphaUpAlt type="button" />
               )}
             </div>
-            <div>Telegram Channels:</div>
+            <div>Telegram Groups:</div>
           </label>
         </div>
         {filteredChannels.map((account) => (
-          <div key={account.name} className="mb-2">
+          <div key={account.id} className="mb-2">
             <input
               type="checkbox"
               className="btn-check"
-              id={`telegram-${account.name}`}
-              value={account.name}
+              id={`telegram-${account.id}`}
+              value={account.id}
               autoComplete="off"
-              checked={selectedChannel?.name === account.name}
-              onChange={() => handleChannelToggle(account.name)}
+              checked={selectedGroup?.id === account.id}
+              onChange={() => handleGroupToggle(account.id)}
             />
             <label
               className={`btn btn-outline-success tool-label ${
-                account.name === selectedChannel?.name || account.flag
+                account.id === selectedGroup?.id || account.flag
                   ? "position-relative"
                   : ""
               }`}
-              htmlFor={`telegram-${account.name}`}
+              htmlFor={`telegram-${account.id}`}
             >
-              <span>{account.name}</span>
-              {account.name === selectedChannel?.name && (
+              <span>{account.username}</span>
+              {account.id === selectedGroup?.id && (
                 <div className="position-absolute top-0 start-100 translate-middle mt-1">
                   <div className="icon-wrapper">
                     <FaTimes className="icon-red" />
@@ -109,4 +109,4 @@ const TelegramChannelList = ({
   );
 };
 
-export default TelegramChannelList;
+export default TelegramGroupList;
