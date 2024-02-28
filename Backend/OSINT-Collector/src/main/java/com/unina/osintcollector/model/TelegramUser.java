@@ -27,10 +27,10 @@ public class TelegramUser {
     @Relationship(type = "SENT", direction = OUTGOING)
     private Set<TelegramMessage> messages;
 
-    public TelegramUser(String id, String firstName, String lastName, String username, String phone, Boolean bot, Boolean verified, Boolean premium, Boolean flag) {
+    public TelegramUser(String id, String first_name, String last_name, String username, String phone, Boolean bot, Boolean verified, Boolean premium, Boolean flag) {
         this.id = id;
-        first_name = firstName;
-        last_name = lastName;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.username = username;
         this.phone = phone;
         this.bot = bot;

@@ -25,7 +25,7 @@ public interface TelegramMessageRepository extends ReactiveNeo4jRepository<Teleg
          ON CREATE SET m.messageType = message.messageType, m.peer_id = message.peer_id, m.from_id = message.from_id, m.date = message.date, m.edit_date = message.edit_date, m.message = message.message, m.pinned = message.pinned, m.reply_to_id = message.reply_to_id, m.processed = message.processed
          ON MATCH SET m.messageType = message.messageType, m.peer_id = message.peer_id, m.from_id = message.from_id, m.date = message.date, m.edit_date = message.edit_date, m.message = message.message, m.pinned = message.pinned, m.reply_to_id = message.reply_to_id, m.processed = message.processed
          WITH ch, m
-         MATCH(repliedMess:TelegramMessage {id: m.reply_to_id})
+         OPTIONAL MATCH(repliedMess:TelegramMessage {id: m.reply_to_id})
          FOREACH(ignoreMe IN CASE WHEN m.reply_to_id IS NOT NULL THEN [1] ELSE [] END |
             MERGE (m)-[:REPLY_TO]->(repliedMess)
          )

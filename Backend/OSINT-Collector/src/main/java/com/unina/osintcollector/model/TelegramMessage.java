@@ -24,19 +24,19 @@ public class TelegramMessage {
     private final String reply_to_id;
     private final Boolean processed;
 
-    @Relationship(type = "REPLY_TO", direction = OUTGOING)
-    private TelegramMessage repliedMessage;
+    @Relationship(type = "REFERS_TO", direction = OUTGOING)
+    private Set<Category> categories;
 
-    public TelegramMessage(String id, String messageType, String peerId, String fromId, String date, String editDate, String message, Boolean pinned, String replyToId, Boolean processed) {
+    public TelegramMessage(String id, String messageType, String peer_id, String from_id, String date, String edit_date, String message, Boolean pinned, String reply_to_id, Boolean processed) {
         this.id = id;
         this.messageType = messageType;
-        peer_id = peerId;
-        from_id = fromId;
+        this.peer_id = peer_id;
+        this.from_id = from_id;
         this.date = date;
-        edit_date = editDate;
+        this.edit_date = edit_date;
         this.message = message;
         this.pinned = pinned;
-        reply_to_id = replyToId;
+        this.reply_to_id = reply_to_id;
         this.processed = processed;
     }
 
@@ -78,5 +78,9 @@ public class TelegramMessage {
 
     public Boolean getProcessed() {
         return processed;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
     }
 }

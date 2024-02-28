@@ -18,17 +18,19 @@ public class TelegramGroup {
     private final String username;
     private final String date;
     private final String participants_count;
+    private final Boolean flag;
 
     @Relationship(type = "PUBLISHED", direction = OUTGOING)
     private Set<TelegramMessage> messages;
 
-    public TelegramGroup(String id, String about, String title, String username, String date, String participantsCount) {
+    public TelegramGroup(String id, String about, String title, String username, String date, String participants_count, Boolean flag) {
         this.id = id;
         this.about = about;
         this.title = title;
         this.username = username;
         this.date = date;
-        participants_count = participantsCount;
+        this.participants_count = participants_count;
+        this.flag = flag;
     }
 
     public String getId() {
@@ -57,5 +59,9 @@ public class TelegramGroup {
 
     public Set<TelegramMessage> getMessages() {
         return messages;
+    }
+
+    public Boolean getFlag() {
+        return flag;
     }
 }
