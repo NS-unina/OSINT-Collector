@@ -115,7 +115,7 @@ const UsernameInferenceCard = ({
     tags.forEach((tag, index) => {
       updatedTitle = updatedTitle.replace(
         `[${tag}]`,
-        `<div class="badge bg-primary me-1 mb-1">${
+        `<div class="badge bg-warning me-1 mb-1">${
           selectedInputs[index] === "" ? tag : selectedInputs[index]
         }</div>`
       );
@@ -126,7 +126,9 @@ const UsernameInferenceCard = ({
   return (
     <div className={`col-sm-4 mt-3`} style={selected ? { width: "500px" } : {}}>
       <div
-        className={`card h-100 w-100 ${selected ? "selected" : ""}`}
+        className={`card h-100 w-100 ${
+          selected ? "selected border border-warning" : ""
+        }`}
         onClick={handleCardClick}
       >
         <div className="card-body snscrape">
@@ -149,7 +151,7 @@ const UsernameInferenceCard = ({
                     <input
                       ref={(el) => (inputRefs.current[index] = el)}
                       type="text"
-                      className="form-control border border-2 border-primary mt-3"
+                      className="form-control border border-2 border-warning mt-3"
                       placeholder={tag}
                       value={inputValues[index]}
                       onChange={(event) => handleInputChange(event, index)}
@@ -159,7 +161,7 @@ const UsernameInferenceCard = ({
                       {suggestedusernames.map((account) => (
                         <div
                           key={account.id}
-                          className="badge bg-primary me-1 mb-1"
+                          className="badge bg-warning me-1 mb-1"
                           onClick={() => handleBadgeClick(account, index)}
                         >
                           {account.username}

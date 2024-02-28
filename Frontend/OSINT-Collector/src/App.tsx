@@ -96,7 +96,7 @@ const App = () => {
               <div className="col">
                 <div
                   className={`card h-100 ${
-                    selectedTool === "Search" ? "border-warning selected" : ""
+                    selectedTool === "Search" ? "border-info selected" : ""
                   }`}
                   onClick={() => handleSelectTool("Search")}
                 >
@@ -108,7 +108,7 @@ const App = () => {
                     </div>
                   )}
                   <div className="card-body text-center">
-                    <BsSearch size={40} className="mb-3 text-warning" />
+                    <BsSearch size={40} className="mb-3 text-info" />
                     <h5 className="card-title">Search</h5>
                   </div>
                 </div>

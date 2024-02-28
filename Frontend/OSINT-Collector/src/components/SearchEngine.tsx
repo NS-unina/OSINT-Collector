@@ -61,7 +61,7 @@ const SearchEngine = () => {
           placeholder="Search for Channels, Bots & Groups"
         />
         <button
-          className="btn btn-outline-primary"
+          className="btn btn-outline-info"
           type="button"
           id="button-addon2"
           onClick={handleSearchEngineSubmit}

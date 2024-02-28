@@ -168,7 +168,7 @@ const Inference = () => {
                   isInstagramAccount(result.account) && (
                     <div
                       key={index}
-                      className="d-flex justify-content-center mb-3"
+                      className="d-flex col-sm-5 justify-content-center mb-3"
                     >
                       <InstaloaderProfileInfo {...result.account} />
                     </div>
