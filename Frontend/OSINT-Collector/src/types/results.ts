@@ -131,7 +131,6 @@ export interface TelegramUser {
     verified: boolean;
     premium: boolean;
     flag: boolean;
-    messages?: TelegramMessage[];
 }
 
 export interface TelegramMessage {
@@ -147,6 +146,7 @@ export interface TelegramMessage {
     processed: boolean;
     categories?: Category[];
     repliedMessage?: TelegramMessage;
+    user: TelegramUser;
 }
 
 export interface TelegramGroup {

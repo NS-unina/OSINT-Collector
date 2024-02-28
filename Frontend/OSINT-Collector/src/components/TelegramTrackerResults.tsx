@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { TelegramMessage } from "../types/results";
+import axios from "axios";
 import { MdOpenInNew } from "react-icons/md";
 import { IoCalendar } from "react-icons/io5";
 import { format } from "date-fns";
+import { TelegramMessage } from "../types/results";
 
 interface Props {
   results: TelegramMessage[];
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
+  const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(true);
 
   const sortedMessages = [...results].sort((a, b) => {
@@ -21,6 +23,24 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
   const filteredPosts = showAll
     ? sortedMessages
     : sortedMessages.filter((message) => message.processed);
+
+  const handleUsernameAnalysisClick = (username: string) => {
+    const requestBody = {
+      timestamp: format(new Date(), "yyyy-MM-dd HH:mm"),
+      image: "blackbird",
+      entrypoint: "search-accounts",
+      inputs: [username],
+    };
+
+    axios
+      .post("http://localhost:5000/launch", requestBody)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
   return (
     <div>
@@ -44,7 +64,12 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
       </div>
       <div className="row mt-3">
         {filteredPosts.map((message) => (
-          <div key={message.id} className="col-sm-6 mb-3 mb-sm-3">
+          <div
+            key={message.id}
+            className="col-sm-6 mb-3 mb-sm-3"
+            onMouseEnter={() => setHoveredMessageId(message.id)}
+            onMouseLeave={() => setHoveredMessageId(null)}
+          >
             <a
               href={"https://t.me/" + channelUsername + "/" + message.id}
               target="_blank"
@@ -53,7 +78,12 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
               <div className="card h-100 w-100">
                 <div className="card-body snscrape text-center">
                   <h6 className="card-subtitle mb-2 text-body-secondary">
-                    @{message.from_id}
+                    {message.user.username
+                      ? "@" + message.user.username
+                      : message.user.first_name +
+                        (message.user.last_name != null
+                          ? " " + message.user.last_name
+                          : "")}
                   </h6>
                   <p className="card-text">"{message.message}"</p>
                   <div className="d-flex flex-wrap align-items-center">
@@ -76,6 +106,21 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
                     </div>
                   )}
                 </div>
+                {hoveredMessageId === message.id && (
+                  <div className="card-footer">
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        handleUsernameAnalysisClick(
+                          message.user.username || ""
+                        );
+                      }}
+                    >
+                      Username analysis
+                    </button>
+                  </div>
+                )}
                 <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
               </div>
             </a>
