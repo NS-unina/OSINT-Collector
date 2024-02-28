@@ -26,8 +26,10 @@ public class TelegramMessage {
 
     @Relationship(type = "REFERS_TO", direction = OUTGOING)
     private Set<Category> categories;
+    @Relationship(type = "SENT_BY", direction = OUTGOING)
+    private TelegramUser user;
 
-    public TelegramMessage(String id, String messageType, String peer_id, String from_id, String date, String edit_date, String message, Boolean pinned, String reply_to_id, Boolean processed) {
+    public TelegramMessage(String id, String messageType, String peer_id, String from_id, String date, String edit_date, String message, Boolean pinned, String reply_to_id, Boolean processed, TelegramUser user) {
         this.id = id;
         this.messageType = messageType;
         this.peer_id = peer_id;
@@ -38,6 +40,7 @@ public class TelegramMessage {
         this.pinned = pinned;
         this.reply_to_id = reply_to_id;
         this.processed = processed;
+        this.user = user;
     }
 
     public String getId() {
@@ -82,5 +85,9 @@ public class TelegramMessage {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public TelegramUser getUser() {
+        return user;
     }
 }

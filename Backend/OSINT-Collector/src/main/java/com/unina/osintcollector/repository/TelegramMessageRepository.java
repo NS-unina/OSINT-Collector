@@ -31,7 +31,7 @@ public interface TelegramMessageRepository extends ReactiveNeo4jRepository<Teleg
          )
          WITH ch, m
          MATCH (user:TelegramUser {id: m.from_id})
-         MERGE (m)<-[:SENT]-(user)
+         MERGE (m)-[:SENT_BY]->(user)
          MERGE (ch)-[:PUBLISHED]->(m)
          WITH user, ch, m AS messages
          CALL apoc.nlp.gcp.entities.stream(messages, {

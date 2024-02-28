@@ -2,12 +2,6 @@ package com.unina.osintcollector.model;
 
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
-
-import java.util.Date;
-import java.util.Set;
-
-import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
 @Node("TelegramUser")
 public class TelegramUser {
@@ -23,9 +17,6 @@ public class TelegramUser {
     private final Boolean verified;
     private final Boolean premium;
     private final Boolean flag;
-
-    @Relationship(type = "SENT", direction = OUTGOING)
-    private Set<TelegramMessage> messages;
 
     public TelegramUser(String id, String first_name, String last_name, String username, String phone, Boolean bot, Boolean verified, Boolean premium, Boolean flag) {
         this.id = id;
@@ -69,10 +60,6 @@ public class TelegramUser {
 
     public Boolean getPremium() {
         return premium;
-    }
-
-    public Set<TelegramMessage> getMessages() {
-        return messages;
     }
 
     public Boolean getFlag() {
