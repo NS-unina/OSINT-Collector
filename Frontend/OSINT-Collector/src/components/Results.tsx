@@ -34,8 +34,7 @@ const Results = () => {
   const [selectedGroup, setSelectedGroup] = useState<TelegramGroup | null>(
     null
   );
-  const [selectedComponent, setSelectedComponent] =
-    useState<string>("Launches");
+  const [selectedComponent, setSelectedComponent] = useState<string>("");
 
   useEffect(() => {
     fetchLaunches();
@@ -192,30 +191,37 @@ const Results = () => {
                 ? "btn-success"
                 : "btn-outline-success"
             }`}
+            style={{ display: "none" }}
             onClick={() => handleComponentChange("Launches")}
           >
             Launches
           </button>
-          <button
-            className={`btn mx-2 ${
-              selectedComponent === "Telegram"
-                ? "btn-success"
-                : "btn-outline-success"
-            }`}
-            onClick={() => handleComponentChange("Telegram")}
+          <div
+            className="btn-group-vertical me-2"
+            role="group"
+            aria-label="Vertical button group"
           >
-            Telegram Channels
-          </button>
-          <button
-            className={`btn mx-2 ${
-              selectedComponent === "TelegramGroups"
-                ? "btn-success"
-                : "btn-outline-success"
-            }`}
-            onClick={() => handleComponentChange("TelegramGroups")}
-          >
-            Telegram Groups
-          </button>
+            <button
+              className={`btn ${
+                selectedComponent === "Telegram"
+                  ? "btn-success"
+                  : "btn-outline-success"
+              }`}
+              onClick={() => handleComponentChange("Telegram")}
+            >
+              Telegram Channels
+            </button>
+            <button
+              className={`btn ${
+                selectedComponent === "TelegramGroups"
+                  ? "btn-success"
+                  : "btn-outline-success"
+              }`}
+              onClick={() => handleComponentChange("TelegramGroups")}
+            >
+              Telegram Groups
+            </button>
+          </div>
           <button
             className={`btn mx-2 ${
               selectedComponent === "Instagram"

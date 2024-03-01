@@ -13,6 +13,8 @@ interface Props {
 const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
   const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10;
 
   const sortedMessages = [...results].sort((a, b) => {
     if (a.id < b.id) return -1;
@@ -23,6 +25,12 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
   const filteredPosts = showAll
     ? sortedMessages
     : sortedMessages.filter((message) => message.processed);
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleUsernameAnalysisClick = (username: string) => {
     const requestBody = {
@@ -63,7 +71,7 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
         </button>
       </div>
       <div className="row mt-3">
-        {filteredPosts.map((message) => (
+        {currentPosts.map((message) => (
           <div
             key={message.id}
             className="col-sm-6 mb-3 mb-sm-3"
@@ -127,6 +135,39 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
           </div>
         ))}
       </div>
+      <nav>
+        <ul className="pagination justify-content-center mt-2">
+          <button
+            className="page-link me-2"
+            onClick={() => paginate(currentPage - 1)}
+          >
+            Previous
+          </button>
+          {Array(Math.ceil(filteredPosts.length / postsPerPage))
+            .fill(0)
+            .map((_, index) => (
+              <li
+                key={index}
+                className={`page-item ms-1 me-1 ${
+                  currentPage === index + 1 ? "active" : ""
+                }`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => paginate(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+          <button
+            className="page-link ms-2"
+            onClick={() => paginate(currentPage + 1)}
+          >
+            Next
+          </button>
+        </ul>
+      </nav>
     </div>
   );
 };
