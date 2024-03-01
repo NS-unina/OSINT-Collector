@@ -1,7 +1,7 @@
 telegram-tracker:
   description: Download messages from the given telegram channel.
   entrypoints:
-    - key: download-messages
+    - key: download-group-messages
       name: Download messages
       description: Download the last message in the provided channel
       inputs:

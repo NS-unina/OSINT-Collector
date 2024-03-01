@@ -1,0 +1,9 @@
+name: telegram-tracker
+platform: Telegram
+capabilities:
+  download-group-messages:
+    description: Download Telegram group messages
+    input:
+      - groupName
+    output:
+      - Message
