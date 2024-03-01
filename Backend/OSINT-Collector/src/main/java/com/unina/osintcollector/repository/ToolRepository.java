@@ -15,6 +15,8 @@ public interface ToolRepository extends ReactiveNeo4jRepository<Tool, String> {
     Flux<Tool> getTools();
     Mono<Void> deleteToolByName(String toolName);
 
+    Flux<Tool> findToolsByPlatform(String platform);
+
     @Query("MATCH (t:Tool)-[:HAS_CAPABILITY]->(c:Capability) WHERE t.name = $toolName DETACH DELETE t, c")
     Mono<Void> deleteTool(String toolName);
 

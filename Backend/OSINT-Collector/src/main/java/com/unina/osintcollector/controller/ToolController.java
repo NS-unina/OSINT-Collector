@@ -35,6 +35,11 @@ public class ToolController {
         return toolRepository.getTools();
     }
 
+    @GetMapping(value = { "/filter"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Flux<Tool> getToolsByPlatform(@RequestParam(required = false) String platform) {
+        return toolRepository.findToolsByPlatform(platform);
+    }
+
     @PostMapping("/remove")
     public Flux<Tool> removeTool(@RequestBody Map<String, String> requestBody) {
         String toolNameToRemove = requestBody.get("remove_tool");
