@@ -15,6 +15,7 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
   const [showAll, setShowAll] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
+  const totalPages = Math.ceil(results.length / postsPerPage);
 
   const sortedMessages = [...results].sort((a, b) => {
     if (a.id < b.id) return -1;
@@ -115,19 +116,23 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
                   )}
                 </div>
                 {hoveredMessageId === message.id && (
-                  <div className="card-footer">
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        handleUsernameAnalysisClick(
-                          message.user.username || ""
-                        );
-                      }}
-                    >
-                      Username analysis
-                    </button>
-                  </div>
+                  <>
+                    {message.user.username && (
+                      <div className="card-footer">
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            handleUsernameAnalysisClick(
+                              message.user.username || ""
+                            );
+                          }}
+                        >
+                          Username analysis
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
                 <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
               </div>
@@ -137,12 +142,14 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
       </div>
       <nav>
         <ul className="pagination justify-content-center mt-2">
-          <button
-            className="page-link me-2"
-            onClick={() => paginate(currentPage - 1)}
-          >
-            Previous
-          </button>
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+            <button
+              className="page-link me-2"
+              onClick={() => paginate(currentPage - 1)}
+            >
+              Previous
+            </button>
+          </li>
           {Array(Math.ceil(filteredPosts.length / postsPerPage))
             .fill(0)
             .map((_, index) => (
@@ -160,12 +167,18 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
                 </button>
               </li>
             ))}
-          <button
-            className="page-link ms-2"
-            onClick={() => paginate(currentPage + 1)}
+          <li
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
           >
-            Next
-          </button>
+            <button
+              className="page-link ms-2"
+              onClick={() => paginate(currentPage + 1)}
+            >
+              Next
+            </button>
+          </li>
         </ul>
       </nav>
     </div>
