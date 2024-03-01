@@ -21,7 +21,7 @@ public interface TelegramMessageRepository extends ReactiveNeo4jRepository<Teleg
          ON MATCH SET ch.about = $channel.about, ch.title = $channel.title, ch.username = $channel.username, ch.date = $channel.date, ch.participants_count = $channel.participants_count
          WITH ch
          UNWIND $messages AS message
-         MERGE (m:TelegramMessage {id: message.id})
+         MERGE (m:TelegramMessage {id: message.id, peer_id: message.peer_id, from_id: message.from_id})
          ON CREATE SET m.messageType = message.messageType, m.peer_id = message.peer_id, m.from_id = message.from_id, m.date = message.date, m.edit_date = message.edit_date, m.message = message.message, m.pinned = message.pinned, m.reply_to_id = message.reply_to_id, m.processed = message.processed
          ON MATCH SET m.messageType = message.messageType, m.peer_id = message.peer_id, m.from_id = message.from_id, m.date = message.date, m.edit_date = message.edit_date, m.message = message.message, m.pinned = message.pinned, m.reply_to_id = message.reply_to_id, m.processed = message.processed
          WITH ch, m
@@ -33,9 +33,10 @@ public interface TelegramMessageRepository extends ReactiveNeo4jRepository<Teleg
          MATCH (user:TelegramUser {id: m.from_id})
          MERGE (m)-[:SENT_BY]->(user)
          MERGE (ch)-[:PUBLISHED]->(m)
+         SET m.lowercase_message = toLower(m.message)
          WITH user, ch, m AS messages
          CALL apoc.nlp.gcp.entities.stream(messages, {
-            nodeProperty: 'message',
+            nodeProperty: 'lowercase_message',
             key: 'AIzaSyC_RV2nb7vjC32i1jd6mj92p1ww6BPga0g'
          })
          YIELD node, value
