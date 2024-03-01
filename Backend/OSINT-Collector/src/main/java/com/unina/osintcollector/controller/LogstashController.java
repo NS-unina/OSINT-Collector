@@ -1,5 +1,6 @@
 package com.unina.osintcollector.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unina.osintcollector.model.*;
 import com.unina.osintcollector.repository.InstagramPostRepository;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.*;
 
@@ -35,7 +35,7 @@ public class LogstashController {
     @PostMapping("telegram-tracker")
     public Mono<ResponseEntity<Object>> getTelegramTrackerResults(@RequestBody TelegramRecord telegramRecord) {
 
-        TelegramMessage[] telegramMessages = telegramRecord.messages();
+        TelegramMessage[] telegramMessages = telegramRecord.msgs();
         TelegramGroup telegramGroup = telegramRecord.channel();
         TelegramUser[] telegramUsers = telegramRecord.users();
 
@@ -53,6 +53,10 @@ public class LogstashController {
             Map<String, Object> userMap = mapper.convertValue(user, new TypeReference<Map<String, Object>>() {});
             telegramUsersMapList.add(userMap);
         }
+
+        System.out.print("MESSAGES: " + telegramMessagesMapList + "\n");
+        System.out.print("TELEGRAM GROUP: " + telegramGroupMap + "\n");
+        System.out.print("USERS: " + telegramUsersMapList + "\n");
 
         return telegramMessageRepository.saveMessagesChannelUser(telegramMessagesMapList, telegramGroupMap, telegramUsersMapList).thenReturn(ResponseEntity.status(HttpStatus.OK).build());
     }
