@@ -4,7 +4,7 @@ FROM python:3.9.7
 
 WORKDIR /app
 
-RUN git clone https://github.com/estebanpdl/telegram-api.git .
+RUN git clone https://github.com/ciro-99/telegram-tracker.git .
 
 COPY session_file.session session_file.session
 COPY config.ini config/config.ini
