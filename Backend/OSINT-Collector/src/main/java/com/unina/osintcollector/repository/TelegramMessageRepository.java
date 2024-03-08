@@ -4,6 +4,8 @@ import com.unina.osintcollector.model.InstagramPost;
 import com.unina.osintcollector.model.TelegramMessage;
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
+import org.springframework.data.repository.query.Param;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -52,4 +54,28 @@ public interface TelegramMessageRepository extends ReactiveNeo4jRepository<Teleg
         """)
     Mono<TelegramMessage> saveMessagesChannelUser(List<Map<String, Object>> messages, Map<String, Object> channel, List<Map<String, Object>> users);
 
+    @Query("""
+            MATCH (t:TelegramGroup {id: $peerId})-[:PUBLISHED]->(m)
+            WITH t, m as messages
+            CALL apoc.nlp.gcp.moderate.stream(messages, {
+              nodeProperty: 'lowercase_message',
+              key: 'AIzaSyC_RV2nb7vjC32i1jd6mj92p1ww6BPga0g'
+            })
+            YIELD node, value
+            WITH node, value, t
+            UNWIND value.moderationCategories AS category
+            WITH category, node, t
+            MERGE (cat:ModerationCategory {name: category.name})
+            MERGE (node)-[:REFERS_TO_MODERATION {confidence: category.confidence}]->(cat)
+            WITH node, count(cat) as matchedCategories, t
+            FOREACH (ignoreMe IN CASE WHEN matchedCategories > 0 THEN [1] ELSE [] END |
+                SET t.flag = true, node.processed = true
+            )
+            """)
+    Flux<TelegramMessage> ModerateGroup(String peerId);
+
+    @Query("""
+            MATCH (telegramMessage:`TelegramMessage`) WHERE telegramMessage.peer_id = $peerId RETURN telegramMessage{.date, .edit_date, .from_id, .id, .message, .messageType, .peer_id, .pinned, .processed, .reply_to_id, __nodeLabels__: labels(telegramMessage), __elementId__: id(telegramMessage), TelegramMessage_SENT_BY_TelegramUser: [(telegramMessage)-[:`SENT_BY`]->(telegramMessage_user:`TelegramUser`) | telegramMessage_user{.bot, .first_name, .flag, .id, .last_name, .phone, .premium, .username, .verified, __nodeLabels__: labels(telegramMessage_user), __elementId__: id(telegramMessage_user)}], TelegramMessage_REFERS_TO_MODERATION_ModerationCategory: [(telegramMessage)-[TelegramMessage__relationship__ModerationCategory:`REFERS_TO_MODERATION`]->(telegramMessage_moderationCategories:`ModerationCategory`) | telegramMessage_moderationCategories{.name, __nodeLabels__: labels(telegramMessage_moderationCategories), __elementId__: id(telegramMessage_moderationCategories), TelegramMessage__relationship__ModerationCategory}], TelegramMessage_REFERS_TO_Category: [(telegramMessage)-[:`REFERS_TO`]->(telegramMessage_categories:`Category`) | telegramMessage_categories{.alsoKnownAs, .name, .uri, __nodeLabels__: labels(telegramMessage_categories), __elementId__: id(telegramMessage_categories)}]}  
+            """)
+    Flux<TelegramMessage> findTelegramMessageByPeerId(String peerId);
 }

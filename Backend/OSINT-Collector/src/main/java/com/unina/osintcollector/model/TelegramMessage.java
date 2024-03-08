@@ -1,10 +1,11 @@
 package com.unina.osintcollector.model;
 
+import com.unina.osintcollector.repository.Confidence;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.Date;
 import java.util.Set;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
@@ -14,7 +15,7 @@ public class TelegramMessage {
 
     @Id
     private final String id;
-    private final String messageType; //"_":"Message", "_":"MessageService"
+    private final String messageType;
     private final String peer_id;
     private final String from_id;
     private final String date;
@@ -26,10 +27,12 @@ public class TelegramMessage {
 
     @Relationship(type = "REFERS_TO", direction = OUTGOING)
     private Set<Category> categories;
+    @Relationship(type = "REFERS_TO_MODERATION", direction = OUTGOING)
+    private Set<Confidence> moderationCategories;
     @Relationship(type = "SENT_BY", direction = OUTGOING)
     private TelegramUser user;
 
-    public TelegramMessage(String id, String messageType, String peer_id, String from_id, String date, String edit_date, String message, Boolean pinned, String reply_to_id, Boolean processed, TelegramUser user) {
+    public TelegramMessage(String id, String messageType, String peer_id, String from_id, String date, String edit_date, String message, Boolean pinned, String reply_to_id, Boolean processed) {
         this.id = id;
         this.messageType = messageType;
         this.peer_id = peer_id;
@@ -40,7 +43,6 @@ public class TelegramMessage {
         this.pinned = pinned;
         this.reply_to_id = reply_to_id;
         this.processed = processed;
-        this.user = user;
     }
 
     public String getId() {
@@ -85,6 +87,10 @@ public class TelegramMessage {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public Set<Confidence> getModerationCategories() {
+        return moderationCategories;
     }
 
     public TelegramUser getUser() {
