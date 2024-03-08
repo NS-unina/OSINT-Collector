@@ -112,6 +112,23 @@ const InstaloaderResults = ({ results }: Props) => {
                       ))}
                     </div>
                   )}
+                  {post.moderationCategories &&
+                    post.moderationCategories.length > 0 && (
+                      <div className="d-flex flex-wrap mt-2">
+                        {post.moderationCategories
+                          .filter((category) => category.confidence > 0.7)
+                          .map((category) => (
+                            <div
+                              key={category.moderationCategory.name}
+                              className="badge bg-warning me-1 mb-1"
+                              role="alert"
+                            >
+                              {category.moderationCategory.name}:{" "}
+                              {category.confidence.toFixed(2)}
+                            </div>
+                          ))}
+                      </div>
+                    )}
                 </div>
                 <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
               </div>

@@ -52,6 +52,10 @@ export interface instaloader {
             name: string;
             alsoKnownAs: string;
         } [];
+        moderationCategories?: {
+            confidence: number;
+            moderationCategory: ModerationCategory;
+        }[];
     } [];
 }
 
