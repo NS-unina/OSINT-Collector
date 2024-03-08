@@ -64,7 +64,7 @@ public interface TelegramMessageRepository extends ReactiveNeo4jRepository<Teleg
             YIELD node, value
             WITH node, value, t
             UNWIND value.moderationCategories AS category
-            WITH category, node, t
+            WITH category, node, t WHERE category.confidence > 0.7
             MERGE (cat:ModerationCategory {name: category.name})
             MERGE (node)-[:REFERS_TO_MODERATION {confidence: category.confidence}]->(cat)
             WITH node, count(cat) as matchedCategories, t
