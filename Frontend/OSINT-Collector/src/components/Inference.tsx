@@ -112,55 +112,59 @@ const Inference = () => {
       <div className="d-flex justify-content-center align-items-center">
         <div className="row mt-4">
           {selectedCardIndex === 1 ? (
-            inferenceResults.map((result, index) => (
-              <div key={index} className="col-sm-4 mb-3">
-                <a
-                  href={
-                    isInstagramPost(result.post)
-                      ? "https://www.instagram.com/p/" + result.post.shortcode
-                      : result.post.url
-                  }
-                  target="_blank"
-                  className="card-link position-relative"
-                >
-                  <div className="card h-100 w-100">
-                    <div className="card-body snscrape text-center">
-                      <h5 className="card-title">
-                        {isInstagramPost(result.post) ? (
-                          <AiFillInstagram />
-                        ) : (
-                          <FaTelegram />
-                        )}
-                        <> </>
-                        {isInstagramAccount(result.account)
-                          ? result.account.username
-                          : result.account.name}
-                      </h5>
-                      <p
-                        id="cardText"
-                        className="card-text p-1"
-                        style={{ maxHeight: "300px", overflowY: "scroll" }}
-                      >
-                        "{result.post.text}"
-                      </p>
-                      <div className="d-flex flex-wrap"></div>
-                      <div className="d-flex flex-wrap">
-                        {result.categories.map((category) => (
-                          <div
-                            key={category.uri}
-                            className="badge bg-danger me-1 mb-1"
-                            role="alert"
-                          >
-                            {category.name}
-                          </div>
-                        ))}
+            inferenceResults
+              .filter((result) => {
+                return result.post && result.post.text !== undefined;
+              })
+              .map((result, index) => (
+                <div key={index} className="col-sm-4 mb-3">
+                  <a
+                    href={
+                      isInstagramPost(result.post)
+                        ? "https://www.instagram.com/p/" + result.post.shortcode
+                        : result.post.url
+                    }
+                    target="_blank"
+                    className="card-link position-relative"
+                  >
+                    <div className="card h-100 w-100">
+                      <div className="card-body snscrape text-center">
+                        <h5 className="card-title">
+                          {isInstagramPost(result.post) ? (
+                            <AiFillInstagram />
+                          ) : (
+                            <FaTelegram />
+                          )}
+                          <> </>
+                          {isInstagramAccount(result.account)
+                            ? result.account.username
+                            : result.account.name}
+                        </h5>
+                        <p
+                          id="cardText"
+                          className="card-text p-1"
+                          style={{ maxHeight: "300px", overflowY: "scroll" }}
+                        >
+                          {result.post.text}
+                        </p>
+                        <div className="d-flex flex-wrap"></div>
+                        <div className="d-flex flex-wrap">
+                          {result.categories.map((category) => (
+                            <div
+                              key={category.uri}
+                              className="badge bg-danger me-1 mb-1"
+                              role="alert"
+                            >
+                              {category.name}
+                            </div>
+                          ))}
+                        </div>
                       </div>
+                      <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
                     </div>
-                    <MdOpenInNew className="position-absolute top-0 end-0 mt-2 me-2 invisible" />
-                  </div>
-                </a>
-              </div>
-            ))
+                  </a>
+                </div>
+              ))
           ) : (
             <div className="row mt-3">
               {inferenceResults.map(

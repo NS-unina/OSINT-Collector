@@ -99,7 +99,7 @@ const RequiredInputs = ({ requiredInputs, onSubmit }: Props) => {
             <h3>
               {getPlatformIcon(input.tool.platform)} {input.tool.name}
             </h3>
-            <h6 className="mb-3">({input.capability.name})</h6>
+            {/* <h6 className="mb-3">({input.capability.name})</h6> */}
             <input
               hidden
               readOnly

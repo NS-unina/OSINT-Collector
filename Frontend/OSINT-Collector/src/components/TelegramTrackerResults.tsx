@@ -18,8 +18,8 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
   const totalPages = Math.ceil(results.length / postsPerPage);
 
   const sortedMessages = [...results].sort((a, b) => {
-    if (a.id < b.id) return -1;
-    if (a.id > b.id) return 1;
+    if (parseInt(a.id) < parseInt(b.id)) return 1;
+    if (parseInt(a.id) > parseInt(b.id)) return -1;
     return 0;
   });
 
@@ -114,6 +114,23 @@ const TelegramTrackerResults = ({ results, channelUsername }: Props) => {
                       ))}
                     </div>
                   )}
+                  {message.moderationCategories &&
+                    message.moderationCategories.length > 0 && (
+                      <div className="d-flex flex-wrap mt-2">
+                        {message.moderationCategories
+                          .filter((category) => category.confidence > 0.7)
+                          .map((category) => (
+                            <div
+                              key={category.moderationCategory.name}
+                              className="badge bg-warning me-1 mb-1"
+                              role="alert"
+                            >
+                              {category.moderationCategory.name}:{" "}
+                              {category.confidence.toFixed(2)}
+                            </div>
+                          ))}
+                      </div>
+                    )}
                 </div>
                 {hoveredMessageId === message.id && (
                   <>

@@ -5,6 +5,7 @@ import SelectLaunch from "./SelectLaunch";
 import ShowResults from "./ShowResults";
 import {
   TelegramGroup,
+  TelegramMessage,
   blackbird,
   instaloader,
   snscrape,
@@ -24,6 +25,9 @@ const Results = () => {
   const [instagramAccounts, setInstagramAccounts] = useState<instaloader[]>([]);
   const [usernames, setUsernames] = useState<blackbird[]>([]);
   const [telegramGroups, setTelegramGroups] = useState<TelegramGroup[]>([]);
+  const [telegramMessages, setTelegramMessages] = useState<TelegramMessage[]>(
+    []
+  );
   const [selectedLaunch, setSelectedLaunch] = useState<Launch | null>(null);
   const [selectedChannel, setSelectedChannel] = useState<snscrape | null>(null);
   const [selectedInstagramAccount, setSelectedInstagramAccount] =
@@ -76,6 +80,24 @@ const Results = () => {
     axios
       .get<TelegramGroup[]>(`http://localhost:8080/telegram/groups`)
       .then((res) => setTelegramGroups(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const fetchTelegramMessages = (peerId: string) => {
+    axios
+      .get<TelegramMessage[]>(
+        `http://localhost:8080/telegram/messages?id=${peerId}`
+      )
+      .then((res) => setTelegramMessages(res.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  const moderateTelegramMessages = (peerId: string) => {
+    axios
+      .get<TelegramMessage[]>(
+        `http://localhost:8080/telegram/moderate?id=${peerId}`
+      )
+      .then(() => fetchTelegramMessages(peerId))
       .catch((error) => console.error("Error fetching data:", error));
   };
 
@@ -138,6 +160,8 @@ const Results = () => {
       setSelectedGroup(null);
     } else if (selected) {
       setSelectedGroup(selected);
+      setTelegramMessages([]);
+      moderateTelegramMessages(selected.id);
     }
   };
 
@@ -294,12 +318,19 @@ const Results = () => {
           {selectedChannel != null && (
             <SnscrapeResults results={selectedChannel} />
           )}
-          {selectedGroup != null && selectedGroup.messages && (
-            <TelegramTrackerResults
-              results={selectedGroup.messages}
-              channelUsername={selectedGroup.username}
-            />
-          )}
+          {selectedGroup != null &&
+            selectedGroup.messages &&
+            (telegramMessages.length > 0 ? (
+              <TelegramTrackerResults
+                results={telegramMessages}
+                channelUsername={selectedGroup.username}
+              />
+            ) : (
+              <TelegramTrackerResults
+                results={selectedGroup.messages}
+                channelUsername={selectedGroup.username}
+              />
+            ))}
           {selectedInstagramAccount != null && (
             <InstaloaderResults results={selectedInstagramAccount} />
           )}

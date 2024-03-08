@@ -133,6 +133,10 @@ export interface TelegramUser {
     flag: boolean;
 }
 
+export interface ModerationCategory {
+    name: string;
+}
+
 export interface TelegramMessage {
     id: string;
     messageType: string;
@@ -145,6 +149,10 @@ export interface TelegramMessage {
     reply_to_id: string;
     processed: boolean;
     categories?: Category[];
+    moderationCategories?: {
+        confidence: number;
+        moderationCategory: ModerationCategory;
+    }[];
     repliedMessage?: TelegramMessage;
     user: TelegramUser;
 }
