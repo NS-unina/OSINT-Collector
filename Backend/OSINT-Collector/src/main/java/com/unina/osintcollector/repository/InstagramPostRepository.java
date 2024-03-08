@@ -1,9 +1,11 @@
 package com.unina.osintcollector.repository;
 
 import com.unina.osintcollector.model.InstagramPost;
+import com.unina.osintcollector.model.TelegramMessage;
 import com.unina.osintcollector.model.TelegramPost;
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -42,4 +44,23 @@ public interface InstagramPostRepository extends ReactiveNeo4jRepository<Instagr
         """)
     Mono<InstagramPost> saveAccountAndPost(Map<String, Object> account, Map<String, Object> post);
 
+    @Query("""
+            MATCH (t:InstagramAccount {username: $username})-[:PUBLISHED]->(m:InstagramPost {id: $id})
+            WITH t, m as messages
+            CALL apoc.nlp.gcp.moderate.stream(messages, {
+              nodeProperty: 'text',
+              key: 'AIzaSyC_RV2nb7vjC32i1jd6mj92p1ww6BPga0g'
+            })
+            YIELD node, value
+            WITH node, value, t
+            UNWIND value.moderationCategories AS category
+            WITH category, node, t WHERE category.confidence > 0.7
+            MERGE (cat:ModerationCategory {name: category.name})
+            MERGE (node)-[:REFERS_TO_MODERATION {confidence: category.confidence}]->(cat)
+            WITH node, count(cat) as matchedCategories, t
+            FOREACH (ignoreMe IN CASE WHEN matchedCategories > 0 THEN [1] ELSE [] END |
+                SET t.flag = true, node.processed = true
+            )
+            """)
+    Mono<InstagramPost> ModerateInstagramProfile(String username, String id);
 }

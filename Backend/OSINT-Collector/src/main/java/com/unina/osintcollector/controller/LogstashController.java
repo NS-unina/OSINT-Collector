@@ -84,8 +84,7 @@ public class LogstashController {
         Map<String, Object> accountMap = mapper.convertValue(instagramAccount, Map.class);
         Map<String, Object> postMap = mapper.convertValue(instagramPost, Map.class);
 
-        return instagramPostRepository.saveAccountAndPost(accountMap, postMap).thenReturn(ResponseEntity.status(HttpStatus.OK).build());
-
+        return  instagramPostRepository.saveAccountAndPost(accountMap, postMap).then(instagramPostRepository.ModerateInstagramProfile(instagramAccount.getUsername(), instagramPost.getId()).thenReturn(ResponseEntity.status(HttpStatus.OK).build()));
     }
 
     @PostMapping("/blackbird")

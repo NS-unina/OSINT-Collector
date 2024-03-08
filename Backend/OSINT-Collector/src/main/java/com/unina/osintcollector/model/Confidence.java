@@ -1,4 +1,4 @@
-package com.unina.osintcollector.repository;
+package com.unina.osintcollector.model;
 
 import com.unina.osintcollector.model.ModerationCategory;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;

@@ -27,6 +27,8 @@ public class InstagramPost {
 
     @Relationship(type = "REFERS_TO", direction = OUTGOING)
     private Set<Category> categories;
+    @Relationship(type = "REFERS_TO_MODERATION", direction = OUTGOING)
+    private Set<Confidence> moderationCategories;
     @Relationship(type = "TAKEN_AT", direction = OUTGOING)
     private Location location;
 
@@ -77,6 +79,10 @@ public class InstagramPost {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    public Set<Confidence> getModerationCategories() {
+        return moderationCategories;
     }
 
     public Boolean getProcessed() {
