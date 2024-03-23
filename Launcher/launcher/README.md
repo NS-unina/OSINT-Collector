@@ -1,6 +1,8 @@
 # Requirements
 In order to use the following launcher, you should have Docker and Docker Compose installed.
 
+Moreover, the launcher will expect that a server is listening locally on the host machine on port 8080; the launcher, after the tool execution, will try to send the output data to the following address: ```http://host.docker.internal:8080/logstash/<tool-name>```; if no server receives the request, the upload will fail, and an error message will be returned.
+
 # Startup
 It is possible to run the whole architecture by starting the docker-compose with:
 ```
