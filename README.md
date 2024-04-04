@@ -5,3 +5,4 @@
 
 [osint tool list - belligcat](https://docs.google.com/spreadsheets/d/18rtqh8EG2q1xBo2cLNyhIDuK9jrPGwYr9DI2UncoqJQ/edit#gid=930747607)
 
+[Launcher](https://github.com/NS-unina/OSINT-Collector/blob/main/Launcher/launcher/README.md)
