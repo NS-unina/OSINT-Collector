@@ -1,0 +1,199 @@
+@prefix : <http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/> .
+
+<http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#igFollow
+:igFollow rdf:type owl:ObjectProperty ;
+          rdfs:domain :igAccount ;
+          rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#igFollowing
+:igFollowing rdf:type owl:ObjectProperty ;
+             rdfs:domain :igAccount ;
+             rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#igHasComment
+:igHasComment rdf:type owl:ObjectProperty ;
+              rdfs:domain :igPost ;
+              rdfs:range :igPost .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/hasSocialAccount
+:hasSocialAccount rdf:type owl:ObjectProperty ;
+                  rdfs:domain :Person ;
+                  rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCommentedBy
+:igCommentedBy rdf:type owl:ObjectProperty ;
+               rdfs:domain :igPost ;
+               rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igFollows
+:igFollows rdf:type owl:ObjectProperty ;
+           rdfs:domain :igAccount ;
+           rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLikedBy
+:igLikedBy rdf:type owl:ObjectProperty ;
+           rdfs:domain :igPost ;
+           rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igPublished
+:igPublished rdf:type owl:ObjectProperty ;
+             rdfs:domain :igAccount ;
+             rdfs:range :igPost ,
+                        :igStories .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTagged
+:igTagged rdf:type owl:ObjectProperty ;
+          rdfs:domain :igPost ;
+          rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTakenAt
+:igTakenAt rdf:type owl:ObjectProperty ;
+           rdfs:domain :igPost ;
+           rdfs:range :igLocation .
+
+
+###  http://www.w3.org/2002/07/owl#topObjectProperty
+owl:topObjectProperty rdfs:domain :igPost .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igAccountID
+:igAccountID rdf:type owl:DatatypeProperty ;
+             rdfs:domain :igAccount ;
+             rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCaption
+:igCaption rdf:type owl:DatatypeProperty ;
+           rdfs:domain :igPost ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCommentText
+:igCommentText rdf:type owl:DatatypeProperty ;
+               rdfs:domain :igComment ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLikes
+:igLikes rdf:type owl:DatatypeProperty ;
+         rdfs:domain :igComment ;
+         rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igName
+:igName rdf:type owl:DatatypeProperty ;
+        rdfs:domain :igAccount ;
+        rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igNumberLike
+:igNumberLike rdf:type owl:DatatypeProperty ;
+              rdfs:domain :igComment ,
+                          :igPost ;
+              rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igPostContent
+:igPostContent rdf:type owl:DatatypeProperty ;
+               rdfs:domain :igPost ;
+               rdfs:range xsd:byte .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igProfilePhoto
+:igProfilePhoto rdf:type owl:DatatypeProperty ;
+                rdfs:domain :igAccount ;
+                rdfs:range xsd:byte .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTimePosted
+:igTimePosted rdf:type owl:DatatypeProperty ;
+              rdfs:domain :igPost ;
+              rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igUsername
+:igUsername rdf:type owl:DatatypeProperty ;
+            rdfs:domain :igAccount ;
+            rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igVerifiedBedge
+:igVerifiedBedge rdf:type owl:DatatypeProperty ;
+                 rdfs:domain :igAccount ;
+                 rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igWebsite
+:igWebsite rdf:type owl:DatatypeProperty ;
+           rdfs:domain :igAccount ;
+           rdfs:range xsd:string .
+
+
+###  http://www.w3.org/2002/07/owl#topDataProperty
+owl:topDataProperty rdfs:domain :igComment ;
+                    rdfs:range xsd:string .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Instagram
+:Instagram rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Person
+:Person rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igAccount
+:igAccount rdf:type owl:Class ;
+           rdfs:subClassOf :Instagram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igComment
+:igComment rdf:type owl:Class ;
+           rdfs:subClassOf :Instagram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLocation
+:igLocation rdf:type owl:Class ;
+            rdfs:subClassOf :Instagram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igPost
+:igPost rdf:type owl:Class ;
+        rdfs:subClassOf :Instagram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igStories
+:igStories rdf:type owl:Class ;
+           rdfs:subClassOf :Instagram .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
