@@ -12,16 +12,38 @@
 #    Object Properties
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#igHasHashtag
-:igHasHashtag rdf:type owl:ObjectProperty ;
-              rdfs:domain :igPost ;
-              rdfs:range :igHashtag .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgBelongsToChannel
+:tgBelongsToChannel rdf:type owl:ObjectProperty ;
+                    rdfs:domain :tgMessage ;
+                    rdfs:range :tgChannel ,
+                               :tgGroup .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgGroupHasParticipant
+:tgGroupHasParticipant rdf:type owl:ObjectProperty ;
+                       rdfs:domain :tgChannel ,
+                                   :tgGroup ;
+                       rdfs:range :tgBot ,
+                                  :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgRecivedBy
+:tgRecivedBy rdf:type owl:ObjectProperty ;
+             rdfs:domain :tgAccount ;
+             rdfs:range :tgMessage .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgSentBy
+:tgSentBy rdf:type owl:ObjectProperty ;
+          rdfs:domain :tgMessage ;
+          rdfs:range :tgAccount .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/hasSocialAccount
 :hasSocialAccount rdf:type owl:ObjectProperty ;
                   rdfs:domain :Person ;
-                  rdfs:range :igAccount .
+                  rdfs:range :igAccount ,
+                             :tgAccount .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCommentedBy
@@ -60,6 +82,12 @@
               rdfs:range :igPost .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igHasHashtag
+:igHasHashtag rdf:type owl:ObjectProperty ;
+              rdfs:domain :igPost ;
+              rdfs:range :igHashtag .
+
+
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLikedBy
 :igLikedBy rdf:type owl:ObjectProperty ;
            rdfs:domain :igPost ;
@@ -87,11 +115,79 @@
            rdfs:range :igLocation .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAdmin
+:tgAdmin rdf:type owl:ObjectProperty ;
+         rdfs:domain :tgAccount ;
+         rdfs:range :tgChannel ,
+                    :tgGroup .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgOwn
+:tgOwn rdf:type owl:ObjectProperty ;
+       rdfs:domain :tgAccount ;
+       rdfs:range :tgChannel ,
+                  :tgGroup .
+
+
 #################################################################
 #    Data properties
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#IgHashtagName
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgChannelID
+:tgChannelID rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgChannel ;
+             rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgChannelName
+:tgChannelName rdf:type owl:DatatypeProperty ;
+               rdfs:domain :tgChannel ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgFileContent
+:tgFileContent rdf:type owl:DatatypeProperty ;
+               rdfs:domain :tgMessage ;
+               rdfs:range xsd:byte .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgGroupID
+:tgGroupID rdf:type owl:DatatypeProperty ;
+           rdfs:domain :tgGroup ;
+           rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgGroupName
+:tgGroupName rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgGroup ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgMessageId
+:tgMessageId rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgMessage ;
+             rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgMessageStringContent
+:tgMessageStringContent rdf:type owl:DatatypeProperty ;
+                        rdfs:domain :tgMessage ;
+                        rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgMessageTimestamp
+:tgMessageTimestamp rdf:type owl:DatatypeProperty ;
+                    rdfs:domain :tgMessage ;
+                    rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgReact
+:tgReact rdf:type owl:DatatypeProperty ;
+         rdfs:domain :tgMessage ;
+         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/IgHashtagName
 :IgHashtagName rdf:type owl:DatatypeProperty ;
                rdfs:domain :igHashtag ;
                rdfs:range xsd:string .
@@ -170,9 +266,59 @@
            rdfs:range xsd:string .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAccountID
+:tgAccountID rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgAccount ;
+             rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAccountName
+:tgAccountName rdf:type owl:DatatypeProperty ;
+               rdfs:domain :tgAccount ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgInvitationLink
+:tgInvitationLink rdf:type owl:DatatypeProperty ;
+                  rdfs:domain :tgChannel ,
+                              :tgGroup ;
+                  rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgLastAccess
+:tgLastAccess rdf:type owl:DatatypeProperty ;
+              rdfs:domain :tgAccount ;
+              rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgPhoneNumber
+:tgPhoneNumber rdf:type owl:DatatypeProperty ;
+               rdfs:domain :tgAccount ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgPhotoProfile
+:tgPhotoProfile rdf:type owl:DatatypeProperty ;
+                rdfs:domain :tgAccount ,
+                            :tgChannel ,
+                            :tgGroup ;
+                rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgUsername
+:tgUsername rdf:type owl:DatatypeProperty ;
+            rdfs:domain :tgAccount ;
+            rdfs:range xsd:string .
+
+
 #################################################################
 #    Classes
 #################################################################
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgBot
+:tgBot rdf:type owl:Class ;
+       rdfs:subClassOf :Telegram .
+
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Instagram
 :Instagram rdf:type owl:Class .
@@ -180,6 +326,10 @@
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Person
 :Person rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Telegram
+:Telegram rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igAccount
@@ -215,6 +365,26 @@
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTaggedPost
 :igTaggedPost rdf:type owl:Class ;
               rdfs:subClassOf :igPost .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAccount
+:tgAccount rdf:type owl:Class ;
+           rdfs:subClassOf :Telegram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgChannel
+:tgChannel rdf:type owl:Class ;
+           rdfs:subClassOf :Telegram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgGroup
+:tgGroup rdf:type owl:Class ;
+         rdfs:subClassOf :Telegram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgMessage
+:tgMessage rdf:type owl:Class ;
+           rdfs:subClassOf :Telegram .
 
 
 ###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
