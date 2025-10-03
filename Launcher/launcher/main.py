@@ -91,21 +91,3 @@ if __name__ == "__main__":
 
     copy_conf_files("./tools", "/tools_conf")
     server.run(host='0.0.0.0', port=5000)
-
-    # Help Section
-
-    # if Starter.check_for_help():
-    #     print(Globals.help_message())
-    #     exit(0)
-
-    # if Starter.check_for_tool_help():
-    #     print(Globals.help_tool_message())
-    #     exit(0)
-
-    # Launch Section
-
-    # image, entrypoint, inputs_str = Starter.fetch_launcher_params()
-    # launcher = Launcher(image, entrypoint, inputs_str)
-    # launcher.launch_tool()
-    # launcher.generate_output()
-    # launcher.upload_output()

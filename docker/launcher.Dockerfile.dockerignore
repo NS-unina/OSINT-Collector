@@ -1,0 +1,6 @@
+./new-Laucher/pytest.ini
+./new-Laucher/tests/*
+./new-Laucher/requirements-test.txt
+*/__pycache__
+*/venv
+*/.coverage

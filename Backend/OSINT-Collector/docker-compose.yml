@@ -11,12 +11,10 @@ volumes:
     name: "tools_conf"
 
 services:
-  osint-container:
-    image: osint-collector
-    ports:
-      - "8080:8080"
+
+      
   neo4j:
-    image: neo4j:4.1.0
+    image: neo4j:latest
     container_name: "neo4j-test-2"
     volumes:
       - ./neo4j/data:/data
