@@ -1,0 +1,19 @@
+services:
+
+  neo4j:
+    image: neo4j:5.26.12-community
+    container_name: "osint-collector-neo4j"
+    privileged: true
+    volumes:
+      - ./Database/data:/data
+      - ./Database/logs:/logs
+      - ./Database/import:/var/lib/neo4j/import
+      - ./Database/plugins:/plugins
+    ports:
+      - '7474:7474'
+      - '7687:7687'
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_apoc_import_file_use__neo4j__config=true
