@@ -1,3 +1,4 @@
+from app.utils.globals import Globals
 from flask import Blueprint
 
 
@@ -17,7 +18,7 @@ def tools_help():
     """
     Gives the tool list
     """
-    return "<p>It Works!</p>"
+    return Globals.tools(), 200
 
 
 @views_bp.route("/launch", methods=['POST'])
