@@ -5,13 +5,14 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-
+    
 
 class DevelopmentConfig(Config):
     """
     Development Configuration
     """
     DEBUG = True
+    TOOLS_DIRECTORY = "tools"
 
 
 class TestingConfig(Config):

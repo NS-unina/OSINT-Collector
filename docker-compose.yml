@@ -1,5 +1,4 @@
 services:
-
   neo4j:
     image: neo4j:5.26.12-community
     container_name: "osint-collector-neo4j"
