@@ -1,6 +1,5 @@
-from app.utils.parser.yaml_parser import YAMLServices
 from app.utils.services.tool_manager import ToolManager
-from flask import Blueprint
+from flask import Blueprint, request
 
 
 views_bp = Blueprint('views', __name__)
@@ -31,6 +30,8 @@ def launch():
     """
     Launcher
     """
+    
+    print(request.json)
 
     return "<p>It Works!</p>"
 
