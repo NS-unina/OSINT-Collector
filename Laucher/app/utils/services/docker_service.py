@@ -65,27 +65,21 @@ class DockerServices:
             self._log.error("Docker API error while pulling %s: %s", tag, str(e))
 
 
-    def run_tool_container(self, name, output_volume, entrypoint):
+    def run_tool_container(self, image, output_volume, entrypoint):
         """
         Run a Docker container with the provided image.
 
-        TODO: DA MODIFICARE
-
         Args:
-            name (str): The name of the container.
+            image (str): Image tag.
             output_volume (str): The name of the volume to mount for output.
             entrypoint (str): The entry point command to run within
                               the container.
         """
 
-        if self._image_tag is None:
-            self._log.error(_Exceptions.invalid_order)
-
-        self._log.info('Running %s container', name)
+        self._log.info("Running %s container", image)
         try:
 
-            self._client.containers.run(image=self._image_tag,
-                                        name=name,
+            self._client.containers.run(image=image,
                                         entrypoint=entrypoint,
                                         volumes=[f'{output_volume}:/output'],
                                         auto_remove=True)
@@ -93,15 +87,7 @@ class DockerServices:
         except (docker.errors.ContainerError,
                 docker.errors.ImageNotFound,
                 docker.errors.APIError) as e:
-            self._log.error(e)
-            self._client.images.remove(image=self._image_tag, force=True)
+            self._log.error("Docker error during run of %s container: %s", image, str(e))
+            self._client.images.remove(image=image, force=True)
 
-        self._client.images.remove(image=self._image_tag, force=True)
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    docker_engine = DockerServices()
-    docker_engine.pull_image("osintcollector/snscrape:latest")
-    print("ciao")
-    
+        self._client.images.remove(image=image, force=True)
