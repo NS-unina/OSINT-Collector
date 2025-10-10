@@ -1,5 +1,6 @@
 from app.utils.models.tool_config import ToolConfig
 from app.utils.services.tool_manager import ToolManager
+from app.utils.services.docker_service import DockerServices
 from flask import Blueprint, request, jsonify
 import yaml
 
@@ -9,9 +10,7 @@ views_bp = Blueprint('views', __name__)
 
 @views_bp.route("/tools/<tool>", methods=['GET'])
 def tool_details_help(tool: str):
-    """
-    Gives the help message for a specific tool
-    """
+    """Gives the help message for a specific tool"""
     try:
         tool_config = ToolManager.read_tool_config(tool)
         return tool_config, 200
@@ -22,40 +21,41 @@ def tool_details_help(tool: str):
 
 @views_bp.route("/tools", methods=['GET'])
 def tools_help():
-    """
-    Gives the tool list
-    """
-
+    """Gives the tool list"""
     return ToolManager.tools_list(), 200
 
 
 # curl -X POST http://127.0.0.1:5000/launch -H "Content-Type: application/json" -d '{"tool": "instaloader", "feature_key": "download-public-profile", "inputs": {"CHANNEL": "ciccio"}}'
 @views_bp.route("/launch", methods=['POST'])
 def launch():
-    """
-    Launcher
-    """
-
-    tool_image = request.json["tool"] 
+    """Launcher"""
+    tool_name = request.json["tool"] 
     feature_key = request.json["feature_key"]
-    inputs = request.json["feature_key"]
+    inputs = request.json["inputs"]
 
     try:
-        dict_tool = ToolManager.read_tool_config(tool_image)
-        tool_config = ToolConfig(dict_tool)
-        print(tool_config.toolName)
-        # print(tool_config[tool_image]["entrypoints"][0])
-        return "<p>It Works!</p>", 200
+        tool_dict = ToolManager.read_tool_config(tool_name)
+        tool = ToolConfig(tool_dict)
+
+        if not tool.feature_validation(feature_key):
+            return jsonify({"error": f"'{tool_name}' is not a valid feature key."}), 404
+
+        if not tool.input_validation(feature_key, inputs):
+            return jsonify({"error": f"'{inputs}' is not a valid input key."}), 404
+        
+        print(tool.image)
+        docker_client = DockerServices()
+        docker_client.pull_image(tool.image)
+
+        return "<p>It Works!</p>", 200 # TODO: Cambiare
+    
     except FileNotFoundError:
-        return jsonify({"error": f"Configuration file for tool '{tool_image}' not found."}), 404
+        return jsonify({"error": f"Configuration file for tool '{tool_name}' not found."}), 404
     except yaml.YAMLError:
-        return jsonify({"error": f"Configuration file for tool '{tool_image}' is invalid."}), 500
+        return jsonify({"error": f"Configuration file for tool '{tool_name}' is invalid."}), 500
 
 
 @views_bp.route("/")
 def start():
-    """
-    Index page
-    """
-
+    """Index page"""
     return "<p>It Works!</p>"

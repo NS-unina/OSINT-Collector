@@ -1,7 +1,7 @@
 """class for model tool"""
 from typing import List
 from pathlib import Path
-import yaml
+
 
 class Input:
     input_key: str
@@ -61,11 +61,9 @@ class ToolConfig:
             entry_inputs = []
 
             for input_key in ep.get("inputs", []):
-                input_def = next((i for i in tool_data["inputs"] if i["key"] == input_key), None)
+                input_def = next((i for i in tool_data["inputs"] if i["input_key"] == input_key),None)                
                 if input_def:
-                    entry_inputs.append(Input(input_def["key"], input_def["description"], input_def["type"]))
-                else:
-                    print(f" Warning: input '{input_key}' not defined in tool inputs.")
+                    entry_inputs.append(Input(input_def["input_key"], input_def["description"], input_def["type"]))
 
             entry = EntrypointConfig(
                 feature_key=ep["feature_key"],
@@ -76,6 +74,40 @@ class ToolConfig:
 
             self.entrypointList.append(entry)
 
+    def feature_validation(self, feature: str) -> bool:
+        """Check whether a given feature_key exists among the tool's entrypoints.
+        Args:
+            feature (str): The feature_key identifying a specific entrypoint.
+        Returns:
+            bool: True if the feature exists, False otherwise.
+        """
+        return any(ep.feature_key == feature for ep in self.entrypointList)
+    
+
+    def input_validation(self, feature: str, user_inputs: dict) -> bool:
+        """Validate that all required inputs for the given feature are provided.
+
+        Args:
+            feature (str): The feature_key of the entrypoint to validate.
+            user_inputs (dict): Dictionary of user-provided inputs.
+
+        Returns:
+            bool: True if all required inputs are provided, False otherwise.
+        """
+        entrypoint = next((ep for ep in self.entrypointList if ep.feature_key == feature), None)
+        if not entrypoint:
+            return False
+
+        expected_inputs = [i.input_key for i in entrypoint.inputList]
+        provided_inputs = list(user_inputs.keys())
+
+        missing = [key for key in expected_inputs if key not in provided_inputs]
+
+        if missing:
+            return False
+
+        return True
+
+
     def __repr__(self):
         return f"ToolConfig(name={self.toolName}, entrypoints={self.entrypointList})"
-

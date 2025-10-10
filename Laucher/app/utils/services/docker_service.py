@@ -14,17 +14,14 @@ class _Exceptions:
 
 
 class DockerServices:
-    """
-    Class containing methods to properly manage docker images and containers
-    """
+    """Class containing methods to properly manage docker images and containers"""
 
     _log = logging.getLogger(__name__)
     _client = docker.from_env()
 
 
     def build_image(self, folder_path, tag, dockerfile = "Dockerfile"):
-        """
-        Build a Docker image using the Dockerfile provided in the
+        """Build a Docker image using the Dockerfile provided in the
         specified folder.
 
         Args:
@@ -50,8 +47,7 @@ class DockerServices:
 
 
     def pull_image(self, tag):
-        """
-        Pull a Docker image from the registry.
+        """Pull a Docker image from the registry.
 
         Args:
             tag (str): The full image tag.
@@ -66,8 +62,7 @@ class DockerServices:
 
 
     def run_tool_container(self, image, output_volume, entrypoint):
-        """
-        Run a Docker container with the provided image.
+        """Run a Docker container with the provided image.
 
         Args:
             image (str): Image tag.

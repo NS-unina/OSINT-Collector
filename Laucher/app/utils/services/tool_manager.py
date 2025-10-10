@@ -4,14 +4,11 @@ from flask import current_app
 
 
 class ToolManager:
-    """
-    Class containing all function required to manage tool configuration
-    """
+    """Class containing all function required to manage tool configuration."""
 
     @staticmethod
     def tools_list():
-        """
-        Return a list of available tools.
+        """Return a list of available tools.
 
         This method retrieves the names of folders located within the 'tools'
         directory in the current working directory.
@@ -29,8 +26,7 @@ class ToolManager:
 
     @staticmethod
     def read_tool_config(tool: str):
-        """
-        Reads the YAML configuration for a specific tool.
+        """Reads the YAML configuration for a specific tool.
 
         Args:
             tool (str): The name of the tool whose config should be read.
