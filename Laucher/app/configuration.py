@@ -20,3 +20,4 @@ class TestingConfig(Config):
     Testing Configuration
     """
     TESTING = True
+    TOOLS_DIRECTORY = "tools"
