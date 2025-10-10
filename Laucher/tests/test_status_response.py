@@ -23,14 +23,12 @@ class TestStatusResponse:
         assert isinstance(data, list)
 
         # Compare both lists (sorted to avoid order issues)
-        expected_tools = os.listdir(app.config["TOOLS_DIRECTORY"])
-        assert sorted(data) == sorted(expected_tools), (
-            f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
+        expected_tools = ["snscrape", "snscrape-invalid"]
+        assert sorted(data) == expected_tools, (f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
 
-
+    
     def test_tool_positive_description_response(self, client, app):
-        tools_dir = os.listdir(app.config["TOOLS_DIRECTORY"])
-        tool_selected = random.choice(tools_dir)
+        tool_selected = "snscrape"
 
         # 200 OK
         response = client.get(f"/tools/{tool_selected}")
@@ -44,5 +42,18 @@ class TestStatusResponse:
         tool_config_path = Path(app.config["TOOLS_DIRECTORY"]) / tool_selected / f"{tool_selected}.yml"
         with open(tool_config_path) as file:
             expected_tools = yaml.safe_load(file)
-        assert sorted(data) == sorted(expected_tools), (
-            f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
+        assert sorted(data) == sorted(expected_tools), (f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
+
+        # File not found test
+        response = client.get(f"/tools/this_tool_does_not_exist")
+        assert response.status_code == 404
+        data = response.get_json()
+        assert "error" in data
+        assert "Configuration file for tool 'this_tool_does_not_exist' not found." in data["error"]
+
+        # Invalid yaml
+        response = client.get(f"/tools/snscrape-invalid")
+        assert response.status_code == 500
+        data = response.get_json()
+        assert "error" in data
+        assert "Configuration file for tool 'snscrape-invalid' is invalid." in data["error"]
