@@ -19,6 +19,7 @@ def tool_details_help(tool: str):
     except yaml.YAMLError:
         return jsonify({"error": f"Configuration file for tool '{tool}' is invalid."}), 500
 
+
 @views_bp.route("/tools", methods=['GET'])
 def tools_help():
     """Gives the tool list"""
@@ -28,7 +29,7 @@ def tools_help():
 # curl -X POST http://127.0.0.1:5000/launch -H "Content-Type: application/json" -d '{"tool": "instaloader", "feature_key": "download-public-profile", "inputs": {"CHANNEL": "ciccio"}}'
 @views_bp.route("/launch", methods=['POST'])
 def launch():
-    """Launcher"""
+    """Tool Launcher"""
     tool_name = request.json["tool"] 
     feature_key = request.json["feature_key"]
     inputs = request.json["inputs"]
@@ -37,32 +38,34 @@ def launch():
         tool_dict = ToolManager.read_tool_config(tool_name)
         tool = ToolConfig(tool_dict)
 
-        if not tool.feature_validation(feature_key):
-            return jsonify({"error": f"'{tool_name}' is not a valid feature key."}), 404
+        try:
+            feature = tool.get_feature(feature_key)
+        except ValueError:
+            return jsonify({"error": f"Provided feature_key '{feature_key}' does not exist for tool '{tool_name}'"}), 404
 
         if not tool.input_validation(feature_key, inputs):
             return jsonify({"error": f"'{inputs}' is not a valid input key."}), 404
         
-        print(tool.image)
         docker_client = DockerServices()
         docker_client.pull_image(tool.image)
         
+        """      
         feature = tool.get_feature("download-messages")
         entrypoint = feature.replace_input_in_command(inputs)
         print(entrypoint)
         print(current_app.config["OUTOUT_DIRECTORY"])        
         
         docker_client.run_tool_container(tool.image, current_app.config["OUTOUT_DIRECTORY"], entrypoint)
-
+        """
         return "<p>It Works!</p>", 200 # TODO: Cambiare
-    
+        
     except FileNotFoundError:
         return jsonify({"error": f"Configuration file for tool '{tool_name}' not found."}), 404
     except yaml.YAMLError:
         return jsonify({"error": f"Configuration file for tool '{tool_name}' is invalid."}), 500
 
 
-@views_bp.route("/")
+@views_bp.route("/", methods=['GET'])
 def start():
     """Index page"""
     return "<p>It Works!</p>"

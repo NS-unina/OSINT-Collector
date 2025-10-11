@@ -1,6 +1,6 @@
 snscrape-telegram:
   description: Download the last message from the given telegram channel.
-  image: test
+  image: osintcollector/snscrape:latest
   entrypoints:
     - feature_key: download-messages
       name: Download last channel message

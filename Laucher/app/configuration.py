@@ -2,26 +2,20 @@ import os
 
 
 class Config(object):
-    """
-    Configuration base, for all environments.
-    """
+    """Configuration base, for all environments"""
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    
+
 
 class DevelopmentConfig(Config):
-    """
-    Development Configuration
-    """
+    """Development Configuration"""
     DEBUG = True
     TOOLS_DIRECTORY = "tools"
     OUTOUT_DIRECTORY = os.path.join(os.getcwd(), "output")
 
 
 class TestingConfig(Config):
-    """
-    Testing Configuration
-    """
+    """Testing Configuration"""
     TESTING = True
-    TOOLS_DIRECTORY = "tools_test"
+    TOOLS_DIRECTORY = "tests/tools_test"

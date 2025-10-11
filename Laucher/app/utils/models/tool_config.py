@@ -84,7 +84,24 @@ class ToolConfig:
 
 
     def get_feature(self, feature: str):
-        return next((ep for ep in self.entrypointList if ep.feature_key == feature), None)
+        """
+        Retrieve the EntrypointConfig object corresponding to the given feature key.
+
+        Args:
+            feature (str): The feature_key identifying the desired entrypoint.
+
+        Returns:
+            EntrypointConfig: The matching entrypoint configuration.
+
+        Raises:
+            ValueError: If no entrypoint with the given feature_key exists.
+        """
+
+        for ep in self.entrypointList:
+            if ep.feature_key == feature:
+                return ep
+        
+        raise ValueError(f"Feature '{feature}' not found in tool '{self.toolName}'.")
 
 
     def feature_validation(self, feature: str) -> bool:
