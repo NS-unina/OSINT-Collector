@@ -1,16 +1,6 @@
-# Module containing methods to properly manage docker images and containers
-import os
+"""Module containing methods to properly manage docker images and containers"""
 import logging
 import docker
-
-
-class _Exceptions:
-    """
-    Manage docker services errors
-    """
-
-    invalid_order = ("run_container method should be "
-                     "called only after build_image method")
 
 
 class DockerServices:

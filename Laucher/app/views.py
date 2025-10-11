@@ -1,7 +1,7 @@
 from app.utils.models.tool_config import ToolConfig
 from app.utils.services.tool_manager import ToolManager
 from app.utils.services.docker_service import DockerServices
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 import yaml
 
 
@@ -46,7 +46,11 @@ def launch():
         print(tool.image)
         docker_client = DockerServices()
         docker_client.pull_image(tool.image)
-
+        
+        feature = tool.get_feature("download-messages")
+        entrypoint = feature.replace_input_in_command(inputs)
+        print(entrypoint)
+                
         return "<p>It Works!</p>", 200 # TODO: Cambiare
     
     except FileNotFoundError:

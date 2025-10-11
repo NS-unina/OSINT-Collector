@@ -1,7 +1,7 @@
 """class for model tool"""
 from typing import List
 from pathlib import Path
-
+import yaml
 
 class Input:
     input_key: str
@@ -23,13 +23,21 @@ class EntrypointConfig:
     description: str
     inputList: list[Input]
 
-
     def __init__(self, feature_key: str, name: str, description: str, command: str, inputList: list[Input]):
         self.feature_key = feature_key
         self.name = name
         self.description = description
         self.command = command
         self.inputList = inputList
+
+    def replace_input_in_command(self, inputs: dict):
+        replaced_command = self.command
+        
+        for key, value in inputs.items():
+            placeholder = f"${{{key}}}"
+            replaced_command = replaced_command.replace(placeholder, str(value))
+
+        return replaced_command
 
     def __repr__(self):
         return f"Entrypoint(feature={self.feature_key}, inputs={[i.input_key for i in self.inputList]})"
@@ -74,6 +82,11 @@ class ToolConfig:
 
             self.entrypointList.append(entry)
 
+
+    def get_feature(self, feature: str):
+        return next((ep for ep in self.entrypointList if ep.feature_key == feature), None)
+
+
     def feature_validation(self, feature: str) -> bool:
         """Check whether a given feature_key exists among the tool's entrypoints.
         Args:
@@ -108,6 +121,37 @@ class ToolConfig:
 
         return True
 
-
     def __repr__(self):
         return f"ToolConfig(name={self.toolName}, entrypoints={self.entrypointList})"
+
+
+if __name__ == "__main__":
+    yml_path = Path("/home/nda/Desktop/OSINT-Collector/Laucher/tools/snscrape-telegram/snscrape-telegram.yml")
+    with open(yml_path, "r") as f:
+        tool_dict = yaml.safe_load(f)
+
+    tool = ToolConfig(tool_dict)
+
+    print(f"\n🔧 Tool name: {tool.toolName}")
+    print(f"📝 Description: {tool.description}")
+    print(f"🪣 Image: {tool.image}")
+    print("\n🚀 Entrypoints:")
+    for ep in tool.entrypointList:
+        print(f"  • Feature key: {ep.feature_key}")
+        print(f"    Name: {ep.name}")
+        print(f"    Description: {ep.description}")
+        print(f"    Command: {ep.command}")
+        print(f"    Inputs:")
+        for inp in ep.inputList:
+            print(f"       - {inp.input_key} ({inp.type}): {inp.description}")
+    print("-----------------------------------------------------------------")
+
+    print("Command replace")
+    test_dict = {"CHANNEL": "prova1", "RESULTS": 5}
+    feature = tool.get_feature("download-messages")
+    print(feature)
+    ciccio = feature.replace_input_in_command(test_dict)
+    print(ciccio)
+    
+    # print(tool.get_feature("download-messages").replace_input_in_command(test_dict))
+

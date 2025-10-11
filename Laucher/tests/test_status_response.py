@@ -27,7 +27,7 @@ class TestStatusResponse:
         assert sorted(data) == expected_tools, (f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
 
     
-    def test_tool_positive_description_response(self, client, app):
+    def test_tool_description_response(self, client, app):
         tool_selected = "snscrape"
 
         # 200 OK
@@ -57,3 +57,9 @@ class TestStatusResponse:
         data = response.get_json()
         assert "error" in data
         assert "Configuration file for tool 'snscrape-invalid' is invalid." in data["error"]
+
+    
+    """
+    def test_tool_lauch(self, client):
+        response = client.get(f"/tools/{tool_selected}")
+    """
