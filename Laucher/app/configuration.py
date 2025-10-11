@@ -1,3 +1,6 @@
+import os
+
+
 class Config(object):
     """
     Configuration base, for all environments.
@@ -13,7 +16,7 @@ class DevelopmentConfig(Config):
     """
     DEBUG = True
     TOOLS_DIRECTORY = "tools"
-    OUTOUT_DIRECTORY = "output"
+    OUTOUT_DIRECTORY = os.path.join(os.getcwd(), "output")
 
 
 class TestingConfig(Config):

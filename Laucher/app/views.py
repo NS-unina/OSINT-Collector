@@ -50,7 +50,10 @@ def launch():
         feature = tool.get_feature("download-messages")
         entrypoint = feature.replace_input_in_command(inputs)
         print(entrypoint)
-                
+        print(current_app.config["OUTOUT_DIRECTORY"])        
+        
+        docker_client.run_tool_container(tool.image, current_app.config["OUTOUT_DIRECTORY"], entrypoint)
+
         return "<p>It Works!</p>", 200 # TODO: Cambiare
     
     except FileNotFoundError:
