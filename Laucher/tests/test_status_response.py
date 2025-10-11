@@ -77,8 +77,18 @@ class TestStatusResponse:
         assert "Configuration file for tool 'snscrape-invalid' is invalid." in data["error"]
 
 
-
     def test_launch_lauch(self, client):
+        """Test suite for the /launch endpoint of the Tool Manager API.
+        This test verifies multiple error-handling and success scenarios:
+        - Invalid tool name (configuration file missing)
+        - Invalid YAML configuration (malformed tool config)
+        - Invalid feature key
+        - Invalid input parameters
+        - Invalid image pull operation
+        - Valid request (expected success)
+        """
+
+        # 1) Tool does not exist
         invalid_tool_payload = {
             "tool": "invalid",
             "feature_key": "download-messages",
@@ -93,12 +103,12 @@ class TestStatusResponse:
             data=json.dumps(invalid_tool_payload),
             content_type="application/json")
         
-        
         assert response.status_code == 404
         data = response.get_json()
         assert "error" in data
         assert "Configuration file for tool 'invalid' not found." in data["error"]
 
+        # 2) Invalid YAML configuration
         invalid_yaml_tool_payload = {
             "tool": "snscrape-invalid",
             "feature_key": "download-messages",
@@ -118,6 +128,7 @@ class TestStatusResponse:
         assert "error" in data
         assert "Configuration file for tool 'snscrape-invalid' is invalid." in data["error"]
 
+        # 3) Invalid feature key
         invalid_feature_payload = {
             "tool": "snscrape-telegram",
             "feature_key": "invalid",
@@ -137,6 +148,7 @@ class TestStatusResponse:
         assert "error" in data
         assert "Provided feature_key 'invalid' does not exist for tool 'snscrape-telegram'" in data["error"]
 
+        # 4) Invalid input key
         invalid_feature_payload = {
             "tool": "snscrape-telegram",
             "feature_key": "download-messages",
@@ -156,7 +168,8 @@ class TestStatusResponse:
         assert "error" in data
         assert "'{'INVALID': 'ilpost_official', 'RESULTS': 5}' is not a valid input key." in data["error"]
 
-        invalid_input_payload = {
+        # 5) Invalid image (Docker pull failure)
+        invalid_image_payload = {
             "tool": "snscrape-invalid-image",
             "feature_key": "download-messages",
             "inputs": {
@@ -167,7 +180,7 @@ class TestStatusResponse:
 
         response = client.post(
             "/launch",
-            data=json.dumps(invalid_input_payload),
+            data=json.dumps(invalid_image_payload),
             content_type="application/json")
         
         assert response.status_code == 500
@@ -175,6 +188,7 @@ class TestStatusResponse:
         assert "error" in data
         assert "Failed to pull image: invalid" in data["error"]
 
+        # 6) Valid request (expected success)
         att_response =  {"entrypoint": "sh -c \"snscrape --jsonl --max-results 5 telegram-channel ilpost_official > /output/snscrape-telegram-ilpost_official.json\"",
             "feature_key": "download-messages",
             "status": "success",

@@ -78,21 +78,3 @@ class DockerServices:
             self._client.images.remove(image=image, force=True)
 
         self._client.images.remove(image=image, force=True)
-
-"""
-if __name__ == "__main__":
-    docker_svc = DockerServices()
-
-    # Example image – pick one that definitely exists locally or on Docker Hub
-    image = "osintcollector/snscrape:latest"
-
-    # Create a simple command to verify container runs correctly
-    entrypoint = "sh -c 'echo Hello from container > /output/result.txt'"
-
-    # Use a local directory as the output volume (bind mount)
-    output_volume = "/tmp/docker_output"
-
-    docker_svc.run_tool_container(image=image,
-                                  output_volume=output_volume,
-                                  entrypoint=entrypoint)
-"""

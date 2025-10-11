@@ -140,35 +140,3 @@ class ToolConfig:
 
     def __repr__(self):
         return f"ToolConfig(name={self.toolName}, entrypoints={self.entrypointList})"
-
-
-if __name__ == "__main__":
-    yml_path = Path("/home/nda/Desktop/OSINT-Collector/Laucher/tools/snscrape-telegram/snscrape-telegram.yml")
-    with open(yml_path, "r") as f:
-        tool_dict = yaml.safe_load(f)
-
-    tool = ToolConfig(tool_dict)
-
-    print(f"\n🔧 Tool name: {tool.toolName}")
-    print(f"📝 Description: {tool.description}")
-    print(f"🪣 Image: {tool.image}")
-    print("\n🚀 Entrypoints:")
-    for ep in tool.entrypointList:
-        print(f"  • Feature key: {ep.feature_key}")
-        print(f"    Name: {ep.name}")
-        print(f"    Description: {ep.description}")
-        print(f"    Command: {ep.command}")
-        print(f"    Inputs:")
-        for inp in ep.inputList:
-            print(f"       - {inp.input_key} ({inp.type}): {inp.description}")
-    print("-----------------------------------------------------------------")
-
-    print("Command replace")
-    test_dict = {"CHANNEL": "prova1", "RESULTS": 5}
-    feature = tool.get_feature("download-messages")
-    print(feature)
-    ciccio = feature.replace_input_in_command(test_dict)
-    print(ciccio)
-    
-    # print(tool.get_feature("download-messages").replace_input_in_command(test_dict))
-

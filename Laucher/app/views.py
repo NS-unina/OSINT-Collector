@@ -55,8 +55,9 @@ def launch():
         docker_client.pull_image(tool.image)
     except Exception as e:
         return jsonify({"error": f"Failed to pull image: {tool.image}"}), 500
-    entrypoint = feature.replace_input_in_command(inputs)
     
+    entrypoint = feature.replace_input_in_command(inputs)
+    # TODO: Manage execution
     docker_client.run_tool_container(tool.image, current_app.config["OUTOUT_DIRECTORY"], entrypoint)
     
     return jsonify({"status": "success", "tool": tool_name, "feature_key": feature_key, "entrypoint": entrypoint,}), 200
