@@ -93,6 +93,7 @@ class TestStatusResponse:
             data=json.dumps(invalid_tool_payload),
             content_type="application/json")
         
+        
         assert response.status_code == 404
         data = response.get_json()
         assert "error" in data
@@ -155,7 +156,7 @@ class TestStatusResponse:
         assert "error" in data
         assert "'{'INVALID': 'ilpost_official', 'RESULTS': 5}' is not a valid input key." in data["error"]
 
-        invalid_feature_payload = {
+        invalid_input_payload = {
             "tool": "snscrape-invalid-image",
             "feature_key": "download-messages",
             "inputs": {
@@ -166,7 +167,7 @@ class TestStatusResponse:
 
         response = client.post(
             "/launch",
-            data=json.dumps(invalid_feature_payload),
+            data=json.dumps(invalid_input_payload),
             content_type="application/json")
         
         assert response.status_code == 500
@@ -174,5 +175,30 @@ class TestStatusResponse:
         assert "error" in data
         assert "Failed to pull image: invalid" in data["error"]
 
-        #assert response.status_code == 200  
+        att_response =  {"entrypoint": "sh -c \"snscrape --jsonl --max-results 5 telegram-channel ilpost_official > /output/snscrape-telegram-ilpost_official.json\"",
+            "feature_key": "download-messages",
+            "status": "success",
+            "tool": "snscrape-telegram"}
+        
+        valid_payload = {
+            "tool": "snscrape-telegram",
+            "feature_key": "download-messages",
+            "inputs": {
+                "CHANNEL": "ilpost_official",
+                "RESULTS": 5
+            }
+        }
 
+        response = client.post(
+            "/launch",
+            data=json.dumps(valid_payload),
+            content_type="application/json")
+
+        assert response.status_code == 200
+        
+        data = response.get_json()
+        if data != att_response:
+            print("\nExpected JSON:\n", json.dumps(att_response, indent=2))
+            print("\nActual JSON:\n", json.dumps(data, indent=2))
+
+        assert data == att_response, "Response JSON does not match expected output"
