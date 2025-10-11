@@ -18,4 +18,4 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """Testing Configuration"""
     TESTING = True
-    TOOLS_DIRECTORY = "tests/tools_test"
+    TOOLS_DIRECTORY = "tests/tools"

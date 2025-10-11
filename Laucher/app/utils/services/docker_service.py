@@ -50,6 +50,7 @@ class DockerServices:
             self._client.images.pull(tag)
         except (docker.errors.APIError) as e:
             self._log.error("Docker API error while pulling %s: %s", tag, str(e))
+            raise
 
 
     def run_tool_container(self, image, output_volume, entrypoint):

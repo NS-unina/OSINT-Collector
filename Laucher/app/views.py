@@ -37,33 +37,30 @@ def launch():
     try:
         tool_dict = ToolManager.read_tool_config(tool_name)
         tool = ToolConfig(tool_dict)
-
-        try:
-            feature = tool.get_feature(feature_key)
-        except ValueError:
-            return jsonify({"error": f"Provided feature_key '{feature_key}' does not exist for tool '{tool_name}'"}), 404
-
-        if not tool.input_validation(feature_key, inputs):
-            return jsonify({"error": f"'{inputs}' is not a valid input key."}), 404
-        
-        docker_client = DockerServices()
-        docker_client.pull_image(tool.image)
-        
-        """      
-        feature = tool.get_feature("download-messages")
-        entrypoint = feature.replace_input_in_command(inputs)
-        print(entrypoint)
-        print(current_app.config["OUTOUT_DIRECTORY"])        
-        
-        docker_client.run_tool_container(tool.image, current_app.config["OUTOUT_DIRECTORY"], entrypoint)
-        """
-        return "<p>It Works!</p>", 200 # TODO: Cambiare
-        
     except FileNotFoundError:
         return jsonify({"error": f"Configuration file for tool '{tool_name}' not found."}), 404
     except yaml.YAMLError:
         return jsonify({"error": f"Configuration file for tool '{tool_name}' is invalid."}), 500
-
+    
+    try:
+        feature = tool.get_feature(feature_key)
+    except ValueError:
+        return jsonify({"error": f"Provided feature_key '{feature_key}' does not exist for tool '{tool_name}'"}), 404
+    if not tool.input_validation(feature_key, inputs):
+        return jsonify({"error": f"'{inputs}' is not a valid input key."}), 404
+    
+    docker_client = DockerServices()
+    
+    try:
+        docker_client.pull_image(tool.image)
+    except Exception as e:
+        return jsonify({"error": f"Failed to pull image: {tool.image}"}), 500
+    entrypoint = feature.replace_input_in_command(inputs)
+    
+    docker_client.run_tool_container(tool.image, current_app.config["OUTOUT_DIRECTORY"], entrypoint)
+    
+    return jsonify({"status": "success", "tool": tool_name, "feature_key": feature_key, "entrypoint": entrypoint,}), 200
+        
 
 @views_bp.route("/", methods=['GET'])
 def start():

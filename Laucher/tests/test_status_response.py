@@ -35,7 +35,7 @@ class TestStatusResponse:
         assert isinstance(data, list)
 
         # Compare both lists (sorted to avoid order issues)
-        expected_tools = ["snscrape-invalid", "snscrape-telegram"]
+        expected_tools = ['snscrape-invalid', 'snscrape-invalid-image', 'snscrape-telegram']
         assert sorted(data) == expected_tools, (f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
 
     
@@ -154,6 +154,25 @@ class TestStatusResponse:
         data = response.get_json()
         assert "error" in data
         assert "'{'INVALID': 'ilpost_official', 'RESULTS': 5}' is not a valid input key." in data["error"]
+
+        invalid_feature_payload = {
+            "tool": "snscrape-invalid-image",
+            "feature_key": "download-messages",
+            "inputs": {
+                "CHANNEL": "ilpost_official",
+                "RESULTS": 5
+            }
+        }
+
+        response = client.post(
+            "/launch",
+            data=json.dumps(invalid_feature_payload),
+            content_type="application/json")
+        
+        assert response.status_code == 500
+        data = response.get_json()
+        assert "error" in data
+        assert "Failed to pull image: invalid" in data["error"]
 
         #assert response.status_code == 200  
 
