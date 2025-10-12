@@ -36,7 +36,7 @@ class TestStatusResponse:
 
         # Compare both lists (sorted to avoid order issues)
         expected_tools = ['snscrape-invalid', 'snscrape-invalid-image', 'snscrape-telegram']
-        assert sorted(data) == expected_tools, (f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
+        assert sorted(data) == sorted(expected_tools), (f"Tools mismatch:\n Expected: {expected_tools}\n Got: {data}")
 
     
     def test_tool_description_valid_response(self, client, app):
