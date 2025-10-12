@@ -51,12 +51,6 @@ class ToolConfig:
     entrypointList: list[EntrypointConfig]
 
 
-    def __init__(self, toolName: str, description: str, image: str, entrypointList: list[EntrypointConfig]):
-        self.toolName = toolName
-        self.description = description
-        self.image = image
-        self.entrypointList = entrypointList
-
     def __init__(self, tool_config: dict):
         self.toolName = next(iter(tool_config))
         tool_data = tool_config[self.toolName]

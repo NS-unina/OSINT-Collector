@@ -7,7 +7,7 @@ class ToolManager:
     """Class containing all function required to manage tool configuration."""
 
     @staticmethod
-    def tools_list():
+    def tools_list(tools_path):
         """Return a list of available tools.
 
         This method retrieves the names of folders located within the 'tools'
@@ -17,7 +17,7 @@ class ToolManager:
             list: A list containing the names of available tools (folders).
         """
         
-        complete_path = Path.cwd() / current_app.config["TOOLS_DIRECTORY"]
+        complete_path = Path(tools_path)
 
         folders = [p.name for p in complete_path.iterdir() if p.is_dir()]
 
@@ -25,7 +25,7 @@ class ToolManager:
     
 
     @staticmethod
-    def read_tool_config(tool: str):
+    def read_tool_config(tools_base_path: str, tool: str):
         """Reads the YAML configuration for a specific tool.
 
         Args:
@@ -39,8 +39,7 @@ class ToolManager:
             yaml.YAMLError: If the YAML content is invalid.
         """
 
-        tools_dir = current_app.config.get("TOOLS_DIRECTORY")
-        tool_config_path = Path.cwd() / tools_dir / tool / f"{tool}.yml"
+        tool_config_path = Path.cwd() / tools_base_path / tool / f"{tool}.yml"
 
         if not tool_config_path.exists():
             raise FileNotFoundError(f"Configuration file not found: {tool_config_path}")

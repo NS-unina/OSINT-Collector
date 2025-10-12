@@ -12,7 +12,8 @@ views_bp = Blueprint('views', __name__)
 def tool_details_help(tool: str):
     """Gives the help message for a specific tool"""
     try:
-        tool_config = ToolManager.read_tool_config(tool)
+        tools_base_path = current_app.config.get("TOOLS_DIRECTORY")
+        tool_config = ToolManager.read_tool_config(tools_base_path, tool)
         return tool_config, 200
     except FileNotFoundError:
         return jsonify({"error": f"Configuration file for tool '{tool}' not found."}), 404
@@ -23,7 +24,7 @@ def tool_details_help(tool: str):
 @views_bp.route("/tools", methods=['GET'])
 def tools_help():
     """Gives the tool list"""
-    return ToolManager.tools_list(), 200
+    return ToolManager.tools_list(current_app.config["TOOLS_DIRECTORY"]), 200
 
 
 # curl -X POST http://127.0.0.1:5000/launch -H "Content-Type: application/json" -d '{"tool": "instaloader", "feature_key": "download-public-profile", "inputs": {"CHANNEL": "ciccio"}}'
@@ -35,7 +36,8 @@ def launch():
     inputs = request.json["inputs"]
 
     try:
-        tool_dict = ToolManager.read_tool_config(tool_name)
+        tools_base_path = current_app.config.get("TOOLS_DIRECTORY")
+        tool_dict = ToolManager.read_tool_config(tools_base_path, tool_name)
         tool = ToolConfig(tool_dict)
     except FileNotFoundError:
         return jsonify({"error": f"Configuration file for tool '{tool_name}' not found."}), 404
