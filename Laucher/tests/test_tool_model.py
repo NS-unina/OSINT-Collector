@@ -2,6 +2,29 @@ from app.utils.models.tool_config import Input, EntrypointConfig, ToolConfig
 import pytest
 
 class TestInput:
+    
+    @pytest.fixture(autouse=True)
+    def example_tool_dict(self):
+        """Provide an example tool dictionary structure."""
+        return {
+            "snscrape": {
+                "description": "Download telegram data",
+                "image": "snscrape/image:latest",
+                "entrypoints": [
+                    {
+                        "feature_key": "download-messages",
+                        "name": "Download messages",
+                        "description": "Download Telegram messages",
+                        "command": "snscrape --max-results ${RESULTS} telegram-channel ${CHANNEL}",
+                        "inputs": ["CHANNEL", "RESULTS"],
+                    }
+                ],
+                "inputs": [
+                    {"input_key": "CHANNEL", "description": "Telegram channel", "type": "string"},
+                    {"input_key": "RESULTS", "description": "Number of results", "type": "int"},
+                ],
+            }
+        }
 
 
     def test_input_repr(self):

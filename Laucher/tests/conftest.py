@@ -24,27 +24,3 @@ def client(app):
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
-
-
-@pytest.fixture
-def example_tool_dict():
-    """Provide an example tool dictionary structure."""
-    return {
-        "snscrape": {
-            "description": "Download telegram data",
-            "image": "snscrape/image:latest",
-            "entrypoints": [
-                {
-                    "feature_key": "download-messages",
-                    "name": "Download messages",
-                    "description": "Download Telegram messages",
-                    "command": "snscrape --max-results ${RESULTS} telegram-channel ${CHANNEL}",
-                    "inputs": ["CHANNEL", "RESULTS"],
-                }
-            ],
-            "inputs": [
-                {"input_key": "CHANNEL", "description": "Telegram channel", "type": "string"},
-                {"input_key": "RESULTS", "description": "Number of results", "type": "int"},
-            ],
-        }
-    }
