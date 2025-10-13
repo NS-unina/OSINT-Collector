@@ -12,65 +12,28 @@
 #    Object Properties
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igAccountObject
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igAccountObject
 :igAccountObject rdf:type owl:ObjectProperty ;
                  rdfs:subPropertyOf :igObject .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentHasBeenPublishedBy
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igCommentHasBeenPublishedBy
 :igCommentHasBeenPublishedBy rdf:type owl:ObjectProperty ;
                              rdfs:subPropertyOf :igCommentObject ;
                              rdfs:domain :igComment ;
                              rdfs:range :igAccount .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentHasBeenReplayed
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igCommentHasBeenReplayed
 :igCommentHasBeenReplayed rdf:type owl:ObjectProperty ;
                           rdfs:subPropertyOf :igCommentObject ;
                           rdfs:domain :igComment ;
                           rdfs:range :igComment .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentObject
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igCommentObject
 :igCommentObject rdf:type owl:ObjectProperty ;
                  rdfs:subPropertyOf :igObject .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igObject
-:igObject rdf:type owl:ObjectProperty .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igPostObject
-:igPostObject rdf:type owl:ObjectProperty ;
-              rdfs:subPropertyOf :igObject .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igStoryHasBeenPublishedBy
-:igStoryHasBeenPublishedBy rdf:type owl:ObjectProperty ;
-                           rdfs:subPropertyOf :igStoryObject ;
-                           rdfs:domain :igStories ;
-                           rdfs:range :igAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igStoryHasComment
-:igStoryHasComment rdf:type owl:ObjectProperty ;
-                   rdfs:subPropertyOf :igStoryObject ;
-                   rdfs:domain :igStories ;
-                   rdfs:range :igComment .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igStoryObject
-:igStoryObject rdf:type owl:ObjectProperty ;
-               rdfs:subPropertyOf :igObject .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgGroupObject
-:tgGroupObject rdf:type owl:ObjectProperty ;
-               rdfs:subPropertyOf :tgObject .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgObject
-:tgObject rdf:type owl:ObjectProperty .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igFollow
@@ -85,6 +48,10 @@
              rdfs:subPropertyOf :igAccountObject ;
              rdfs:domain :igAccount ;
              rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igObject
+:igObject rdf:type owl:ObjectProperty .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostHasBeenCommentedBy
@@ -122,6 +89,11 @@
                   rdfs:range :igHashtag .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostObject
+:igPostObject rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf :igObject .
+
+
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostTagsAccount
 :igPostTagsAccount rdf:type owl:ObjectProperty ;
                    rdfs:subPropertyOf :igPostObject ;
@@ -134,6 +106,25 @@
                rdfs:subPropertyOf :igPostObject ;
                rdfs:domain :igPost ;
                rdfs:range :igLocation .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igStoryHasBeenPublishedBy
+:igStoryHasBeenPublishedBy rdf:type owl:ObjectProperty ;
+                           rdfs:subPropertyOf :igStoryObject ;
+                           rdfs:domain :igStories ;
+                           rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igStoryHasComment
+:igStoryHasComment rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :igStoryObject ;
+                   rdfs:domain :igStories ;
+                   rdfs:range :igComment .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igStoryObject
+:igStoryObject rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :igObject .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgBelongsToChannel
@@ -162,13 +153,16 @@
 :tgGroupHasParticipant rdf:type owl:ObjectProperty ;
                        rdfs:subPropertyOf :tgGroupObject ;
                        rdfs:domain :tgGroup ;
-                       rdfs:range :tgAccount ,
-                                  :tgBot ,
-                                  [ rdf:type owl:Class ;
+                       rdfs:range [ rdf:type owl:Class ;
                                     owl:unionOf ( :tgAccount
                                                   :tgBot
                                                 )
                                   ] .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupObject
+:tgGroupObject rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :tgObject .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageSentBy
@@ -176,6 +170,10 @@
                  rdfs:subPropertyOf :tgObject ;
                  rdfs:domain :tgMessage ;
                  rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgObject
+:tgObject rdf:type owl:ObjectProperty .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgRecivedBy
@@ -189,30 +187,16 @@
 #    Data properties
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igAccountData
-:igAccountData rdf:type owl:DatatypeProperty ;
-               rdfs:subPropertyOf :igData .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentData
-:igCommentData rdf:type owl:DatatypeProperty ;
-               rdfs:subPropertyOf :igData .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igData
-:igData rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igPostData
-:igPostData rdf:type owl:DatatypeProperty ;
-            rdfs:subPropertyOf :igData .
-
-
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/IgHashtagName
 :IgHashtagName rdf:type owl:DatatypeProperty ;
                rdfs:subPropertyOf :igData ;
                rdfs:domain :igHashtag ;
                rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igAccountData
+:igAccountData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igData .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igAccountID
@@ -222,11 +206,20 @@
              rdfs:range xsd:int .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igCommentData
+:igCommentData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igData .
+
+
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igCommentText
 :igCommentText rdf:type owl:DatatypeProperty ;
                rdfs:subPropertyOf :igCommentData ;
                rdfs:domain :igComment ;
                rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igData
+:igData rdf:type owl:DatatypeProperty .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igLikes
@@ -255,6 +248,11 @@
                rdfs:subPropertyOf :igPostData ;
                rdfs:domain :igPost ;
                rdfs:range xsd:byte .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostData
+:igPostData rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf :igData .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostNumberLike
