@@ -1,303 +1,384 @@
-@prefix : <http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/> .
+@prefix : <http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/> .
+@base <http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/> .
 
-<http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7> rdf:type owl:Ontology .
+<http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector> rdf:type owl:Ontology .
 
 #################################################################
 #    Object Properties
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgBelongsToChannel
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igAccountObject
+:igAccountObject rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :igObject .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentHasBeenPublishedBy
+:igCommentHasBeenPublishedBy rdf:type owl:ObjectProperty ;
+                             rdfs:subPropertyOf :igCommentObject ;
+                             rdfs:domain :igComment ;
+                             rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentHasBeenReplayed
+:igCommentHasBeenReplayed rdf:type owl:ObjectProperty ;
+                          rdfs:subPropertyOf :igCommentObject ;
+                          rdfs:domain :igComment ;
+                          rdfs:range :igComment .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentObject
+:igCommentObject rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :igObject .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igObject
+:igObject rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igPostObject
+:igPostObject rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf :igObject .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igStoryHasBeenPublishedBy
+:igStoryHasBeenPublishedBy rdf:type owl:ObjectProperty ;
+                           rdfs:subPropertyOf :igStoryObject ;
+                           rdfs:domain :igStories ;
+                           rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igStoryHasComment
+:igStoryHasComment rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :igStoryObject ;
+                   rdfs:domain :igStories ;
+                   rdfs:range :igComment .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igStoryObject
+:igStoryObject rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :igObject .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgGroupObject
+:tgGroupObject rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :tgObject .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgObject
+:tgObject rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igFollow
+:igFollow rdf:type owl:ObjectProperty ;
+          rdfs:subPropertyOf :igAccountObject ;
+          rdfs:domain :igAccount ;
+          rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igFollowing
+:igFollowing rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :igAccountObject ;
+             rdfs:domain :igAccount ;
+             rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostHasBeenCommentedBy
+:igPostHasBeenCommentedBy rdf:type owl:ObjectProperty ;
+                          rdfs:subPropertyOf :igPostObject ;
+                          rdfs:domain :igPost ;
+                          rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostHasBeenLikedBy
+:igPostHasBeenLikedBy rdf:type owl:ObjectProperty ;
+                      rdfs:subPropertyOf :igPostObject ;
+                      rdfs:domain :igPost ;
+                      rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostHasBeenPublishedBy
+:igPostHasBeenPublishedBy rdf:type owl:ObjectProperty ;
+                          rdfs:subPropertyOf :igPostObject ;
+                          rdfs:domain :igPost ;
+                          rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostHasComment
+:igPostHasComment rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf :igPostObject ;
+                  rdfs:domain :igPost ;
+                  rdfs:range :igComment .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostHasHashtag
+:igPostHasHashtag rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf :igPostObject ;
+                  rdfs:domain :igPost ;
+                  rdfs:range :igHashtag .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostTagsAccount
+:igPostTagsAccount rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :igPostObject ;
+                   rdfs:domain :igPost ;
+                   rdfs:range :igAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostTakenAt
+:igPostTakenAt rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :igPostObject ;
+               rdfs:domain :igPost ;
+               rdfs:range :igLocation .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgBelongsToChannel
 :tgBelongsToChannel rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :tgObject ;
                     rdfs:domain :tgMessage ;
                     rdfs:range :tgChannel ,
                                :tgGroup .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgGroupHasParticipant
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasAdmin
+:tgGroupHasAdmin rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :tgGroupObject ;
+                 rdfs:domain :tgGroup ;
+                 rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasOwner
+:tgGroupHasOwner rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :tgGroupObject ;
+                 rdfs:domain :tgGroup ;
+                 rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasParticipant
 :tgGroupHasParticipant rdf:type owl:ObjectProperty ;
-                       rdfs:domain :tgChannel ,
-                                   :tgGroup ;
-                       rdfs:range :tgBot ,
-                                  :tgAccount .
+                       rdfs:subPropertyOf :tgGroupObject ;
+                       rdfs:domain :tgGroup ;
+                       rdfs:range :tgAccount ,
+                                  :tgBot ,
+                                  [ rdf:type owl:Class ;
+                                    owl:unionOf ( :tgAccount
+                                                  :tgBot
+                                                )
+                                  ] .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgRecivedBy
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageSentBy
+:tgMessageSentBy rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :tgObject ;
+                 rdfs:domain :tgMessage ;
+                 rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgRecivedBy
 :tgRecivedBy rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :tgObject ;
              rdfs:domain :tgAccount ;
              rdfs:range :tgMessage .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgSentBy
-:tgSentBy rdf:type owl:ObjectProperty ;
-          rdfs:domain :tgMessage ;
-          rdfs:range :tgAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/hasSocialAccount
-:hasSocialAccount rdf:type owl:ObjectProperty ;
-                  rdfs:domain :Person ;
-                  rdfs:range :igAccount ,
-                             :tgAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCommentedBy
-:igCommentedBy rdf:type owl:ObjectProperty ;
-               rdfs:domain :igPost ;
-               rdfs:range :igAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igFollow
-:igFollow rdf:type owl:ObjectProperty ;
-          rdfs:domain :igAccount ;
-          rdfs:range :igAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igFollowing
-:igFollowing rdf:type owl:ObjectProperty ;
-             rdfs:domain :igAccount ;
-             rdfs:range :igAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igFollows
-:igFollows rdf:type owl:ObjectProperty ;
-           rdfs:domain :igAccount ;
-           rdfs:range :igAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igHasBeenTagged
-:igHasBeenTagged rdf:type owl:ObjectProperty ;
-                 rdfs:domain :igAccount ;
-                 rdfs:range :igTaggedPost .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igHasComment
-:igHasComment rdf:type owl:ObjectProperty ;
-              rdfs:domain :igPost ;
-              rdfs:range :igPost .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igHasHashtag
-:igHasHashtag rdf:type owl:ObjectProperty ;
-              rdfs:domain :igPost ;
-              rdfs:range :igHashtag .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLikedBy
-:igLikedBy rdf:type owl:ObjectProperty ;
-           rdfs:domain :igPost ;
-           rdfs:range :igAccount .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igPublished
-:igPublished rdf:type owl:ObjectProperty ;
-             rdfs:domain :igAccount ;
-             rdfs:range :igPost ,
-                        :igStories .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTagged
-:igTagged rdf:type owl:ObjectProperty ;
-          rdfs:domain :igAccount ,
-                      :igPost ;
-          rdfs:range :igAccount ,
-                     :igTaggedPost .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTakenAt
-:igTakenAt rdf:type owl:ObjectProperty ;
-           rdfs:domain :igPost ;
-           rdfs:range :igLocation .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAdmin
-:tgAdmin rdf:type owl:ObjectProperty ;
-         rdfs:domain :tgAccount ;
-         rdfs:range :tgChannel ,
-                    :tgGroup .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgOwn
-:tgOwn rdf:type owl:ObjectProperty ;
-       rdfs:domain :tgAccount ;
-       rdfs:range :tgChannel ,
-                  :tgGroup .
 
 
 #################################################################
 #    Data properties
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgChannelID
-:tgChannelID rdf:type owl:DatatypeProperty ;
-             rdfs:domain :tgChannel ;
-             rdfs:range xsd:int .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igAccountData
+:igAccountData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igData .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgChannelName
-:tgChannelName rdf:type owl:DatatypeProperty ;
-               rdfs:domain :tgChannel ;
-               rdfs:range xsd:string .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igCommentData
+:igCommentData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igData .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgFileContent
-:tgFileContent rdf:type owl:DatatypeProperty ;
-               rdfs:domain :tgMessage ;
-               rdfs:range xsd:byte .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igData
+:igData rdf:type owl:DatatypeProperty .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgGroupID
-:tgGroupID rdf:type owl:DatatypeProperty ;
-           rdfs:domain :tgGroup ;
-           rdfs:range xsd:int .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igPostData
+:igPostData rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf :igData .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgGroupName
-:tgGroupName rdf:type owl:DatatypeProperty ;
-             rdfs:domain :tgGroup ;
-             rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgMessageId
-:tgMessageId rdf:type owl:DatatypeProperty ;
-             rdfs:domain :tgMessage ;
-             rdfs:range xsd:int .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgMessageStringContent
-:tgMessageStringContent rdf:type owl:DatatypeProperty ;
-                        rdfs:domain :tgMessage ;
-                        rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgMessageTimestamp
-:tgMessageTimestamp rdf:type owl:DatatypeProperty ;
-                    rdfs:domain :tgMessage ;
-                    rdfs:range xsd:dateTime .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgReact
-:tgReact rdf:type owl:DatatypeProperty ;
-         rdfs:domain :tgMessage ;
-         rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/IgHashtagName
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/IgHashtagName
 :IgHashtagName rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igData ;
                rdfs:domain :igHashtag ;
                rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igAccountID
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igAccountID
 :igAccountID rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :igAccountData ;
              rdfs:domain :igAccount ;
              rdfs:range xsd:int .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCaption
-:igCaption rdf:type owl:DatatypeProperty ;
-           rdfs:domain :igPost ;
-           rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igCommentText
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igCommentText
 :igCommentText rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igCommentData ;
                rdfs:domain :igComment ;
                rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLikes
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igLikes
 :igLikes rdf:type owl:DatatypeProperty ;
+         rdfs:subPropertyOf :igCommentData ;
          rdfs:domain :igComment ;
          rdfs:range xsd:int .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igName
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igName
 :igName rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf :igAccountData ;
         rdfs:domain :igAccount ;
         rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igNumberLike
-:igNumberLike rdf:type owl:DatatypeProperty ;
-              rdfs:domain :igComment ,
-                          :igPost ;
-              rdfs:range xsd:int .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostCaption
+:igPostCaption rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igPostData ;
+               rdfs:domain :igPost ;
+               rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igPostContent
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostContent
 :igPostContent rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igPostData ;
                rdfs:domain :igPost ;
                rdfs:range xsd:byte .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igProfilePhoto
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostNumberLike
+:igPostNumberLike rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf :igPostData ;
+                  rdfs:domain :igPost ;
+                  rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPostTimePosted
+:igPostTimePosted rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf :igPostData ;
+                  rdfs:domain :igPost ;
+                  rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igProfilePhoto
 :igProfilePhoto rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf :igAccountData ;
                 rdfs:domain :igAccount ;
                 rdfs:range xsd:byte .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTimePosted
-:igTimePosted rdf:type owl:DatatypeProperty ;
-              rdfs:domain :igPost ;
-              rdfs:range xsd:dateTime .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igUsername
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igUsername
 :igUsername rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf :igAccountData ;
             rdfs:domain :igAccount ;
             rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igVerifiedBedge
-:igVerifiedBedge rdf:type owl:DatatypeProperty ;
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igVerifiedBadge
+:igVerifiedBadge rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf :igAccountData ;
                  rdfs:domain :igAccount ;
                  rdfs:range xsd:boolean .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igWebsite
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igWebsite
 :igWebsite rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf :igAccountData ;
            rdfs:domain :igAccount ;
            rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAccountID
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgAccountID
 :tgAccountID rdf:type owl:DatatypeProperty ;
              rdfs:domain :tgAccount ;
              rdfs:range xsd:int .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAccountName
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgAccountName
 :tgAccountName rdf:type owl:DatatypeProperty ;
                rdfs:domain :tgAccount ;
                rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgInvitationLink
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelID
+:tgChannelID rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgChannel ;
+             rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelName
+:tgChannelName rdf:type owl:DatatypeProperty ;
+               rdfs:domain :tgChannel ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgFileContent
+:tgFileContent rdf:type owl:DatatypeProperty ;
+               rdfs:domain :tgMessage ;
+               rdfs:range xsd:byte .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupID
+:tgGroupID rdf:type owl:DatatypeProperty ;
+           rdfs:domain :tgGroup ;
+           rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupName
+:tgGroupName rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgGroup ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgInvitationLink
 :tgInvitationLink rdf:type owl:DatatypeProperty ;
                   rdfs:domain :tgChannel ,
                               :tgGroup ;
                   rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgLastAccess
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgLastAccess
 :tgLastAccess rdf:type owl:DatatypeProperty ;
               rdfs:domain :tgAccount ;
               rdfs:range xsd:dateTime .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgPhoneNumber
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageId
+:tgMessageId rdf:type owl:DatatypeProperty ;
+             rdfs:domain :tgMessage ;
+             rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageStringContent
+:tgMessageStringContent rdf:type owl:DatatypeProperty ;
+                        rdfs:domain :tgMessage ;
+                        rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageTimestamp
+:tgMessageTimestamp rdf:type owl:DatatypeProperty ;
+                    rdfs:domain :tgMessage ;
+                    rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgPhoneNumber
 :tgPhoneNumber rdf:type owl:DatatypeProperty ;
                rdfs:domain :tgAccount ;
                rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgPhotoProfile
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgPhotoProfile
 :tgPhotoProfile rdf:type owl:DatatypeProperty ;
                 rdfs:domain :tgAccount ,
                             :tgChannel ,
@@ -305,7 +386,13 @@
                 rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgUsername
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgReact
+:tgReact rdf:type owl:DatatypeProperty ;
+         rdfs:domain :tgMessage ;
+         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgUsername
 :tgUsername rdf:type owl:DatatypeProperty ;
             rdfs:domain :tgAccount ;
             rdfs:range xsd:string .
@@ -315,74 +402,74 @@
 #    Classes
 #################################################################
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7#tgBot
-:tgBot rdf:type owl:Class ;
-       rdfs:subClassOf :Telegram .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/InstagramClasses
+:InstagramClasses rdf:type owl:Class .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Instagram
-:Instagram rdf:type owl:Class .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Person
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/Person
 :Person rdf:type owl:Class .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/Telegram
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/Telegram
 :Telegram rdf:type owl:Class .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igAccount
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igAccount
 :igAccount rdf:type owl:Class ;
-           rdfs:subClassOf :Instagram .
+           rdfs:subClassOf :InstagramClasses .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igComment
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igComment
 :igComment rdf:type owl:Class ;
-           rdfs:subClassOf :Instagram .
+           rdfs:subClassOf :InstagramClasses .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igHashtag
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igHashtag
 :igHashtag rdf:type owl:Class ;
-           rdfs:subClassOf :Instagram .
+           rdfs:subClassOf :InstagramClasses .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igLocation
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igLocation
 :igLocation rdf:type owl:Class ;
-            rdfs:subClassOf :Instagram .
+            rdfs:subClassOf :InstagramClasses .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igPost
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPlace
+:igPlace rdf:type owl:Class ;
+         rdfs:subClassOf :InstagramClasses .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igPost
 :igPost rdf:type owl:Class ;
-        rdfs:subClassOf :Instagram .
+        rdfs:subClassOf :InstagramClasses .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igStories
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igStories
 :igStories rdf:type owl:Class ;
-           rdfs:subClassOf :Instagram .
+           rdfs:subClassOf :InstagramClasses .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/igTaggedPost
-:igTaggedPost rdf:type owl:Class ;
-              rdfs:subClassOf :igPost .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgAccount
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgAccount
 :tgAccount rdf:type owl:Class ;
            rdfs:subClassOf :Telegram .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgChannel
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgBot
+:tgBot rdf:type owl:Class ;
+       rdfs:subClassOf :Telegram .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannel
 :tgChannel rdf:type owl:Class ;
            rdfs:subClassOf :Telegram .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgGroup
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroup
 :tgGroup rdf:type owl:Class ;
          rdfs:subClassOf :Telegram .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/untitled-ontology-7/tgMessage
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessage
 :tgMessage rdf:type owl:Class ;
            rdfs:subClassOf :Telegram .
 
