@@ -127,12 +127,30 @@
                rdfs:subPropertyOf :igObject .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgBelongsToChannel
-:tgBelongsToChannel rdf:type owl:ObjectProperty ;
-                    rdfs:subPropertyOf :tgObject ;
-                    rdfs:domain :tgMessage ;
-                    rdfs:range :tgChannel ,
-                               :tgGroup .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelHasAdmin
+:tgChannelHasAdmin rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :tgChannelObject ;
+                   rdfs:domain :tgChannel ;
+                   rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelHasMessage
+:tgChannelHasMessage rdf:type owl:ObjectProperty ;
+                     rdfs:subPropertyOf :tgChannelObject ;
+                     rdfs:domain :tgChannel ;
+                     rdfs:range :tgMessage .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelHasOwner
+:tgChannelHasOwner rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :tgChannelObject ;
+                   rdfs:domain :tgChannel ;
+                   rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelObject
+:tgChannelObject rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :tgObject .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasAdmin
@@ -140,6 +158,20 @@
                  rdfs:subPropertyOf :tgGroupObject ;
                  rdfs:domain :tgGroup ;
                  rdfs:range :tgAccount .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasBot
+:tgGroupHasBot rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf :tgGroupObject ;
+               rdfs:domain :tgGroup ;
+               rdfs:range :tgBot .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasMessage
+:tgGroupHasMessage rdf:type owl:ObjectProperty ;
+                   rdfs:subPropertyOf :tgGroupObject ;
+                   rdfs:domain :tgGroup ;
+                   rdfs:range :tgMessage .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupHasOwner
@@ -153,11 +185,7 @@
 :tgGroupHasParticipant rdf:type owl:ObjectProperty ;
                        rdfs:subPropertyOf :tgGroupObject ;
                        rdfs:domain :tgGroup ;
-                       rdfs:range [ rdf:type owl:Class ;
-                                    owl:unionOf ( :tgAccount
-                                                  :tgBot
-                                                )
-                                  ] .
+                       rdfs:range :tgAccount .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupObject
@@ -165,9 +193,14 @@
                rdfs:subPropertyOf :tgObject .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageObject
+:tgMessageObject rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf :tgObject .
+
+
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageSentBy
 :tgMessageSentBy rdf:type owl:ObjectProperty ;
-                 rdfs:subPropertyOf :tgObject ;
+                 rdfs:subPropertyOf :tgMessageObject ;
                  rdfs:domain :tgMessage ;
                  rdfs:range :tgAccount .
 
@@ -178,7 +211,7 @@
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgRecivedBy
 :tgRecivedBy rdf:type owl:ObjectProperty ;
-             rdfs:subPropertyOf :tgObject ;
+             rdfs:subPropertyOf :tgMessageObject ;
              rdfs:domain :tgAccount ;
              rdfs:range :tgMessage .
 
@@ -187,9 +220,53 @@
 #    Data properties
 #################################################################
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#igHashtagData
+:igHashtagData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :igData .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgAccountData
+:tgAccountData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgData .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgChannelData
+:tgChannelData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgData .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgChannelPhotoProfile
+:tgChannelPhotoProfile rdf:type owl:DatatypeProperty ;
+                       rdfs:subPropertyOf :tgChannelData ;
+                       rdfs:domain :tgChannel ;
+                       rdfs:range xsd:base64Binary .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgData
+:tgData rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf :igData .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgGroupData
+:tgGroupData rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :tgData .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgGroupInvitationLink
+:tgGroupInvitationLink rdf:type owl:DatatypeProperty ;
+                       rdfs:subPropertyOf :tgGroupData ;
+                       rdfs:domain :tgGroup ;
+                       rdfs:range xsd:anyURI .
+
+
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector#tgMessageData
+:tgMessageData rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgData .
+
+
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/IgHashtagName
 :IgHashtagName rdf:type owl:DatatypeProperty ;
-               rdfs:subPropertyOf :igData ;
+               rdfs:subPropertyOf :igHashtagData ;
                rdfs:domain :igHashtag ;
                rdfs:range xsd:string .
 
@@ -299,99 +376,112 @@
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgAccountID
 :tgAccountID rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :tgAccountData ;
              rdfs:domain :tgAccount ;
              rdfs:range xsd:int .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgAccountName
 :tgAccountName rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgAccountData ;
                rdfs:domain :tgAccount ;
                rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelID
 :tgChannelID rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :tgChannelData ;
              rdfs:domain :tgChannel ;
              rdfs:range xsd:int .
 
 
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelInvitationLink
+:tgChannelInvitationLink rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf :tgChannelData ;
+                         rdfs:domain :tgGroup ;
+                         rdfs:range xsd:string .
+
+
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannelName
 :tgChannelName rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgChannelData ;
                rdfs:domain :tgChannel ;
                rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgFileContent
 :tgFileContent rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgMessageData ;
                rdfs:domain :tgMessage ;
                rdfs:range xsd:byte .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupID
 :tgGroupID rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf :tgGroupData ;
            rdfs:domain :tgGroup ;
            rdfs:range xsd:int .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupName
 :tgGroupName rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :tgGroupData ;
              rdfs:domain :tgGroup ;
              rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgInvitationLink
-:tgInvitationLink rdf:type owl:DatatypeProperty ;
-                  rdfs:domain :tgChannel ,
-                              :tgGroup ;
-                  rdfs:range xsd:string .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroupPhotoProfile
+:tgGroupPhotoProfile rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf :tgGroupData ;
+                     rdfs:domain :tgGroup ;
+                     rdfs:range xsd:base64Binary .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgLastAccess
 :tgLastAccess rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf :tgAccountData ;
               rdfs:domain :tgAccount ;
               rdfs:range xsd:dateTime .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageId
 :tgMessageId rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf :tgMessageData ;
              rdfs:domain :tgMessage ;
              rdfs:range xsd:int .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageStringContent
 :tgMessageStringContent rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf :tgMessageData ;
                         rdfs:domain :tgMessage ;
                         rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessageTimestamp
 :tgMessageTimestamp rdf:type owl:DatatypeProperty ;
+                    rdfs:subPropertyOf :tgMessageData ;
                     rdfs:domain :tgMessage ;
                     rdfs:range xsd:dateTime .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgPhoneNumber
 :tgPhoneNumber rdf:type owl:DatatypeProperty ;
+               rdfs:subPropertyOf :tgAccountData ;
                rdfs:domain :tgAccount ;
                rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgPhotoProfile
-:tgPhotoProfile rdf:type owl:DatatypeProperty ;
-                rdfs:domain :tgAccount ,
-                            :tgChannel ,
-                            :tgGroup ;
-                rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgReact
-:tgReact rdf:type owl:DatatypeProperty ;
-         rdfs:domain :tgMessage ;
-         rdfs:range xsd:string .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgReaction
+:tgReaction rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf :tgMessageData ;
+            rdfs:domain :tgMessage ;
+            rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgUsername
 :tgUsername rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf :tgAccountData ;
             rdfs:domain :tgAccount ;
             rdfs:range xsd:string .
 
@@ -408,8 +498,8 @@
 :Person rdf:type owl:Class .
 
 
-###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/Telegram
-:Telegram rdf:type owl:Class .
+###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/TelegramClasses
+:TelegramClasses rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/igAccount
@@ -449,27 +539,27 @@
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgAccount
 :tgAccount rdf:type owl:Class ;
-           rdfs:subClassOf :Telegram .
+           rdfs:subClassOf :TelegramClasses .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgBot
 :tgBot rdf:type owl:Class ;
-       rdfs:subClassOf :Telegram .
+       rdfs:subClassOf :TelegramClasses .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgChannel
 :tgChannel rdf:type owl:Class ;
-           rdfs:subClassOf :Telegram .
+           rdfs:subClassOf :TelegramClasses .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgGroup
 :tgGroup rdf:type owl:Class ;
-         rdfs:subClassOf :Telegram .
+         rdfs:subClassOf :TelegramClasses .
 
 
 ###  http://www.semanticweb.org/nda/ontologies/2025/8/osint-collector/tgMessage
 :tgMessage rdf:type owl:Class ;
-           rdfs:subClassOf :Telegram .
+           rdfs:subClassOf :TelegramClasses .
 
 
 ###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
