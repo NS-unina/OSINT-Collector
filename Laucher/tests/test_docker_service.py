@@ -6,6 +6,7 @@ from app.utils.services.docker_service import DockerServices
 class TestDockerServices:
     """Unit tests for DockerServices class."""
 
+
     @pytest.fixture(autouse=True)
     def setup_service(self):
         """Setup a DockerServices instance with a mocked client before each test."""

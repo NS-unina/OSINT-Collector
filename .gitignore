@@ -201,3 +201,4 @@ pyrightconfig.json
 /Database/data
 /Database/*
 /Laucher/output/*
+/Laucher/tests/output/*

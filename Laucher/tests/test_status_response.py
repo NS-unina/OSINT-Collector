@@ -41,8 +41,7 @@ class TestStatusResponse:
     
     def test_tool_description_valid_response(self, client, app):
         """Test that /tools/<tool> returns valid configuration data for existing tools,
-        and returns appropriate error messages for non-existent or invalid ones.
-        """
+        and returns appropriate error messages for non-existent or invalid ones."""
         # 1) Test a valid tool request
         tool_selected = "snscrape-telegram"
 
