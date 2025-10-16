@@ -25,6 +25,7 @@ class TestDockerServices:
             rm=True,
         )
 
+
     def test_build_image_logs_exception(self, caplog):
         """Ensure build_image logs exceptions properly."""
         with patch("docker.errors.BuildError", Exception):
@@ -65,6 +66,7 @@ class TestDockerServices:
         self.service._client.images.remove.assert_called_once_with(
             image="alpine:latest", force=True
         )
+
 
     def test_run_tool_container_error_logs_and_removes_image(self, caplog):
         """Ensure container errors are logged and image is force-removed."""

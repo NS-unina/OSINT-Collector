@@ -66,7 +66,7 @@ class TestInput:
         """Ensure ToolConfig correctly initializes from a tool dictionary.
 
         Args:
-            example_tool_dict (_type_): _description_
+            example_tool_dict (dict): Example tool configuration dictionary.
         """
         tool = ToolConfig(example_tool_dict)
         assert tool.toolName == "snscrape-telegram"
@@ -81,7 +81,7 @@ class TestInput:
         """Ensure get_feature returns correct entrypoint.
 
         Args:
-            example_tool_dict (_type_): _description_
+            example_tool_dict (dict): Example tool configuration dictionary.
         """
         tool = ToolConfig(example_tool_dict)
         ep = tool.get_feature("download-messages")
