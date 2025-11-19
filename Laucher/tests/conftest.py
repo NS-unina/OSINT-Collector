@@ -1,6 +1,5 @@
 import pytest
 from app import create_app
-from app.utils.services.docker_service import DockerServices
 
 
 @pytest.fixture()
